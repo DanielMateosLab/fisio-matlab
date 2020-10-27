@@ -1,6 +1,5 @@
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
 import Head from "next/head"
-import "../styles/globals.css"
 import appName from "../shared/appName"
 import theme from "../client/theme"
 
