@@ -1,4 +1,5 @@
 import React from "react"
+import appName from "../../shared/appName"
 import styles from "./WelcomePage.module.css"
 
 export const principles: Array<{ name: string; description: string }> = [
@@ -19,7 +20,6 @@ export const principles: Array<{ name: string; description: string }> = [
   },
 ]
 
-export const appName = "Fisio-matlab"
 export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
 const WelcomePage = () => (

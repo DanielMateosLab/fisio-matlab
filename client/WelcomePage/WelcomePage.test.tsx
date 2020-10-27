@@ -1,6 +1,7 @@
 import React from "react"
 import { render } from "@testing-library/react"
-import WelcomePage, { principles, appName, appDescription } from "./WelcomePage"
+import WelcomePage, { principles, appDescription } from "./WelcomePage"
+import appName from "../../shared/appName"
 
 it("should show the app name and description", () => {
   const { getByText } = render(<WelcomePage />)
