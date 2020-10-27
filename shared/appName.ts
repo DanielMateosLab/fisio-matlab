@@ -1,3 +1,3 @@
-const appName = "Fisio-matlab"
+const appName = "Fisio Matlab"
 
 export default appName
