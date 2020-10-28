@@ -23,8 +23,12 @@ export const principles: Array<{ name: string; description: string }> = [
 export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
 const useStyles = makeStyles((theme) => ({
-  main: {
+  header: {
     padding: "2vw",
+    background: theme.palette.primary.main,
+  },
+  headerText: {
+    color: theme.palette.primary.contrastText,
   },
   authButtons: {
     display: "flex",
@@ -34,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     columnGap: theme.spacing(1),
+    padding: "2vw",
   },
   appName: {
     fontSize: "clamp(3.75rem, 10vw, 6rem)",
@@ -47,12 +52,22 @@ const WelcomePage = () => {
   const classes = useStyles()
 
   return (
-    <div className={classes.main}>
-      <header>
-        <Typography align="center" variant="h1" className={classes.appName}>
+    <div>
+      <header className={classes.header}>
+        <Typography
+          align="center"
+          variant="h1"
+          className={`${classes.appName} ${classes.headerText}`}
+        >
           {appName}
         </Typography>
-        <Typography align="center" variant="h5" gutterBottom>
+        <Typography
+          align="center"
+          variant="h5"
+          component="h2"
+          className={classes.headerText}
+          gutterBottom
+        >
           {appDescription}
         </Typography>
         <div className={classes.authButtons}>
@@ -64,8 +79,10 @@ const WelcomePage = () => {
         <div className={classes.principles}>
           {principles.map((p) => (
             <div key={p.name}>
-              <h3> {p.name} </h3>
-              <p> {p.description} </p>
+              <Typography variant="h6" component="h1" gutterBottom>
+                {p.name}
+              </Typography>
+              <Typography variant="body1"> {p.description} </Typography>
             </div>
           ))}
         </div>
