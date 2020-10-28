@@ -23,6 +23,9 @@ export const principles: Array<{ name: string; description: string }> = [
 export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
 const useStyles = makeStyles((theme) => ({
+  main: {
+    padding: "2vw",
+  },
   authButtons: {
     display: "flex",
     justifyContent: "center",
@@ -31,7 +34,12 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     columnGap: theme.spacing(1),
-    padding: "2vw",
+  },
+  appName: {
+    fontSize: "clamp(3.75rem, 10vw, 6rem)",
+    fallbacks: {
+      fontSize: "6rem",
+    },
   },
 }))
 
@@ -39,9 +47,9 @@ const WelcomePage = () => {
   const classes = useStyles()
 
   return (
-    <div>
+    <div className={classes.main}>
       <header>
-        <Typography align="center" variant="h1">
+        <Typography align="center" variant="h1" className={classes.appName}>
           {appName}
         </Typography>
         <Typography align="center" variant="h5" gutterBottom>
