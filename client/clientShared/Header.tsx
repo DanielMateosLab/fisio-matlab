@@ -34,7 +34,7 @@ const Header = () => {
       <Typography
         align="center"
         variant="h5"
-        component="h2"
+        component="p"
         className={classes.headerText}
         gutterBottom
       >
