@@ -64,7 +64,7 @@ const WelcomePage = () => {
         <div className={classes.principles}>
           {principles.map((p) => (
             <div key={p.name}>
-              <Typography variant="h6" component="h1" gutterBottom>
+              <Typography variant="h6" component="h2" gutterBottom>
                 {p.name}
               </Typography>
               <Typography variant="body1"> {p.description} </Typography>
