@@ -24,7 +24,7 @@ export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    padding: "2vw",
+    padding: "2vmax",
     background: theme.palette.primary.main,
   },
   headerText: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     columnGap: theme.spacing(1),
-    padding: "2vw",
+    padding: "max(8px, 2vw)",
   },
   appName: {
     fontSize: "clamp(3.75rem, 10vw, 6rem)",
