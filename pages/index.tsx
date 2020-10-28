@@ -1,8 +1,5 @@
-import WelcomePage from '../client/WelcomePage/WelcomePage'
-import Head from 'next/head'
+import WelcomePage from "../client/WelcomePage/WelcomePage"
 
 export default function Home() {
-  return (
-    <WelcomePage/>
-  )
+  return <WelcomePage />
 }
