@@ -25,11 +25,21 @@ it("should show the principle names and descriptions", () => {
 })
 
 describe("Login button", () => {
-  it.todo("should render a log in button")
+  it("should render a log in button", () => {
+    const { getByText } = render(<WelcomePage />)
+    const loginButtonElement = getByText("Inicia sesión")
+
+    expect(loginButtonElement).toBeInTheDocument()
+  })
   it.todo("should display the Login component")
 })
 
-describe("Register button", () => {
-  it.todo("should render a register button")
-  it.todo("should redirect to the register page")
+describe("Signup button", () => {
+  it("should render a signup button", () => {
+    const { getByText } = render(<WelcomePage />)
+    const signupButtonElement = getByText("Regístrate")
+
+    expect(signupButtonElement).toBeInTheDocument()
+  })
+  it.todo("should redirect to the signup page")
 })

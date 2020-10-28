@@ -1,10 +1,10 @@
-import { makeStyles, Typography } from "@material-ui/core"
+import { Button, makeStyles, Typography } from "@material-ui/core"
 import React from "react"
 import appName from "../../shared/appName"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
-    name: "Simplicidad",
+    name: "Simple",
     description:
       "Hecho para facilitarte la vida. Céntrate en lo realmente importante: tus pacientes.",
   },
@@ -28,11 +28,16 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
   },
   headerText: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.getContrastText(theme.palette.primary.main),
   },
-  authButtons: {
+  authButtonsContainer: {
     display: "flex",
     justifyContent: "center",
+    flexWrap: "wrap",
+    padding: "1vmax",
+  },
+  authButton: {
+    margin: theme.spacing(0.5),
   },
   principles: {
     display: "grid",
@@ -70,12 +75,24 @@ const WelcomePage = () => {
         >
           {appDescription}
         </Typography>
-        <div className={classes.authButtons}>
-          <button>Inicia sesión</button>
-          <button>Regístrate</button>
-        </div>
       </header>
       <main>
+        <div className={classes.authButtonsContainer}>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.authButton}
+          >
+            Inicia sesión
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.authButton}
+          >
+            Regístrate
+          </Button>
+        </div>
         <div className={classes.principles}>
           {principles.map((p) => (
             <div key={p.name}>
