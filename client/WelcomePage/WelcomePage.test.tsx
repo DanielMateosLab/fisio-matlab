@@ -1,17 +1,7 @@
 import React from "react"
 import { render } from "@testing-library/react"
-import WelcomePage, { principles, appDescription } from "./WelcomePage"
-import appName from "../../shared/appName"
-
-it("should show the app name and description", () => {
-  const { getByText } = render(<WelcomePage />)
-
-  const appNameElement = getByText(appName)
-  const appDescriptionElement = getByText(appDescription)
-
-  expect(appNameElement).toBeInTheDocument()
-  expect(appDescriptionElement).toBeInTheDocument()
-})
+import WelcomePage, { principles } from "./WelcomePage"
+import { loginTitle } from "../Auth/LoginPage"
 
 it("should show the principle names and descriptions", () => {
   const { getByText } = render(<WelcomePage />)
@@ -31,7 +21,12 @@ describe("Login button", () => {
 
     expect(loginButtonElement).toBeInTheDocument()
   })
-  it.todo("should display the Login component")
+  it("should display the Login component", () => {
+    const { getByText } = render(<WelcomePage />)
+    const loginTitleElement = getByText(loginTitle)
+
+    expect(loginTitleElement).toBeInTheDocument()
+  })
 })
 
 describe("Signup button", () => {

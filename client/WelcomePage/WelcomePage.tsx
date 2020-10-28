@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
 import React from "react"
-import appName from "../../shared/appName"
+import Header from "../clientShared/Header"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
@@ -20,16 +20,7 @@ export const principles: Array<{ name: string; description: string }> = [
   },
 ]
 
-export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
-
 const useStyles = makeStyles((theme) => ({
-  header: {
-    padding: "2vmax",
-    background: theme.palette.primary.main,
-  },
-  headerText: {
-    color: theme.palette.getContrastText(theme.palette.primary.main),
-  },
   authButtonsContainer: {
     display: "flex",
     justifyContent: "center",
@@ -45,12 +36,6 @@ const useStyles = makeStyles((theme) => ({
     columnGap: theme.spacing(1),
     padding: "max(8px, 2vw)",
   },
-  appName: {
-    fontSize: "clamp(3.75rem, 10vw, 6rem)",
-    fallbacks: {
-      fontSize: "6rem",
-    },
-  },
 }))
 
 const WelcomePage = () => {
@@ -58,24 +43,7 @@ const WelcomePage = () => {
 
   return (
     <div>
-      <header className={classes.header}>
-        <Typography
-          align="center"
-          variant="h1"
-          className={`${classes.appName} ${classes.headerText}`}
-        >
-          {appName}
-        </Typography>
-        <Typography
-          align="center"
-          variant="h5"
-          component="h2"
-          className={classes.headerText}
-          gutterBottom
-        >
-          {appDescription}
-        </Typography>
-      </header>
+      <Header />
       <main>
         <div className={classes.authButtonsContainer}>
           <Button

@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
 import Head from "next/head"
-import appName from "../shared/appName"
+import appName from "../appShared/appName"
 import theme from "../client/theme"
 
 function MyApp({ Component, pageProps }) {
