@@ -26,15 +26,20 @@ describe("WelcomePage", () => {
   })
 
   describe("Login button", () => {
-    it("should render a log in button", () => {
-      const loginButtonElement = getByText("Inicia sesión")
+    let loginButtonElement
+    beforeEach(() => {
+      loginButtonElement = getByText("Inicia sesión")
+    })
+    afterEach(() => {
+      loginButtonElement = undefined
+    })
 
+    it("should render a log in button", () => {
       expect(loginButtonElement).toBeInTheDocument()
     })
     it("redirects to the login page when clicking it", () => {
       const routerSpy = jest.spyOn(Router, "push")
 
-      const loginButtonElement = getByText("Inicia sesión")
       userEvent.click(loginButtonElement)
 
       expect(routerSpy).toHaveBeenCalledWith("/login")
@@ -48,5 +53,6 @@ describe("WelcomePage", () => {
       expect(signupButtonElement).toBeInTheDocument()
     })
     it.todo("should redirect to the signup page")
+    // TODO: make something to go back to the home page from the auth pages
   })
 })
