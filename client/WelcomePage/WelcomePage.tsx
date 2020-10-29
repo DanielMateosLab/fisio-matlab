@@ -1,4 +1,5 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
+import Router from "next/router"
 import React from "react"
 import Header from "../clientShared/Header"
 
@@ -41,6 +42,11 @@ const useStyles = makeStyles((theme) => ({
 const WelcomePage = () => {
   const classes = useStyles()
 
+  function handleLoginButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault
+    Router.push("/login")
+  }
+
   return (
     <div>
       <Header />
@@ -50,6 +56,7 @@ const WelcomePage = () => {
             variant="outlined"
             color="primary"
             className={classes.authButton}
+            onClick={handleLoginButtonClick}
           >
             Inicia sesión
           </Button>

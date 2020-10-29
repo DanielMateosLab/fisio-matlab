@@ -1,7 +1,10 @@
 import React from "react"
 import { render } from "@testing-library/react"
 import WelcomePage, { principles } from "./WelcomePage"
-import { loginTitle } from "../Auth/LoginPage"
+import userEvent from "@testing-library/user-event"
+import Router from "next/router"
+
+jest.mock("next/router")
 
 it("should show the principle names and descriptions", () => {
   const { getByText } = render(<WelcomePage />)
@@ -21,11 +24,16 @@ describe("Login button", () => {
 
     expect(loginButtonElement).toBeInTheDocument()
   })
-  it("should display the Login component", () => {
+  it("redirects to the login page when clicking it", () => {
+    // TODO: upload the bug to nextjs issues.
+    // Make a branch with the buggy version so people can test it
+    const routerSpy = jest.spyOn(Router, "push")
     const { getByText } = render(<WelcomePage />)
-    const loginTitleElement = getByText(loginTitle)
+    const loginButtonElement = getByText("Inicia sesión")
 
-    expect(loginTitleElement).toBeInTheDocument()
+    userEvent.click(loginButtonElement)
+
+    expect(routerSpy).toHaveBeenCalledWith("/login")
   })
 })
 
