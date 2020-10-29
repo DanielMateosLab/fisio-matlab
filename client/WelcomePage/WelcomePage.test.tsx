@@ -27,6 +27,7 @@ describe("WelcomePage", () => {
 
   describe("Login button", () => {
     let loginButtonElement
+
     beforeEach(() => {
       loginButtonElement = getByText("Inicia sesión")
     })
@@ -47,12 +48,24 @@ describe("WelcomePage", () => {
   })
 
   describe("Signup button", () => {
-    it("should render a signup button", () => {
-      const signupButtonElement = getByText("Regístrate")
+    let signupButtonElement
 
+    beforeEach(() => {
+      signupButtonElement = getByText("Regístrate")
+    })
+    afterEach(() => {
+      signupButtonElement = undefined
+    })
+
+    it("should render a signup button", () => {
       expect(signupButtonElement).toBeInTheDocument()
     })
-    it.todo("should redirect to the signup page")
-    // TODO: make something to go back to the home page from the auth pages
+    it("should redirect to the signup page", () => {
+      const routerSpy = jest.spyOn(Router, "push")
+
+      userEvent.click(signupButtonElement)
+
+      expect(routerSpy).toHaveBeenCalledWith("/register")
+    })
   })
 })

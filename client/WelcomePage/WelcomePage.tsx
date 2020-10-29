@@ -47,6 +47,11 @@ const WelcomePage = () => {
     Router.push("/login")
   }
 
+  function handleSignupButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault
+    Router.push("/register")
+  }
+
   return (
     <div>
       <Header />
@@ -64,6 +69,7 @@ const WelcomePage = () => {
             variant="outlined"
             color="primary"
             className={classes.authButton}
+            onClick={handleSignupButtonClick}
           >
             Regístrate
           </Button>
