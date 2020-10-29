@@ -65,7 +65,7 @@ describe("WelcomePage", () => {
 
       userEvent.click(signupButtonElement)
 
-      expect(routerSpy).toHaveBeenCalledWith("/register")
+      expect(routerSpy).toHaveBeenCalledWith("/signup")
     })
   })
 })

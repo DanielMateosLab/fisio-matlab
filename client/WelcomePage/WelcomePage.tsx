@@ -49,7 +49,7 @@ const WelcomePage = () => {
 
   function handleSignupButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault
-    Router.push("/register")
+    Router.push("/signup")
   }
 
   return (
