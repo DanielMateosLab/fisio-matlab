@@ -25,8 +25,6 @@ describe("Login button", () => {
     expect(loginButtonElement).toBeInTheDocument()
   })
   it("redirects to the login page when clicking it", () => {
-    // TODO: upload the bug to nextjs issues.
-    // Make a branch with the buggy version so people can test it
     const routerSpy = jest.spyOn(Router, "push")
     const { getByText } = render(<WelcomePage />)
     const loginButtonElement = getByText("Inicia sesión")
