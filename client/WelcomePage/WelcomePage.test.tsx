@@ -1,48 +1,52 @@
 import React from "react"
-import { render } from "@testing-library/react"
+import { render, RenderResult } from "@testing-library/react"
 import WelcomePage, { principles } from "./WelcomePage"
 import userEvent from "@testing-library/user-event"
 import Router from "next/router"
 
 jest.mock("next/router")
 
-it("should show the principle names and descriptions", () => {
-  const { getByText } = render(<WelcomePage />)
-  principles.forEach((principle) => {
-    const principleNameElement = getByText(principle.name)
-    const principleDescriptionElement = getByText(principle.description)
+describe("WelcomePage", () => {
+  let queries: RenderResult
+  let getByText
 
-    expect(principleNameElement).toBeInTheDocument()
-    expect(principleDescriptionElement).toBeInTheDocument()
+  beforeEach(() => {
+    queries = render(<WelcomePage />)
+    getByText = queries.getByText
   })
-})
 
-describe("Login button", () => {
-  it("should render a log in button", () => {
-    const { getByText } = render(<WelcomePage />)
-    const loginButtonElement = getByText("Inicia sesión")
+  it("should show the principle names and descriptions", () => {
+    principles.forEach((principle) => {
+      const principleNameElement = getByText(principle.name)
+      const principleDescriptionElement = getByText(principle.description)
 
-    expect(loginButtonElement).toBeInTheDocument()
+      expect(principleNameElement).toBeInTheDocument()
+      expect(principleDescriptionElement).toBeInTheDocument()
+    })
   })
-  it("redirects to the login page when clicking it", () => {
-    // TODO: upload the bug to nextjs issues.
-    // Make a branch with the buggy version so people can test it
-    const routerSpy = jest.spyOn(Router, "push")
-    const { getByText } = render(<WelcomePage />)
-    const loginButtonElement = getByText("Inicia sesión")
 
-    userEvent.click(loginButtonElement)
+  describe("Login button", () => {
+    it("should render a log in button", () => {
+      const loginButtonElement = getByText("Inicia sesión")
 
-    expect(routerSpy).toHaveBeenCalledWith("/login")
+      expect(loginButtonElement).toBeInTheDocument()
+    })
+    it("redirects to the login page when clicking it", () => {
+      const routerSpy = jest.spyOn(Router, "push")
+
+      const loginButtonElement = getByText("Inicia sesión")
+      userEvent.click(loginButtonElement)
+
+      expect(routerSpy).toHaveBeenCalledWith("/login")
+    })
   })
-})
 
-describe("Signup button", () => {
-  it("should render a signup button", () => {
-    const { getByText } = render(<WelcomePage />)
-    const signupButtonElement = getByText("Regístrate")
+  describe("Signup button", () => {
+    it("should render a signup button", () => {
+      const signupButtonElement = getByText("Regístrate")
 
-    expect(signupButtonElement).toBeInTheDocument()
+      expect(signupButtonElement).toBeInTheDocument()
+    })
+    it.todo("should redirect to the signup page")
   })
-  it.todo("should redirect to the signup page")
 })
