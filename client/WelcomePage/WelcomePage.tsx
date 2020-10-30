@@ -1,5 +1,5 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import React from "react"
 import Header from "../clientShared/Header"
 
@@ -41,15 +41,16 @@ const useStyles = makeStyles((theme) => ({
 
 const WelcomePage = () => {
   const classes = useStyles()
+  const router = useRouter()
 
   function handleLoginButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault
-    Router.push("/login")
+    router.push("/login")
   }
 
   function handleSignupButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault
-    Router.push("/signup")
+    router.push("/signup")
   }
 
   return (

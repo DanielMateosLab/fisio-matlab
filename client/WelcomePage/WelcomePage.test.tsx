@@ -4,7 +4,15 @@ import WelcomePage, { principles } from "./WelcomePage"
 import userEvent from "@testing-library/user-event"
 import Router from "next/router"
 
-jest.mock("next/router")
+const mockPush = jest.fn()
+
+jest.mock("next/router", () => ({
+  useRouter() {
+    return {
+      push: mockPush,
+    }
+  },
+}))
 
 describe("WelcomePage", () => {
   let queries: RenderResult
@@ -39,11 +47,9 @@ describe("WelcomePage", () => {
       expect(loginButtonElement).toBeInTheDocument()
     })
     it("redirects to the login page when clicking it", () => {
-      const routerSpy = jest.spyOn(Router, "push")
-
       userEvent.click(loginButtonElement)
 
-      expect(routerSpy).toHaveBeenCalledWith("/login")
+      expect(mockPush).toHaveBeenCalledWith("/login")
     })
   })
 
@@ -61,11 +67,9 @@ describe("WelcomePage", () => {
       expect(signupButtonElement).toBeInTheDocument()
     })
     it("should redirect to the signup page", () => {
-      const routerSpy = jest.spyOn(Router, "push")
-
       userEvent.click(signupButtonElement)
 
-      expect(routerSpy).toHaveBeenCalledWith("/signup")
+      expect(mockPush).toHaveBeenCalledWith("/signup")
     })
   })
 })
