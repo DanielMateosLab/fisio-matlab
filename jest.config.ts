@@ -10,7 +10,7 @@ const config: Config.InitialOptions = {
   // We use identity-obj-proxy to mock css modules
   moduleNameMapper: { "\\.(css|less)$": "identity-obj-proxy" },
   clearMocks: true,
-  coverageDirectory: "/__coverage__",
+  coverageDirectory: "__coverage__",
 }
 
 export default config
