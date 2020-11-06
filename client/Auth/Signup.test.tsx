@@ -1,17 +1,33 @@
-import { render } from "@testing-library/react"
-import Signup, { signupComponentTitle } from "./Signup"
+import { GetByText, render, RenderResult } from "@testing-library/react"
+import Signup, { signupComponentTitle, emailInputText } from "./Signup"
 
 describe("Signup", () => {
-  it("should render the signup component title", () => {
-    const { getByText } = render(<Signup />)
+  let queries: RenderResult
+  let getByText //TODO: search how to correctly type this with ReturnValue or some type function like it
 
+  beforeEach(() => {
+    queries = render(<Signup />)
+    getByText = queries.getByText
+  })
+  afterEach(() => {
+    queries = undefined
+    getByText = undefined
+  })
+
+  it("should render the signup component title", () => {
     const titleElement = getByText(signupComponentTitle)
 
     expect(titleElement).toBeInTheDocument()
   })
 
   describe("Form", () => {
-    it.todo("should have an email input")
+    it("should have an email input", () => {
+      const emailInputElement = queries.getByText(emailInputText, {
+        selector: "label",
+      })
+
+      expect(emailInputElement).toBeInTheDocument()
+    })
     test.todo("the email validation should fail with a random word")
     test.todo("the email validation should pass with a valid email")
     it.todo("should have a password input")
@@ -20,6 +36,9 @@ describe("Signup", () => {
     it.todo("should have a repeat password input")
     test.todo("the repeatPassword field value should match the password value")
     it.todo("should have a submit button")
+    test.todo(
+      "the submit button should be disabled while the form is being submitted"
+    )
     it.todo("should have a link to go to the login page")
     it.todo(
       "should persist the form data in the local storage until the signup is completed"
