@@ -15,6 +15,14 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(1),
   },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  formElement: {
+    marginTop: theme.spacing(1),
+  },
 }))
 
 const Signup = () => {
@@ -22,7 +30,7 @@ const Signup = () => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h6" component="h2" align="center">
+      <Typography variant="h6" component="h2" align="center" gutterBottom>
         {signupComponentTitle}
       </Typography>
       <Formik
@@ -32,9 +40,17 @@ const Signup = () => {
         onSubmit={(values) => console.log(values)}
       >
         {(formik) => (
-          <form onSubmit={formik.handleSubmit}>
-            <FormikTextInput name="email" label={emailInputText} type="email" />
-            <button type="submit"> {submitButtonText} </button>
+          <form onSubmit={formik.handleSubmit} className={classes.form}>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="email"
+                label={emailInputText}
+                type="email"
+              />
+            </div>
+            <div className={classes.formElement}>
+              <button type="submit"> {submitButtonText} </button>
+            </div>
           </form>
         )}
       </Formik>
