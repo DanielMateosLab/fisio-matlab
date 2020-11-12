@@ -1,17 +1,13 @@
-import { GetByText, render, RenderResult } from "@testing-library/react"
+import { render, RenderResult } from "@testing-library/react"
 import Signup, { signupComponentTitle, emailInputText } from "./Signup"
 
 describe("Signup", () => {
   let queries: RenderResult
-  let getByText //TODO: search how to correctly type this with ReturnValue or some type function like it
+  let getByText: typeof queries.getByText
 
   beforeEach(() => {
     queries = render(<Signup />)
     getByText = queries.getByText
-  })
-  afterEach(() => {
-    queries = undefined
-    getByText = undefined
   })
 
   it("should render the signup component title", () => {
@@ -22,7 +18,7 @@ describe("Signup", () => {
 
   describe("Form", () => {
     it("should have an email input", () => {
-      const emailInputElement = queries.getByText(emailInputText, {
+      const emailInputElement = getByText(emailInputText, {
         selector: "label",
       })
 
