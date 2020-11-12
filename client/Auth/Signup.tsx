@@ -45,7 +45,7 @@ const Signup = () => {
               <FormikTextInput
                 name="email"
                 label={emailInputText}
-                type="email"
+                type="email" // TODO: search how to disable built in HTML validation
               />
             </div>
             <div className={classes.formElement}>

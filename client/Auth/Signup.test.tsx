@@ -1,5 +1,6 @@
 import { render, RenderResult } from "@testing-library/react"
 import Signup, { signupComponentTitle, emailInputText } from "./Signup"
+import userEvent from "@testing-library/user-event"
 
 describe("Signup", () => {
   let queries: RenderResult
@@ -18,13 +19,17 @@ describe("Signup", () => {
 
   describe("Form", () => {
     it("should have an email input", () => {
-      const emailInputElement = getByText(emailInputText, {
-        selector: "label",
-      })
+      const emailInputElement = queries.getByLabelText(emailInputText)
 
       expect(emailInputElement).toBeInTheDocument()
     })
-    test.todo("the email validation should fail with a random word")
+    test("the email validation should fail with a random word", () => {
+      const emailInputElement = queries.getByLabelText(emailInputText)
+      userEvent.type(emailInputElement, "aaaaa")
+      userEvent.tab()
+
+      expect(emailInputElement).toBeInvalid()
+    })
     test.todo("the email validation should pass with a valid email")
     it.todo("should have a password input")
     test.todo("the password validation should fail with less than 5 letters")
