@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import FormikTextInput from "../clientShared/FormikTextInput"
+import { signUpFormValidationSchema } from "../clientShared/Validation"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -37,6 +38,7 @@ const Signup = () => {
         initialValues={{
           email: "",
         }}
+        validationSchema={signUpFormValidationSchema}
         onSubmit={(values) => console.log(values)}
       >
         {(formik) => (
@@ -45,7 +47,7 @@ const Signup = () => {
               <FormikTextInput
                 name="email"
                 label={emailInputText}
-                type="email" // TODO: search how to disable built in HTML validation
+                type="email"
               />
             </div>
             <div className={classes.formElement}>
