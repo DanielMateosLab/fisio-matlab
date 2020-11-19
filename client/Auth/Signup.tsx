@@ -6,10 +6,8 @@ import { signUpFormValidationSchema } from "../clientShared/Validation"
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
 export const emailInputText = "Tu email"
-export const passwordInputText =
-  "Una contraseña, ¡mejor si es única y compleja!"
-export const repeatPasswordInputText =
-  "Que escribas tu contraseña otra vez, para asegurarnos de que es la que quieres poner"
+export const passwordInputText = "Una contraseña"
+export const repeatPasswordInputText = "Que repitas tu contraseña"
 export const submitButtonText = "¡Dale candela!"
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +35,8 @@ const Signup = () => {
       <Formik
         initialValues={{
           email: "",
+          password: "",
+          repeatPassword: "",
         }}
         validationSchema={signUpFormValidationSchema}
         onSubmit={(values) => console.log(values)}
@@ -48,6 +48,20 @@ const Signup = () => {
                 name="email"
                 label={emailInputText}
                 type="email"
+              />
+            </div>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="password"
+                label={passwordInputText}
+                type="password"
+              />
+            </div>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="repeatPassword"
+                label={repeatPasswordInputText}
+                type="password"
               />
             </div>
             <div className={classes.formElement}>

@@ -1,12 +1,21 @@
-import {
-  fireEvent,
-  render,
-  RenderResult,
-  waitFor,
-} from "@testing-library/react"
-import Signup, { signupComponentTitle, emailInputText } from "./Signup"
+import { render, RenderResult, waitFor } from "@testing-library/react"
+import Signup, {
+  signupComponentTitle,
+  emailInputText,
+  passwordInputText,
+  repeatPasswordInputText,
+} from "./Signup"
 import userEvent from "@testing-library/user-event"
-import { getMaxErrorText } from "../clientShared/Validation"
+import {
+  emailErrorText,
+  emailMaxCharacters,
+  getMaxErrorText,
+  getMinErrorText,
+  requiredErrorText,
+  passwordMinCharacters,
+  passwordMaxCharacters,
+  repeatPasswordErrorText,
+} from "../clientShared/Validation"
 
 describe("Signup", () => {
   let queries: RenderResult
@@ -40,9 +49,7 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = queries.getByText(
-            "La dirección de correo electrónico no es válida"
-          )
+          const errorText = queries.getByText(emailErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
@@ -52,20 +59,21 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = queries.getByText("Campo obligatorio")
+          const errorText = queries.getByText(requiredErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the email validation should fail with a 257 characters email", async () => {
         userEvent.type(
           emailInputElement,
-          "a".repeat(250) + "@aa.aaa" // 250 chars + 7
+          // maxChars + 1 (to make the test fail) - 7 letters of the email domain part
+          "a".repeat(emailMaxCharacters + 1 - 7) + "@aa.aaa"
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = queries.getByText(getMaxErrorText(256))
+          const errorText = getByText(getMaxErrorText(emailMaxCharacters))
           expect(errorText).toBeInTheDocument()
         })
       })
@@ -79,11 +87,98 @@ describe("Signup", () => {
       })
     })
 
-    it.todo("should have a password input")
-    test.todo("the password validation should fail with less than 5 letters")
-    test.todo("the password validation should pass with 5 letters or more")
-    it.todo("should have a repeat password input")
-    test.todo("the repeatPassword field value should match the password value")
+    describe("password input", () => {
+      let passwordInputElement: HTMLElement
+
+      beforeEach(() => {
+        passwordInputElement = queries.getByLabelText(passwordInputText)
+      })
+
+      it("should have a password input", () => {
+        expect(passwordInputElement).toBeDefined()
+      })
+      test("the password validation should fail with no input", async () => {
+        userEvent.type(passwordInputElement, "")
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(passwordInputElement).toBeInvalid()
+          const errorText = getByText(requiredErrorText)
+          expect(errorText).toBeInTheDocument()
+        })
+      })
+      test("the password validation should fail with less characters than the minium length allowed", async () => {
+        userEvent.type(
+          passwordInputElement,
+          "a".repeat(passwordMinCharacters - 1)
+        )
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(passwordInputElement).toBeInvalid()
+          const errorText = getByText(getMinErrorText(passwordMinCharacters))
+          expect(errorText).toBeInTheDocument()
+        })
+      })
+      test("the password validation should fail with more characters than the maxium length allowed", async () => {
+        userEvent.type(
+          passwordInputElement,
+          "a".repeat(passwordMaxCharacters + 1)
+        )
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(passwordInputElement).toBeInvalid()
+          const errorText = getByText(getMaxErrorText(passwordMaxCharacters))
+          expect(errorText).toBeInTheDocument()
+        })
+      })
+      test("the password validation should pass with a 20 letters password", async () => {
+        userEvent.type(passwordInputElement, "a".repeat(20))
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(passwordInputElement).toBeValid()
+        })
+      })
+    })
+
+    describe("repeatPassword input", () => {
+      let repeatPasswordElement: HTMLElement
+
+      beforeEach(() => {
+        repeatPasswordElement = queries.getByLabelText(repeatPasswordInputText)
+      })
+
+      it("should have a repeat password input", () => {
+        expect(repeatPasswordElement).toBeInTheDocument()
+      })
+      test("the repeatPassword validation fails with different passwords", async () => {
+        const passwordElement = queries.getByLabelText(passwordInputText)
+
+        userEvent.type(passwordElement, "mockPassword")
+        userEvent.type(repeatPasswordElement, "aaaa")
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(repeatPasswordElement).toBeInvalid()
+          const errorTextElement = getByText(repeatPasswordErrorText)
+          expect(errorTextElement).toBeInTheDocument()
+        })
+      })
+      test("the repeatPassword validation passes with the same password", async () => {
+        const passwordElement = queries.getByLabelText(passwordInputText)
+
+        const password = "mockPassword"
+        userEvent.type(passwordElement, password)
+        userEvent.type(repeatPasswordElement, password)
+        userEvent.tab()
+
+        await waitFor(() => {
+          expect(repeatPasswordElement).toBeValid()
+        })
+      })
+    })
     it.todo("should have a submit button")
     test.todo(
       "the submit button should be disabled while the form is being submitted"
