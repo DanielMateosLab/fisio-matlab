@@ -1,5 +1,7 @@
-import { makeStyles, Typography } from "@material-ui/core"
+import React from "react"
+import { Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
+import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import { signUpFormValidationSchema } from "../clientShared/Validation"
 
@@ -26,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Signup = () => {
   const classes = useStyles()
+  const router = useRouter()
+
+  function handleLoginPageLink(e: React.MouseEvent<HTMLSpanElement>) {
+    e.preventDefault()
+    router.push("/login")
+  }
 
   return (
     <div className={classes.container}>
@@ -66,6 +74,12 @@ const Signup = () => {
             </div>
             <div className={classes.formElement}>
               <button type="submit"> {submitButtonText} </button>
+              <Typography variant="body2">
+                ¿Ya tienes cuenta?{" "}
+                <Link href="#" onClick={handleLoginPageLink}>
+                  Inicia sesión
+                </Link>
+              </Typography>
             </div>
           </form>
         )}

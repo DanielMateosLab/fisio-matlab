@@ -17,6 +17,16 @@ import {
   repeatPasswordErrorText,
 } from "../clientShared/Validation"
 
+jest.mock("next/router", () => ({
+  useRouter() {
+    return {
+      push: mockPush,
+    }
+  },
+}))
+
+const mockPush = jest.fn()
+
 describe("Signup", () => {
   let queries: RenderResult
   let getByText: typeof queries.getByText
@@ -179,15 +189,28 @@ describe("Signup", () => {
         })
       })
     })
-    it.todo("should have a submit button")
-    test.todo(
-      "the submit button should be disabled while the form is being submitted"
-    )
-    it.todo("should have a link to go to the login page")
-    it.todo(
-      "should persist the form data in the local storage until the signup is completed"
-    )
+
+    describe("login page link", () => {
+      let loginPageLinkElement: HTMLElement
+
+      beforeEach(() => {
+        loginPageLinkElement = getByText("Inicia sesión")
+      })
+
+      it("should have a link to go to the login page", () => {
+        expect(loginPageLinkElement).toBeInTheDocument()
+      })
+      test("the link should redirect to the login page", () => {
+        userEvent.click(loginPageLinkElement)
+
+        expect(mockPush).toHaveBeenCalledWith("/login")
+      })
+    })
   })
 
+  it.todo("should have a submit button")
+  test.todo(
+    "the submit button should be disabled while the form is being submitted"
+  )
   //TODO: store
 })
