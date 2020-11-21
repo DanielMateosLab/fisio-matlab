@@ -1,4 +1,4 @@
-import Login from "../client/Auth/Login"
+import Login from "../client/session/Login"
 import Header from "../client/clientShared/Header"
 
 export default function LoginPage() {
