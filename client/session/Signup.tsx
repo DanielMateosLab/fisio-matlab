@@ -4,6 +4,8 @@ import { Formik } from "formik"
 import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import { signUpFormValidationSchema } from "../clientShared/Validation"
+import { useDispatch } from "react-redux"
+import { authSuccess } from "./sessionSlice"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -29,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const Signup = () => {
   const classes = useStyles()
   const router = useRouter()
+  const dispatch = useDispatch()
 
   function handleLoginPageLink(e: React.MouseEvent<HTMLSpanElement>) {
     e.preventDefault()
@@ -47,7 +50,10 @@ const Signup = () => {
           repeatPassword: "",
         }}
         validationSchema={signUpFormValidationSchema}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values, { setSubmitting }) => {
+          dispatch(authSuccess({ email: values.email }))
+          setSubmitting(false)
+        }}
       >
         {(formik) => (
           <form onSubmit={formik.handleSubmit} className={classes.form}>
