@@ -9,7 +9,7 @@ const theme = createMuiTheme({
       main: "#795548",
       contrastText: "#ffffff",
     },
-    secondary: colors.amber,
+    secondary: colors.deepOrange,
   },
 })
 

@@ -4,6 +4,7 @@ import Signup, {
   emailInputText,
   passwordInputText,
   repeatPasswordInputText,
+  submitButtonText,
 } from "./Signup"
 import userEvent from "@testing-library/user-event"
 import {
@@ -208,9 +209,17 @@ describe("Signup", () => {
     })
   })
 
-  it.todo("should have a submit button")
-  test.todo(
-    "the submit button should be disabled while the form is being submitted"
-  )
-  //TODO: store
+  describe("submit button", () => {
+    let submitButtonElement: HTMLElement
+    beforeEach(() => {
+      submitButtonElement = queries.getByRole("button", {
+        name: submitButtonText,
+      })
+    })
+
+    it("should have a submit button", () => {
+      expect(submitButtonElement).toBeInTheDocument()
+    })
+    it.todo("should send the values to the api")
+  })
 })

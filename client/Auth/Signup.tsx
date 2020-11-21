@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, makeStyles, Typography } from "@material-ui/core"
+import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
@@ -73,7 +73,16 @@ const Signup = () => {
               />
             </div>
             <div className={classes.formElement}>
-              <button type="submit"> {submitButtonText} </button>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="submit"
+                disabled={formik.isSubmitting}
+              >
+                {submitButtonText}
+              </Button>
+            </div>
+            <div className={classes.formElement}>
               <Typography variant="body2">
                 ¿Ya tienes cuenta?{" "}
                 <Link href="#" onClick={handleLoginPageLink}>
