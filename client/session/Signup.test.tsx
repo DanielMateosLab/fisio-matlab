@@ -1,4 +1,4 @@
-import { render, RenderResult, waitFor } from "@testing-library/react"
+import { render, RenderResult, waitFor } from "../clientShared/testUtils"
 import Signup, {
   signupComponentTitle,
   emailInputText,
