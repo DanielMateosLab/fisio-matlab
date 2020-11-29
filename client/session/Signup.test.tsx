@@ -25,8 +25,15 @@ jest.mock("next/router", () => ({
     }
   },
 }))
+jest.mock("react-redux", () => ({
+  ...(jest.requireActual("react-redux") as {}),
+  useDispatch() {
+    return mockDispatch
+  },
+}))
 
 const mockPush = jest.fn()
+const mockDispatch = jest.fn()
 
 describe("Signup", () => {
   let queries: RenderResult
@@ -220,6 +227,23 @@ describe("Signup", () => {
     it("should have a submit button", () => {
       expect(submitButtonElement).toBeInTheDocument()
     })
-    it.todo("should send the values to the api")
+    it("should dispatch an action to save in the store the form values", async () => {
+      const emailElement = queries.getByLabelText(emailInputText)
+      const passwordElement = queries.getByLabelText(passwordInputText)
+      const repeatPasswordElement = queries.getByLabelText(
+        repeatPasswordInputText
+      )
+      const email = "aaaa@aaa.aa"
+      const pwd = "aaaaa"
+
+      userEvent.type(emailElement, email)
+      userEvent.type(passwordElement, pwd)
+      userEvent.type(repeatPasswordElement, pwd)
+      userEvent.click(submitButtonElement)
+
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled()
+      })
+    })
   })
 })
