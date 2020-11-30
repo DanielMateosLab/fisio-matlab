@@ -10,7 +10,7 @@ export const requiredErrorText = "Campo obligatorio"
 
 export const emailErrorText = "La dirección de correo electrónico no es válida"
 export const emailMaxCharacters = 256
-const email = yup
+export const emailValidator = yup
   .string()
   .email(emailErrorText)
   .max(emailMaxCharacters, getMaxErrorText(emailMaxCharacters))
@@ -18,21 +18,21 @@ const email = yup
 
 export const passwordMinCharacters = 5
 export const passwordMaxCharacters = 128
-const password = yup
+export const passwordValidator = yup
   .string()
   .required(requiredErrorText)
   .min(passwordMinCharacters, getMinErrorText(passwordMinCharacters))
   .max(passwordMaxCharacters, getMaxErrorText(passwordMaxCharacters))
 
 export const repeatPasswordErrorText = "Las contraseñas deben coincidir"
-const repeatPassword = yup
+export const repeatPasswordValidator = yup
   .string()
   .test("matchPasswords", repeatPasswordErrorText, function (value) {
     return this.parent.password === value
   })
 
 export const signUpFormValidationSchema = yup.object().shape({
-  email,
-  password,
-  repeatPassword,
+  email: emailValidator,
+  password: passwordValidator,
+  repeatPassword: repeatPasswordValidator,
 })

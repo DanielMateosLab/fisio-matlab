@@ -61,6 +61,7 @@ describe("Signup", () => {
       it("should have an email input", () => {
         expect(emailInputElement).toBeInTheDocument()
       })
+      // The following integration tests are not necessary as validation is tested separatedly
       test("the email validation should fail with a random word", async () => {
         userEvent.type(emailInputElement, "aaaaa")
         userEvent.tab()
