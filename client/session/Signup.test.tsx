@@ -9,14 +9,9 @@ import Signup, {
 import userEvent from "@testing-library/user-event"
 import {
   emailErrorText,
-  emailMaxCharacters,
-  getMaxErrorText,
-  getMinErrorText,
-  requiredErrorText,
-  passwordMinCharacters,
-  passwordMaxCharacters,
   repeatPasswordErrorText,
-  emailMaxErrorText,
+  emailValidation,
+  passwordValidation,
 } from "../clientShared/Validation"
 
 jest.mock("next/router", () => ({
@@ -79,7 +74,7 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = queries.getByText(requiredErrorText)
+          const errorText = queries.getByText(emailValidation.requiredErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
@@ -87,13 +82,13 @@ describe("Signup", () => {
         userEvent.type(
           emailInputElement,
           // maxChars + 1 (to make the test fail) - 7 letters of the email domain part
-          "a".repeat(emailMaxCharacters + 1 - 7) + "@aa.aaa"
+          "a".repeat(emailValidation.maxCharacters + 1 - 7) + "@aa.aaa"
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = getByText(emailMaxErrorText)
+          const errorText = getByText(emailValidation.maxErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
@@ -117,6 +112,7 @@ describe("Signup", () => {
       it("should have a password input", () => {
         expect(passwordInputElement).toBeDefined()
       })
+      // The following integration tests are not necessary as validation is tested separatedly
       test("the password validation should fail with no input", async () => {
         userEvent.type(passwordInputElement, "")
         userEvent.tab()
@@ -130,26 +126,26 @@ describe("Signup", () => {
       test("the password validation should fail with less characters than the minium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(passwordMinCharacters - 1)
+          "a".repeat(passwordValidation.minCharacters - 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(getMinErrorText(passwordMinCharacters))
+          const errorText = getByText(passwordValidation.minErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the password validation should fail with more characters than the maxium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(passwordMaxCharacters + 1)
+          "a".repeat(passwordValidation.maxCharacters + 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(getMaxErrorText(passwordMaxCharacters))
+          const errorText = getByText(passwordValidation.maxErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })

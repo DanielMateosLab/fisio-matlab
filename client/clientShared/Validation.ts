@@ -1,29 +1,45 @@
 import * as yup from "yup"
 
-export function getMaxErrorText(max: number): string {
-  return `Debe tener ${max} o menos caracteres`
-}
-export function getMinErrorText(min: number): string {
-  return `Debe tener ${min} o más caracteres`
-}
-export const requiredErrorText = "Campo obligatorio"
+class FieldValidationObject {
+  maxCharacters: number
+  minCharacters: number
+  validator: yup.StringSchema
+  requiredErrorText = "Campo obligatorio"
+  maxErrorText: string
+  minErrorText: string
 
+  constructor(minCharacters: number, maxCharacters: number, required: boolean) {
+    this.minCharacters = minCharacters
+    this.maxCharacters = maxCharacters
+    this.maxErrorText = `Debe tener ${maxCharacters} o menos caracteres`
+    this.minErrorText = `Debe tener ${minCharacters} o más caracteres`
+    this.validator = yup.string().max(maxCharacters, this.maxErrorText)
+
+    if (minCharacters >= 1) {
+      this.validator = this.validator.min(minCharacters, this.minErrorText)
+    }
+    if (required) {
+      this.validator = this.validator.required(this.requiredErrorText)
+    }
+  }
+}
+
+const emailMaxCharacters = 256
+export const emailValidation = new FieldValidationObject(
+  0,
+  emailMaxCharacters,
+  true
+)
 export const emailErrorText = "La dirección de correo electrónico no es válida"
-export const emailMaxCharacters = 256
-export const emailMaxErrorText = getMaxErrorText(emailMaxCharacters)
-export const emailValidator = yup
-  .string()
-  .email(emailErrorText)
-  .max(emailMaxCharacters, emailMaxErrorText)
-  .required(requiredErrorText)
+emailValidation.validator = emailValidation.validator.email(emailErrorText)
 
-export const passwordMinCharacters = 5
-export const passwordMaxCharacters = 128
-export const passwordValidator = yup
-  .string()
-  .required(requiredErrorText)
-  .min(passwordMinCharacters, getMinErrorText(passwordMinCharacters))
-  .max(passwordMaxCharacters, getMaxErrorText(passwordMaxCharacters))
+const passwordMinCharacters = 5
+const passwordMaxCharacters = 128
+export const passwordValidation = new FieldValidationObject(
+  passwordMinCharacters,
+  passwordMaxCharacters,
+  true
+)
 
 export const repeatPasswordErrorText = "Las contraseñas deben coincidir"
 export const repeatPasswordValidator = yup
@@ -33,7 +49,7 @@ export const repeatPasswordValidator = yup
   })
 
 export const signUpFormValidationSchema = yup.object().shape({
-  email: emailValidator,
-  password: passwordValidator,
+  email: emailValidation.validator,
+  password: passwordValidation.validator,
   repeatPassword: repeatPasswordValidator,
 })
