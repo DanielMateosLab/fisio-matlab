@@ -119,7 +119,7 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(requiredErrorText)
+          const errorText = getByText(passwordValidation.requiredErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
