@@ -16,6 +16,7 @@ import {
   passwordMinCharacters,
   passwordMaxCharacters,
   repeatPasswordErrorText,
+  emailMaxErrorText,
 } from "../clientShared/Validation"
 
 jest.mock("next/router", () => ({
@@ -92,7 +93,7 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(emailInputElement).toBeInvalid()
-          const errorText = getByText(getMaxErrorText(emailMaxCharacters))
+          const errorText = getByText(emailMaxErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
