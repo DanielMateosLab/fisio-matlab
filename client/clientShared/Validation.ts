@@ -10,10 +10,11 @@ export const requiredErrorText = "Campo obligatorio"
 
 export const emailErrorText = "La dirección de correo electrónico no es válida"
 export const emailMaxCharacters = 256
+export const emailMaxErrorText = getMaxErrorText(emailMaxCharacters)
 export const emailValidator = yup
   .string()
   .email(emailErrorText)
-  .max(emailMaxCharacters, getMaxErrorText(emailMaxCharacters))
+  .max(emailMaxCharacters, emailMaxErrorText)
   .required(requiredErrorText)
 
 export const passwordMinCharacters = 5
