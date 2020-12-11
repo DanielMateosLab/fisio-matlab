@@ -6,6 +6,7 @@ import FormikTextInput from "../clientShared/FormikTextInput"
 import { signUpFormValidationSchema } from "../clientShared/Validation"
 import { useDispatch } from "react-redux"
 import { authSuccess } from "./sessionSlice"
+import PageTitle from "../clientShared/pageTitle"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -40,9 +41,7 @@ const Signup = () => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h6" component="h2" align="center" gutterBottom>
-        {signupComponentTitle}
-      </Typography>
+      <PageTitle> {signupComponentTitle} </PageTitle>
       <Formik
         initialValues={{
           email: "",
