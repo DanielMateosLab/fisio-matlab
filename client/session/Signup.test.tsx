@@ -11,7 +11,7 @@ import {
   emailErrorText,
   repeatPasswordErrorText,
   emailValidation,
-  passwordValidation,
+  signupPasswordValidation,
 } from "../clientShared/Validation"
 
 jest.mock("next/router", () => ({
@@ -119,33 +119,35 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(passwordValidation.requiredErrorText)
+          const errorText = getByText(
+            signupPasswordValidation.requiredErrorText
+          )
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the password validation should fail with less characters than the minium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(passwordValidation.minCharacters - 1)
+          "a".repeat(signupPasswordValidation.minCharacters - 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(passwordValidation.minErrorText)
+          const errorText = getByText(signupPasswordValidation.minErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the password validation should fail with more characters than the maxium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(passwordValidation.maxCharacters + 1)
+          "a".repeat(signupPasswordValidation.maxCharacters + 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(passwordValidation.maxErrorText)
+          const errorText = getByText(signupPasswordValidation.maxErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })

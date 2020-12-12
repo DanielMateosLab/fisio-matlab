@@ -3,7 +3,7 @@ import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
-import { signUpFormValidationSchema } from "../clientShared/Validation"
+import { signupFormValidationSchema } from "../clientShared/Validation"
 import { useDispatch } from "react-redux"
 import { authSuccess } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
@@ -48,7 +48,7 @@ const Signup = () => {
           password: "",
           repeatPassword: "",
         }}
-        validationSchema={signUpFormValidationSchema}
+        validationSchema={signupFormValidationSchema}
         onSubmit={(values, { setSubmitting }) => {
           dispatch(authSuccess({ email: values.email }))
           setSubmitting(false)
