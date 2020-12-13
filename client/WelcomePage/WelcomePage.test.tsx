@@ -2,7 +2,6 @@ import React from "react"
 import { render, RenderResult } from "../clientShared/testUtils"
 import WelcomePage, { principles } from "./WelcomePage"
 import userEvent from "@testing-library/user-event"
-import Router from "next/router"
 
 const mockPush = jest.fn()
 
