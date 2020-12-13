@@ -4,6 +4,8 @@ import { Provider } from "react-redux"
 import { RootState } from "../redux/rootReducer"
 import store from "../redux/store"
 import reducer from "../redux/rootReducer"
+import theme from "../theme"
+import { ThemeProvider } from "@material-ui/core"
 
 type CustomRenderOptions = RenderOptions & {
   initialState?: RootState
@@ -21,7 +23,9 @@ const render = (
   }: CustomRenderOptions = {}
 ) => {
   const Wrapper: React.FC = ({ children }) => (
-    <Provider store={store}>{children}</Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>{children}</Provider>
+    </ThemeProvider>
   )
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
