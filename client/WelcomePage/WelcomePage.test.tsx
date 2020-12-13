@@ -1,5 +1,5 @@
 import React from "react"
-import { render, RenderResult } from "@testing-library/react"
+import { render, RenderResult } from "../clientShared/testUtils"
 import WelcomePage, { principles } from "./WelcomePage"
 import userEvent from "@testing-library/user-event"
 import Router from "next/router"
@@ -16,7 +16,7 @@ jest.mock("next/router", () => ({
 
 describe("WelcomePage", () => {
   let queries: RenderResult
-  let getByText
+  let getByText: RenderResult["getByText"]
 
   beforeEach(() => {
     queries = render(<WelcomePage />)
@@ -34,13 +34,10 @@ describe("WelcomePage", () => {
   })
 
   describe("Login button", () => {
-    let loginButtonElement
+    let loginButtonElement: HTMLElement
 
     beforeEach(() => {
       loginButtonElement = getByText("Inicia sesión")
-    })
-    afterEach(() => {
-      loginButtonElement = undefined
     })
 
     it("should render a log in button", () => {
@@ -54,13 +51,10 @@ describe("WelcomePage", () => {
   })
 
   describe("Signup button", () => {
-    let signupButtonElement
+    let signupButtonElement: HTMLElement
 
     beforeEach(() => {
       signupButtonElement = getByText("Regístrate")
-    })
-    afterEach(() => {
-      signupButtonElement = undefined
     })
 
     it("should render a signup button", () => {
