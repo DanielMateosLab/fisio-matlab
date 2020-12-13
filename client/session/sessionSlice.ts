@@ -15,10 +15,13 @@ const sessionSlice = createSlice({
     authSuccess(state, action: PayloadAction<{ email: string }>) {
       state.email = action.payload.email
     },
+    logoutSuccess(state) {
+      state.email = ""
+    },
   },
 })
 
-export const { authSuccess } = sessionSlice.actions
+export const { authSuccess, logoutSuccess } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 
