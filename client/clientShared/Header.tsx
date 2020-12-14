@@ -14,24 +14,22 @@ import MenuIcon from "@material-ui/icons/Menu"
 
 export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
-const useStyles = makeStyles<Theme, { email: string }>((theme) => ({
-  header: {
-    padding: ({ email }) => (email ? "1vmax" : "2vmax"),
-    background: theme.palette.primary.light,
-    borderBottom: `1px solid ${theme.palette.primary.dark}`,
-    display: ({ email }) => (email ? "flex" : "block"),
-    alignItems: "center",
-  },
-  headerText: {
-    color: theme.palette.getContrastText(theme.palette.primary.light),
-  },
-  appName: {
-    fontSize: ({ email }) => (email ? "1.25rem" : "clamp(3.75rem, 10vw, 6rem)"),
-  },
-  cursor: {
-    cursor: "pointer",
-  },
-}))
+const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
+  (theme) => ({
+    header: {
+      padding: ({ email }) => (email ? "1vmax" : "2vmax"),
+      background: theme.palette.primary.light,
+      borderBottom: `1px solid ${theme.palette.primary.dark}`,
+      display: ({ email }) => (email ? "flex" : "block"),
+      alignItems: "center",
+    },
+    appName: {
+      fontSize: ({ email }) =>
+        email ? "1.25rem" : "clamp(3.75rem, 10vw, 6rem)",
+      cursor: ({ pathIsNotHome }) => (pathIsNotHome ? "pointer" : "initial"),
+    },
+  })
+)
 
 const FlexSpace: React.FC = () => <div style={{ flexGrow: 1 }} />
 
@@ -39,12 +37,12 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
   smallScreen,
 }) => {
   const { email } = useSelector((state: RootState) => state.session)
-  const classes = useStyles({ email })
   const router = useRouter()
+  const pathIsNotHome = router.pathname !== "/"
+
+  const classes = useStyles({ email, pathIsNotHome })
 
   const bigScreen = !smallScreen
-
-  const pathIsNotHome = router.pathname !== "/"
 
   const handleAppNameClick = () => {
     if (pathIsNotHome) router.push("/")
@@ -58,9 +56,7 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
           align="center"
           variant="h6"
           component="h1"
-          className={`${classes.appName} ${classes.headerText} ${
-            pathIsNotHome ? classes.cursor : ""
-          }`}
+          className={classes.appName}
           onClick={handleAppNameClick}
         >
           {appName}
@@ -68,13 +64,7 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
       </div>
       <div>
         {!email && (
-          <Typography
-            align="center"
-            variant="h5"
-            component="p"
-            className={classes.headerText}
-            gutterBottom
-          >
+          <Typography align="center" variant="h5" component="p" gutterBottom>
             {appDescription}
           </Typography>
         )}
