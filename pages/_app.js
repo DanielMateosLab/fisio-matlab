@@ -1,3 +1,4 @@
+import Header from "../client/clientShared/Header"
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
 import Head from "next/head"
 import { Provider } from "react-redux"
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Provider store={store}>
+          <Header />
           <Component {...pageProps} />
         </Provider>
       </ThemeProvider>

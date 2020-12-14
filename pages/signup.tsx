@@ -3,7 +3,6 @@ import Header from "../client/clientShared/Header"
 
 const SignupPage = () => (
   <>
-    <Header />
     <Signup />
   </>
 )

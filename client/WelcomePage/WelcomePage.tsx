@@ -55,7 +55,6 @@ const WelcomePage = () => {
 
   return (
     <div>
-      <Header />
       <main>
         <div className={classes.authButtonsContainer}>
           <Button
