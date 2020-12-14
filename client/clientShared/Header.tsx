@@ -31,8 +31,6 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
   })
 )
 
-const FlexSpace: React.FC = () => <div style={{ flexGrow: 1 }} />
-
 export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
   smallScreen,
 }) => {
@@ -48,27 +46,36 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
     if (pathIsNotHome) router.push("/")
   }
 
+  const AppName: React.FC = () => (
+    <div>
+      <Typography
+        align="center"
+        variant="h6"
+        component="h1"
+        className={classes.appName}
+        onClick={handleAppNameClick}
+      >
+        {appName}
+      </Typography>
+    </div>
+  )
+
+  const AppDescription: React.FC = () =>
+    !email ? (
+      <div>
+        <Typography align="center" variant="h5" component="p" gutterBottom>
+          {appDescription}
+        </Typography>
+      </div>
+    ) : null
+
+  const FlexSpace: React.FC = () => <div style={{ flexGrow: 1 }} />
+
   return (
     <header className={classes.header}>
       {email && smallScreen && <FlexSpace />}
-      <div>
-        <Typography
-          align="center"
-          variant="h6"
-          component="h1"
-          className={classes.appName}
-          onClick={handleAppNameClick}
-        >
-          {appName}
-        </Typography>
-      </div>
-      <div>
-        {!email && (
-          <Typography align="center" variant="h5" component="p" gutterBottom>
-            {appDescription}
-          </Typography>
-        )}
-      </div>
+      <AppName />
+      <AppDescription />
       {email && bigScreen && (
         <>
           <FlexSpace />

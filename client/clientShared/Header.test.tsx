@@ -108,6 +108,7 @@ describe("Header", () => {
         expect(emailElement).toBeInTheDocument()
 
         //TODO: add drawer https://material-ui.com/components/drawers/#drawer
+        // Both menu-options should be lazy-loaded components to improve performance
       })
     })
   })
