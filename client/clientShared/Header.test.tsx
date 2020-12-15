@@ -108,6 +108,7 @@ describe("Header", () => {
         expect(emailElement).toBeInTheDocument()
         expect(queries.getByRole("menubar")).toBeInTheDocument()
 
+        // TODO: undo logout component and put the logic in the Header smart component
         //TODO: Both menu-options should be lazy-loaded components to improve performance
         //TODO: Move AppName, AppDescription and menus to independant files with props to improve readability
         //TODO: Revise "dumb & smart components" concepts and apply them through the whole code

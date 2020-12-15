@@ -1,11 +1,11 @@
 import {
-  Drawer,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
+  SwipeableDrawer,
   Theme,
   Typography,
   useMediaQuery,
@@ -82,6 +82,8 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
 
   const FlexSpace: React.FC = () => <div style={{ flexGrow: 1 }} />
 
+  const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
+
   return (
     <header className={classes.header}>
       {email && smallScreen && <FlexSpace />}
@@ -107,11 +109,14 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
           <IconButton aria-label="menu" onClick={() => setSidebarOpened(true)}>
             <MenuIcon />
           </IconButton>
-          <Drawer
+          <SwipeableDrawer
             open={sidebarOpened}
             onClose={() => setSidebarOpened(false)}
+            onOpen={() => setSidebarOpened(true)}
             aria-label="menu"
             role="menubar"
+            disableBackdropTransition={!iOS}
+            disableDiscovery={iOS}
           >
             <List component="nav">
               <ListItem>
@@ -132,7 +137,7 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
                 <ListItemText primary="Cerrar sesión" />
               </ListItem>
             </List>
-          </Drawer>
+          </SwipeableDrawer>
         </>
       )}
     </header>
