@@ -106,9 +106,11 @@ describe("Header", () => {
         const emailElement = queries.getByText(email)
 
         expect(emailElement).toBeInTheDocument()
+        expect(queries.getByRole("menubar")).toBeInTheDocument()
 
-        //TODO: add drawer https://material-ui.com/components/drawers/#drawer
-        // Both menu-options should be lazy-loaded components to improve performance
+        //TODO: Both menu-options should be lazy-loaded components to improve performance
+        //TODO: Move AppName, AppDescription and menus to independant files with props to improve readability
+        //TODO: Revise "dumb & smart components" concepts and apply them through the whole code
       })
     })
   })

@@ -1,16 +1,25 @@
 import {
+  Drawer,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   makeStyles,
   Theme,
   Typography,
   useMediaQuery,
 } from "@material-ui/core"
 import { useRouter } from "next/router"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import appName from "../../appShared/appName"
 import { RootState } from "../redux/rootReducer"
 import LogoutButton from "../session/LogoutButton"
 import MenuIcon from "@material-ui/icons/Menu"
+import { useState } from "react"
+import { logoutSuccess } from "../session/sessionSlice"
+import AccountCircle from "@material-ui/icons/AccountCircle"
+import MeetingRoom from "@material-ui/icons/MeetingRoom"
 
 export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
 
@@ -34,8 +43,10 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
 export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
   smallScreen,
 }) => {
+  const [sidebarOpened, setSidebarOpened] = useState(false)
   const { email } = useSelector((state: RootState) => state.session)
   const router = useRouter()
+  const dispatch = useDispatch()
   const pathIsNotHome = router.pathname !== "/"
 
   const classes = useStyles({ email, pathIsNotHome })
@@ -93,9 +104,35 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
       {email && smallScreen && (
         <>
           <FlexSpace />
-          <IconButton aria-label="menu">
+          <IconButton aria-label="menu" onClick={() => setSidebarOpened(true)}>
             <MenuIcon />
           </IconButton>
+          <Drawer
+            open={sidebarOpened}
+            onClose={() => setSidebarOpened(false)}
+            aria-label="menu"
+            role="menubar"
+          >
+            <List component="nav">
+              <ListItem>
+                <ListItemIcon>
+                  <AccountCircle />
+                </ListItemIcon>
+                <ListItemText primary={email} />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  dispatch(logoutSuccess())
+                }}
+              >
+                <ListItemIcon>
+                  <MeetingRoom />
+                </ListItemIcon>
+                <ListItemText primary="Cerrar sesión" />
+              </ListItem>
+            </List>
+          </Drawer>
         </>
       )}
     </header>
