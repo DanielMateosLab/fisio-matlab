@@ -2,7 +2,7 @@ import Header from "../client/clientShared/Header"
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
 import Head from "next/head"
 import { Provider } from "react-redux"
-import appName from "../appShared/appName"
+import { appName } from "../appShared/appData"
 import theme from "../client/theme"
 import store from "../client/redux/store"
 

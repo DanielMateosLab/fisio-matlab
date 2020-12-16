@@ -31,5 +31,13 @@ const render = (
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
 }
 
+export const renderAuthenticated = (
+  ui: Parameters<typeof rtlRender>[0],
+  email: string
+) =>
+  render(ui, {
+    initialState: { session: { email } },
+  })
+
 export * from "@testing-library/react"
 export { render }

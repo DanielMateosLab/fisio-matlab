@@ -1,8 +1,7 @@
 import { render } from "./testUtils"
-import appName from "../../appShared/appName"
-import Header, { appDescription, HeaderWithCustomScreenSize } from "./Header"
+import { appName, appDescription } from "../../appShared/appData"
+import Header, { HeaderWithCustomScreenSize } from "./Header"
 import userEvent from "@testing-library/user-event"
-import { RenderResult } from "@testing-library/react"
 
 jest.mock("next/router", () => ({
   useRouter() {
@@ -51,68 +50,11 @@ describe("Header", () => {
     expect(appNameElement).toHaveStyle("cursor: pointer")
   })
 
-  describe("Auhtenticated state", () => {
-    const email = "aaaa@aaa.aaa"
+  it("should have a menu", () => {
+    const { getByRole } = render(<Header />)
 
-    describe("Big screen sizes", () => {
-      let queries: RenderResult
+    const menuElement = getByRole("menu")
 
-      beforeEach(() => {
-        queries = render(<Header />, {
-          initialState: { session: { email } },
-        })
-      })
-
-      it("should have a logout button when there is an auth user", () => {
-        const logoutButtonElement = queries.getByRole("button", {
-          name: "Cerrar sesión",
-        })
-
-        expect(logoutButtonElement).toBeInTheDocument()
-      })
-      it("should show the user email when it is authenticated", () => {
-        const emailElement = queries.getByText(email)
-
-        expect(emailElement).toBeInTheDocument()
-      })
-    })
-
-    describe("Small screen sizes", () => {
-      let queries: RenderResult
-
-      beforeEach(() => {
-        queries = render(<HeaderWithCustomScreenSize smallScreen={true} />, {
-          initialState: { session: { email } },
-        })
-      })
-
-      it("initially should not have a logout button", () => {
-        const logoutButtonElement = queries.queryByRole("button", {
-          name: "Cerrar sesión",
-        })
-
-        expect(logoutButtonElement).not.toBeInTheDocument()
-      })
-      it("should have a menu button", () => {
-        const menuButtonElement = queries.getByRole("button", { name: "menu" })
-
-        expect(menuButtonElement).toBeInTheDocument()
-      })
-      it("should display the user email after clicking the menu button", () => {
-        const menuButtonElement = queries.getByRole("button", { name: "menu" })
-
-        userEvent.click(menuButtonElement)
-
-        const emailElement = queries.getByText(email)
-
-        expect(emailElement).toBeInTheDocument()
-        expect(queries.getByRole("menubar")).toBeInTheDocument()
-
-        // TODO: undo logout component and put the logic in the Header smart component
-        //TODO: Both menu-options should be lazy-loaded components to improve performance
-        //TODO: Move AppName, AppDescription and menus to independant files with props to improve readability
-        //TODO: Revise "dumb & smart components" concepts and apply them through the whole code
-      })
-    })
+    expect(menuElement).toBeDefined()
   })
 })

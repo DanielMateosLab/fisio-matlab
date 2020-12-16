@@ -1,27 +1,13 @@
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  SwipeableDrawer,
-  Theme,
-  Typography,
-  useMediaQuery,
-} from "@material-ui/core"
+import { makeStyles, Theme, Typography, useMediaQuery } from "@material-ui/core"
 import { useRouter } from "next/router"
-import { useDispatch, useSelector } from "react-redux"
-import appName from "../../appShared/appName"
-import { RootState } from "../redux/rootReducer"
-import LogoutButton from "../session/LogoutButton"
-import MenuIcon from "@material-ui/icons/Menu"
-import { useState } from "react"
-import { logoutSuccess } from "../session/sessionSlice"
-import AccountCircle from "@material-ui/icons/AccountCircle"
-import MeetingRoom from "@material-ui/icons/MeetingRoom"
+import { appName, appDescription } from "../../appShared/appData"
+import { useTypedSelector } from "../redux/rootReducer"
+import FlexSpace from "./FlexSpace"
+import dynamic from "next/dynamic"
+const BigScreenMenu = dynamic(() => import("./BigScreenMenu"))
+const SmallScreenMenu = dynamic(() => import("./SmallScreenMenu"))
 
-export const appDescription = "Gestiona tu trabajo sin dolores de cabeza"
+export const logoutButtonText = "Cerrar sesión"
 
 const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
   (theme) => ({
@@ -40,18 +26,17 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
   })
 )
 
+// The screen size is passed as prop for testing purposes
 export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
   smallScreen,
 }) => {
-  const [sidebarOpened, setSidebarOpened] = useState(false)
-  const { email } = useSelector((state: RootState) => state.session)
+  const email = useTypedSelector((state) => state.session.email)
+  const bigScreen = !smallScreen
+
   const router = useRouter()
-  const dispatch = useDispatch()
   const pathIsNotHome = router.pathname !== "/"
 
   const classes = useStyles({ email, pathIsNotHome })
-
-  const bigScreen = !smallScreen
 
   const handleAppNameClick = () => {
     if (pathIsNotHome) router.push("/")
@@ -70,7 +55,6 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
       </Typography>
     </div>
   )
-
   const AppDescription: React.FC = () =>
     !email ? (
       <div>
@@ -80,66 +64,13 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
       </div>
     ) : null
 
-  const FlexSpace: React.FC = () => <div style={{ flexGrow: 1 }} />
-
-  const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
-
   return (
-    <header className={classes.header}>
+    <header className={classes.header} role="menu" aria-label="menu">
       {email && smallScreen && <FlexSpace />}
       <AppName />
       <AppDescription />
-      {email && bigScreen && (
-        <>
-          <FlexSpace />
-          <div>
-            <Typography variant="body1" align="center">
-              {email}
-            </Typography>
-          </div>
-          <FlexSpace />
-          <div>
-            <LogoutButton />
-          </div>
-        </>
-      )}
-      {email && smallScreen && (
-        <>
-          <FlexSpace />
-          <IconButton aria-label="menu" onClick={() => setSidebarOpened(true)}>
-            <MenuIcon />
-          </IconButton>
-          <SwipeableDrawer
-            open={sidebarOpened}
-            onClose={() => setSidebarOpened(false)}
-            onOpen={() => setSidebarOpened(true)}
-            aria-label="menu"
-            role="menubar"
-            disableBackdropTransition={!iOS}
-            disableDiscovery={iOS}
-          >
-            <List component="nav">
-              <ListItem>
-                <ListItemIcon>
-                  <AccountCircle />
-                </ListItemIcon>
-                <ListItemText primary={email} />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  dispatch(logoutSuccess())
-                }}
-              >
-                <ListItemIcon>
-                  <MeetingRoom />
-                </ListItemIcon>
-                <ListItemText primary="Cerrar sesión" />
-              </ListItem>
-            </List>
-          </SwipeableDrawer>
-        </>
-      )}
+      {email && bigScreen && <BigScreenMenu />}
+      {email && smallScreen && <SmallScreenMenu />}
     </header>
   )
 }
