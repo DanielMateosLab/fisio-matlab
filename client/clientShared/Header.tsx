@@ -14,7 +14,6 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
     header: {
       padding: ({ email }) => (email ? "1vmax" : "2vmax"),
       background: theme.palette.primary.light,
-      borderBottom: `1px solid ${theme.palette.primary.dark}`,
       display: ({ email }) => (email ? "flex" : "block"),
       alignItems: "center",
     },
