@@ -1,3 +1,4 @@
 import Profile from "../client/session/Profile"
 
-export default () => <Profile />
+const ProfilePage = () => <Profile />
+export default ProfilePage

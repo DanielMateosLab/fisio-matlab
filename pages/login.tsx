@@ -1,3 +1,5 @@
 import Login from "../client/session/Login"
 
-export default () => <Login />
+const LoginPage = () => <Login />
+
+export default LoginPage

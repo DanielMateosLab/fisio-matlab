@@ -1,3 +1,4 @@
 import Signup from "../client/session/Signup"
 
-export default () => <Signup />
+const SignupPage = () => <Signup />
+export default SignupPage
