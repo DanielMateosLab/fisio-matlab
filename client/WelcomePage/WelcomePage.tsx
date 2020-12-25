@@ -1,7 +1,6 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
 import { useRouter } from "next/router"
 import React from "react"
-import Header from "../clientShared/Header"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
@@ -58,16 +57,16 @@ const WelcomePage = () => {
       <main>
         <div className={classes.authButtonsContainer}>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="secondary"
             className={classes.authButton}
             onClick={handleLoginButtonClick}
           >
             Inicia sesión
           </Button>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="secondary"
             className={classes.authButton}
             onClick={handleSignupButtonClick}
           >
