@@ -10,6 +10,11 @@ jest.mock("react-redux", () => ({
   useDispatch: () => mockDispatch,
 }))
 
+const mockPush = jest.fn()
+jest.mock("next/router", () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
+
 describe("Sidebar", () => {
   const email = "aaaa@aaa.aa"
 
@@ -23,6 +28,14 @@ describe("Sidebar", () => {
       const emailElement = getByText(email)
 
       expect(emailElement).toBeInTheDocument()
+    })
+    it("should be a link to the profile page", () => {
+      const { getByText } = renderAuth()
+      const emailElement = getByText(email)
+
+      userEvent.click(emailElement)
+
+      expect(mockPush).toHaveBeenCalledWith("/profile")
     })
     it("should not show the user email when none is authenticated", () => {
       const { queryByText } = renderUnauth()

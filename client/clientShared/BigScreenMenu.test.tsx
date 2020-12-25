@@ -10,6 +10,11 @@ jest.mock("react-redux", () => ({
   useDispatch: () => mockDispatch,
 }))
 
+const mockPush = jest.fn()
+jest.mock("next/router", () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
+
 describe("Big Screens' Menu", () => {
   const email = "aaaa@aaa.aa"
 
@@ -22,6 +27,14 @@ describe("Big Screens' Menu", () => {
       const emailElement = getByText(email)
 
       expect(emailElement).toBeInTheDocument()
+    })
+    it("should be a link to the profile page", () => {
+      const { getByText } = renderAuth()
+      const emailElement = getByText(email)
+
+      userEvent.click(emailElement)
+
+      expect(mockPush).toHaveBeenCalledWith("/profile")
     })
   })
 

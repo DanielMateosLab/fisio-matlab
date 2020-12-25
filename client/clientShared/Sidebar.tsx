@@ -12,6 +12,7 @@ import { useTypedSelector } from "../redux/rootReducer"
 import { useDispatch } from "react-redux"
 import { logoutSuccess } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
+import { useRouter } from "next/router"
 
 interface Props {
   sidebarOpened: boolean
@@ -22,6 +23,7 @@ const Sidebar: React.FC<Props> = (props) => {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
   const email = useTypedSelector((state) => state.session.email)
   const dispatch = useDispatch()
+  const router = useRouter()
 
   return (
     <SwipeableDrawer
@@ -36,7 +38,12 @@ const Sidebar: React.FC<Props> = (props) => {
       <List component="nav">
         {email && (
           <>
-            <ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                router.push("/profile")
+              }}
+            >
               <ListItemIcon>
                 <AccountCircle />
               </ListItemIcon>
