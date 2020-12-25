@@ -56,6 +56,7 @@ const Login = () => {
         validationSchema={loginValidationSchema}
         onSubmit={(values, { setSubmitting }) => {
           dispatch(authSuccess({ email: values.email }))
+          router.push("/profile")
           setSubmitting(false)
         }}
       >

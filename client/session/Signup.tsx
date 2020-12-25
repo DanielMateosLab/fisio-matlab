@@ -60,6 +60,7 @@ const Signup = () => {
         validationSchema={signupFormValidationSchema}
         onSubmit={(values, { setSubmitting }) => {
           dispatch(authSuccess({ email: values.email }))
+          router.push("/profile")
           setSubmitting(false)
         }}
       >
