@@ -1,7 +1,17 @@
+import { render } from "../clientShared/testUtils"
 import Profile from "./Profile"
 
+const mockPush = jest.fn()
+jest.mock("next/router", () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
+
 describe("Me", () => {
-  it.todo("should redirect to the login page if there is no session")
+  it("should redirect to the login page if there is no session", () => {
+    render(<Profile />)
+
+    expect(mockPush).toHaveBeenCalledWith("/login")
+  })
   // With session
   it.todo("should show the user email")
 

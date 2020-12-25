@@ -1,6 +1,7 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
 import { useRouter } from "next/router"
 import React from "react"
+import { useTypedSelector } from "../redux/rootReducer"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
@@ -19,6 +20,9 @@ export const principles: Array<{ name: string; description: string }> = [
       "Desarrollado con las tecnologías más avanzadas y eficientes para que nada pueda salir mal.",
   },
 ]
+
+export const loginButtonText = "Inicia sesión"
+export const signupButtonText = "Regístrate"
 
 const useStyles = makeStyles((theme) => ({
   authButtonsContainer: {
@@ -41,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const WelcomePage = () => {
   const classes = useStyles()
   const router = useRouter()
+  const email = useTypedSelector((state) => state.session.email)
 
   function handleLoginButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault
@@ -55,24 +60,26 @@ const WelcomePage = () => {
   return (
     <div>
       <main>
-        <div className={classes.authButtonsContainer}>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.authButton}
-            onClick={handleLoginButtonClick}
-          >
-            Inicia sesión
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.authButton}
-            onClick={handleSignupButtonClick}
-          >
-            Regístrate
-          </Button>
-        </div>
+        {!email && (
+          <div className={classes.authButtonsContainer}>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.authButton}
+              onClick={handleLoginButtonClick}
+            >
+              {loginButtonText}
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.authButton}
+              onClick={handleSignupButtonClick}
+            >
+              {signupButtonText}
+            </Button>
+          </div>
+        )}
         <div className={classes.principles}>
           {principles.map((p) => (
             <div key={p.name}>

@@ -1,4 +1,9 @@
-import { render, RenderResult, waitFor } from "../clientShared/testUtils"
+import {
+  render,
+  renderAuthenticated,
+  RenderResult,
+  waitFor,
+} from "../clientShared/testUtils"
 import Signup, {
   signupComponentTitle,
   emailInputText,
@@ -45,7 +50,6 @@ describe("Signup", () => {
 
     expect(titleElement).toBeInTheDocument()
   })
-  it.todo("should redirect to the profile page when there is a session")
 
   describe("Form", () => {
     describe("email input", () => {
@@ -246,5 +250,11 @@ describe("Signup", () => {
         expect(mockDispatch).toHaveBeenCalled()
       })
     })
+  })
+
+  it("should redirect to the profile page when there is a session", () => {
+    renderAuthenticated(<Signup />)
+
+    expect(mockPush).toHaveBeenCalledWith("/profile")
   })
 })

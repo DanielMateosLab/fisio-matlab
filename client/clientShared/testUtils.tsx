@@ -33,7 +33,7 @@ const render = (
 
 export const renderAuthenticated = (
   ui: Parameters<typeof rtlRender>[0],
-  email: string
+  email: string = "aaaa@aaa.aa"
 ) =>
   render(ui, {
     initialState: { session: { email } },

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
@@ -7,6 +7,7 @@ import { signupFormValidationSchema } from "../clientShared/Validation"
 import { useDispatch } from "react-redux"
 import { authSuccess } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
+import { useTypedSelector } from "../redux/rootReducer"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -33,6 +34,14 @@ const Signup = () => {
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const email = useTypedSelector((state) => state.session.email)
+  useEffect(() => {
+    if (email) {
+      router.push("/profile")
+    }
+  }, [email])
+  // TODO: write a hook for the route protection
 
   function handleLoginPageLink(e: React.MouseEvent<HTMLSpanElement>) {
     e.preventDefault()

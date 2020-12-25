@@ -1,4 +1,9 @@
-import { render, RenderResult, waitFor } from "@testing-library/react"
+import {
+  render,
+  renderAuthenticated,
+  RenderResult,
+  waitFor,
+} from "../clientShared/testUtils"
 import Login, {
   loginTitle,
   emailInputText,
@@ -33,7 +38,6 @@ describe("Login", () => {
 
     expect(titleElement).toBeInTheDocument()
   })
-  it.todo("should redirect to the profile page when there is a session")
 
   it("should have an email input", () => {
     const emailInputElement = getByLabelText(emailInputText)
@@ -96,4 +100,10 @@ describe("Login", () => {
       expect(mockPush).toHaveBeenCalledWith("/signup")
     })
   })
+})
+
+it("should redirect to the profile page when there is a session", () => {
+  renderAuthenticated(<Login />)
+
+  expect(mockPush).toHaveBeenCalledWith("/profile")
 })

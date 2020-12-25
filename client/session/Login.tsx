@@ -1,10 +1,12 @@
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import { loginValidationSchema } from "../clientShared/Validation"
+import { useTypedSelector } from "../redux/rootReducer"
 import { authSuccess } from "./sessionSlice"
 
 export const loginTitle = "¿Quién eres?"
@@ -30,6 +32,13 @@ const Login = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const router = useRouter()
+
+  const email = useTypedSelector((state) => state.session.email)
+  useEffect(() => {
+    if (email) {
+      router.push("/profile")
+    }
+  }, [email])
 
   function handleSignupPageLink(e: React.MouseEvent<HTMLSpanElement>) {
     e.preventDefault()
