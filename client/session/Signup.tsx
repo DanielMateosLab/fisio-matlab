@@ -35,6 +35,10 @@ const Signup = () => {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    router.prefetch("/profile")
+  }, [])
+
   const email = useTypedSelector((state) => state.session.email)
   useEffect(() => {
     if (email) {
