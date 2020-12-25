@@ -45,6 +45,7 @@ describe("Signup", () => {
 
     expect(titleElement).toBeInTheDocument()
   })
+  it.todo("should redirect to the profile page when there is a session")
 
   describe("Form", () => {
     describe("email input", () => {

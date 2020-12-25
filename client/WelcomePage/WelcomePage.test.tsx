@@ -47,6 +47,7 @@ describe("WelcomePage", () => {
 
       expect(mockPush).toHaveBeenCalledWith("/login")
     })
+    it.todo("should not be in the document when there is a session")
   })
 
   describe("Signup button", () => {
@@ -64,5 +65,6 @@ describe("WelcomePage", () => {
 
       expect(mockPush).toHaveBeenCalledWith("/signup")
     })
+    it.todo("should not be in the document when there is a session")
   })
 })

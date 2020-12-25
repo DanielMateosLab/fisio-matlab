@@ -33,6 +33,7 @@ describe("Login", () => {
 
     expect(titleElement).toBeInTheDocument()
   })
+  it.todo("should redirect to the profile page when there is a session")
 
   it("should have an email input", () => {
     const emailInputElement = getByLabelText(emailInputText)
