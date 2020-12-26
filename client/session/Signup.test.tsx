@@ -18,15 +18,8 @@ import {
   emailValidation,
   signupPasswordValidation,
 } from "../clientShared/Validation"
+import { mockPush } from "../clientShared/testUtils"
 
-jest.mock("next/router", () => ({
-  useRouter() {
-    return {
-      push: mockPush,
-      prefetch: jest.fn(),
-    }
-  },
-}))
 jest.mock("react-redux", () => ({
   ...(jest.requireActual("react-redux") as {}),
   useDispatch() {
@@ -34,7 +27,6 @@ jest.mock("react-redux", () => ({
   },
 }))
 
-const mockPush = jest.fn()
 const mockDispatch = jest.fn()
 
 describe("Signup", () => {

@@ -1,4 +1,5 @@
 import {
+  mockPush,
   render,
   renderAuthenticated,
   RenderResult,
@@ -17,11 +18,6 @@ const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
   ...(jest.requireActual("react-redux") as {}),
   useDispatch: () => mockDispatch,
-}))
-
-const mockPush = jest.fn()
-jest.mock("next/router", () => ({
-  useRouter: () => ({ push: mockPush, prefetch: jest.fn() }),
 }))
 
 describe("Login", () => {

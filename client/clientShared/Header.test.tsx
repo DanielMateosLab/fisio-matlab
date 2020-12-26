@@ -1,18 +1,7 @@
-import { render } from "./testUtils"
+import { mockPush, render } from "./testUtils"
 import { appName, appDescription } from "../../appShared/appData"
 import Header, { HeaderWithCustomScreenSize } from "./Header"
 import userEvent from "@testing-library/user-event"
-
-jest.mock("next/router", () => ({
-  useRouter() {
-    return {
-      pathname: "/",
-      push: mockPush,
-    }
-  },
-}))
-
-const mockPush = jest.fn()
 
 describe("Header", () => {
   it("should show the app name and description", () => {
@@ -36,12 +25,7 @@ describe("Header", () => {
   })
 
   test("the page title should be a link to go back to the home page if we are not in there", () => {
-    jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-      pathname: "/login",
-      push: mockPush,
-    }))
-
-    const { getByText } = render(<Header />)
+    const { getByText } = render(<Header />, { pathname: "/login" })
     const appNameElement = getByText(appName)
 
     userEvent.click(appNameElement)

@@ -20,7 +20,15 @@ export const mockPush = jest.fn(async () => false)
 type CustomRenderOptions = RenderOptions & {
   initialState?: RootState
   store?: typeof store
+  pathname?: string
 }
+
+/**
+ * Custom render function with router, store and material contexts provided.
+ * Some useful params can be provided in a config object:
+ * @param initialState store initial state
+ * @param pathname router pathname
+ */
 const render = (
   ui: Parameters<typeof rtlRender>[0],
   {
@@ -29,6 +37,7 @@ const render = (
       reducer,
       preloadedState: initialState,
     }),
+    pathname = "/",
     ...renderOptions
   }: CustomRenderOptions = {}
 ) => {
@@ -38,6 +47,7 @@ const render = (
         <RouterContext.Provider
           value={
             {
+              pathname,
               push: mockPush,
               prefetch: jest.fn(async () => true),
             } as any

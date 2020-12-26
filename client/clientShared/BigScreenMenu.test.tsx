@@ -2,17 +2,12 @@ import userEvent from "@testing-library/user-event"
 import { logoutSuccess } from "../session/sessionSlice"
 import BigScreenMenu from "./BigScreenMenu"
 import { logoutButtonText } from "./Header"
-import { render, renderAuthenticated } from "./testUtils"
+import { mockPush, render, renderAuthenticated } from "./testUtils"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
   ...(jest.requireActual("react-redux") as {}),
   useDispatch: () => mockDispatch,
-}))
-
-const mockPush = jest.fn()
-jest.mock("next/router", () => ({
-  useRouter: () => ({ push: mockPush }),
 }))
 
 describe("Big Screens' Menu", () => {
