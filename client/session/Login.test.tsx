@@ -21,7 +21,7 @@ jest.mock("react-redux", () => ({
 
 const mockPush = jest.fn()
 jest.mock("next/router", () => ({
-  useRouter: () => ({ push: mockPush }),
+  useRouter: () => ({ push: mockPush, prefetch: jest.fn() }),
 }))
 
 describe("Login", () => {

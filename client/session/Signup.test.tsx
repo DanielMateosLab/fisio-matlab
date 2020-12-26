@@ -23,6 +23,7 @@ jest.mock("next/router", () => ({
   useRouter() {
     return {
       push: mockPush,
+      prefetch: jest.fn(),
     }
   },
 }))
