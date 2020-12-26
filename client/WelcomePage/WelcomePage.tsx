@@ -1,7 +1,7 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
-import { useRouter } from "next/router"
 import React from "react"
 import { useTypedSelector } from "../redux/rootReducer"
+import Link from "next/link"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
@@ -44,40 +44,31 @@ const useStyles = makeStyles((theme) => ({
 
 const WelcomePage = () => {
   const classes = useStyles()
-  const router = useRouter()
   const email = useTypedSelector((state) => state.session.email)
-
-  function handleLoginButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault
-    router.push("/login")
-  }
-
-  function handleSignupButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault
-    router.push("/signup")
-  }
 
   return (
     <div>
       <main>
         {!email && (
           <div className={classes.authButtonsContainer}>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.authButton}
-              onClick={handleLoginButtonClick}
-            >
-              {loginButtonText}
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.authButton}
-              onClick={handleSignupButtonClick}
-            >
-              {signupButtonText}
-            </Button>
+            <Link href="/login">
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.authButton}
+              >
+                {loginButtonText}
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.authButton}
+              >
+                {signupButtonText}
+              </Button>
+            </Link>
           </div>
         )}
         <div className={classes.principles}>

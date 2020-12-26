@@ -6,6 +6,16 @@ import store from "../redux/store"
 import reducer from "../redux/rootReducer"
 import theme from "../theme"
 import { ThemeProvider } from "@material-ui/core"
+import { RouterContext } from "next/dist/next-server/lib/router-context"
+
+/**
+ * Re-usable mockPush that is provided to all the tests.
+ * Remember that to assert push calls made with Link you need to do it this way:
+ * ```
+ * expect(mockPush.mock.calls[0]).toContain("/testedRoute")
+ * ```
+ */
+export const mockPush = jest.fn(async () => false)
 
 type CustomRenderOptions = RenderOptions & {
   initialState?: RootState
@@ -24,7 +34,18 @@ const render = (
 ) => {
   const Wrapper: React.FC = ({ children }) => (
     <ThemeProvider theme={theme}>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={store}>
+        <RouterContext.Provider
+          value={
+            {
+              push: mockPush,
+              prefetch: jest.fn(async () => true),
+            } as any
+          }
+        >
+          {children}
+        </RouterContext.Provider>
+      </Provider>
     </ThemeProvider>
   )
 

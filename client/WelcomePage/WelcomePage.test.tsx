@@ -1,21 +1,15 @@
 import React from "react"
-import { render, renderAuthenticated } from "../clientShared/testUtils"
+import {
+  mockPush,
+  render,
+  renderAuthenticated,
+} from "../clientShared/testUtils"
 import WelcomePage, {
   loginButtonText,
   principles,
   signupButtonText,
 } from "./WelcomePage"
 import userEvent from "@testing-library/user-event"
-
-const mockPush = jest.fn()
-
-jest.mock("next/router", () => ({
-  useRouter() {
-    return {
-      push: mockPush,
-    }
-  },
-}))
 
 describe("WelcomePage", () => {
   it("should show the principle names and descriptions", () => {
@@ -44,7 +38,7 @@ describe("WelcomePage", () => {
       const loginButtonElement = getByText(loginButtonText)
       userEvent.click(loginButtonElement)
 
-      expect(mockPush).toHaveBeenCalledWith("/login")
+      expect(mockPush.mock.calls[0]).toContain("/login")
     })
     it("should not be present if there is an active session", () => {
       const { queryByText } = renderAuthenticated(<WelcomePage />)
@@ -69,7 +63,7 @@ describe("WelcomePage", () => {
       const signupButtonElement = getByText(signupButtonText)
       userEvent.click(signupButtonElement)
 
-      expect(mockPush).toHaveBeenCalledWith("/signup")
+      expect(mockPush.mock.calls[0]).toContain("/signup")
     })
     it("should not be present if there is an active session", () => {
       const { queryByText } = renderAuthenticated(<WelcomePage />)
