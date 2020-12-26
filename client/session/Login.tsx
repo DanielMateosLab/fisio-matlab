@@ -39,8 +39,6 @@ const Login = () => {
 
   const email = useTypedSelector((state) => state.session.email)
   useEffect(() => {
-    router.prefetch("/dashboard")
-
     if (email) {
       router.push("/profile")
     }
