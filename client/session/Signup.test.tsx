@@ -16,7 +16,7 @@ import {
   emailErrorText,
   repeatPasswordErrorText,
   emailValidation,
-  signupPasswordValidation,
+  newPasswordValidation,
 } from "../clientShared/Validation"
 import { mockPush } from "../clientShared/testUtils"
 
@@ -117,35 +117,33 @@ describe("Signup", () => {
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(
-            signupPasswordValidation.requiredErrorText
-          )
+          const errorText = getByText(newPasswordValidation.requiredErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the password validation should fail with less characters than the minium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(signupPasswordValidation.minCharacters - 1)
+          "a".repeat(newPasswordValidation.minCharacters - 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(signupPasswordValidation.minErrorText)
+          const errorText = getByText(newPasswordValidation.minErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })
       test("the password validation should fail with more characters than the maxium length allowed", async () => {
         userEvent.type(
           passwordInputElement,
-          "a".repeat(signupPasswordValidation.maxCharacters + 1)
+          "a".repeat(newPasswordValidation.maxCharacters + 1)
         )
         userEvent.tab()
 
         await waitFor(() => {
           expect(passwordInputElement).toBeInvalid()
-          const errorText = getByText(signupPasswordValidation.maxErrorText)
+          const errorText = getByText(newPasswordValidation.maxErrorText)
           expect(errorText).toBeInTheDocument()
         })
       })

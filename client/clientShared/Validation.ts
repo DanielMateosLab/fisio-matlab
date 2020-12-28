@@ -1,5 +1,8 @@
 import * as yup from "yup"
 
+/**
+ * Class that helps to create yup field validators with common error messages.
+ */
 class FieldValidationObject {
   maxCharacters: number
   minCharacters: number
@@ -40,7 +43,7 @@ emailValidation.validator = emailValidation.validator.email(emailErrorText)
 // Signup Password Validation
 const passwordMinCharacters = 5
 const passwordMaxCharacters = 128
-export const signupPasswordValidation = new FieldValidationObject(
+export const newPasswordValidation = new FieldValidationObject(
   passwordMinCharacters,
   passwordMaxCharacters,
   true
@@ -55,16 +58,22 @@ export const repeatPasswordValidator = yup
   })
 
 // Login Password Validation (no min. or max. length)
-export const loginPasswordValidation = new FieldValidationObject(0, 0, true)
+export const currentPasswordValidation = new FieldValidationObject(0, 0, true)
 
 // Form Schemas
 export const signupFormValidationSchema = yup.object().shape({
   email: emailValidation.validator,
-  password: signupPasswordValidation.validator,
+  password: newPasswordValidation.validator,
   repeatPassword: repeatPasswordValidator,
 })
 
 export const loginValidationSchema = yup.object().shape({
   email: emailValidation.validator,
-  password: loginPasswordValidation.validator,
+  password: currentPasswordValidation.validator,
+})
+
+export const changePasswordValidationSchema = yup.object().shape({
+  currentPassword: currentPasswordValidation.validator,
+  password: newPasswordValidation.validator,
+  repeatPassword: repeatPasswordValidator,
 })
