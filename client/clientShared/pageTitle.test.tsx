@@ -18,8 +18,8 @@ describe("PageTitle", () => {
     expect(textElement).toBeDefined()
   })
 
-  it("should be an h2 html element", () => {
-    const textElement = queries.getByText(text, { selector: "h2" })
+  it("should be an h1 html element", () => {
+    const textElement = queries.getByText(text, { selector: "h1" })
 
     expect(textElement).toBeDefined()
   })
