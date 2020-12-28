@@ -1,10 +1,9 @@
-import { render, renderAuthenticated } from "../clientShared/testUtils"
+import {
+  mockPush,
+  render,
+  renderAuthenticated,
+} from "../clientShared/testUtils"
 import Profile from "./Profile"
-
-const mockPush = jest.fn()
-jest.mock("next/router", () => ({
-  useRouter: () => ({ push: mockPush }),
-}))
 
 describe("Me", () => {
   // Without session
