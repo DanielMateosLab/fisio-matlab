@@ -46,7 +46,7 @@ export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
       <Typography
         align="center"
         variant="h6"
-        component="h1"
+        component={!!email ? "span" : "h1"}
         className={classes.appName}
         onClick={handleAppNameClick}
       >
