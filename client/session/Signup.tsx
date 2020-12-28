@@ -7,7 +7,7 @@ import { signupFormValidationSchema } from "../clientShared/Validation"
 import { useDispatch } from "react-redux"
 import { authSuccess } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
-import { useTypedSelector } from "../redux/rootReducer"
+import useRedirectAuth from "../clientShared/useRedirectAuth"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -39,13 +39,7 @@ const Signup = () => {
     router.prefetch("/profile")
   }, [])
 
-  const email = useTypedSelector((state) => state.session.email)
-  useEffect(() => {
-    if (email) {
-      router.push("/profile")
-    }
-  }, [email])
-  // TODO: write a hook for the route protection
+  useRedirectAuth()
 
   function handleLoginPageLink(e: React.MouseEvent<HTMLSpanElement>) {
     e.preventDefault()

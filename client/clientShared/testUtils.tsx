@@ -72,3 +72,15 @@ export const renderAuthenticated = (
 
 export * from "@testing-library/react"
 export { render }
+
+/**
+ * Calls the provided hook into an empty component and renders it.
+ * @param hook hook to be called inside the component
+ */
+export const callHookInComponent = (hook: Function) => {
+  const Component = () => {
+    hook()
+    return <div />
+  }
+  render(<Component />)
+}

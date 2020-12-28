@@ -1,16 +1,7 @@
-import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { useTypedSelector } from "../redux/rootReducer"
+import useRedirectUnauth from "../clientShared/useRedirectUnauth"
 
 const Profile: React.FC = () => {
-  const router = useRouter()
-  const email = useTypedSelector((state) => state.session.email)
-
-  useEffect(() => {
-    if (!email) {
-      router.push("/login")
-    }
-  }, [email])
+  useRedirectUnauth()
 
   return <div></div>
 }
