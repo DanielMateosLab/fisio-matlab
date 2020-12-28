@@ -1,4 +1,4 @@
-import { render } from "../clientShared/testUtils"
+import { render, renderAuthenticated } from "../clientShared/testUtils"
 import Profile from "./Profile"
 
 const mockPush = jest.fn()
@@ -7,13 +7,22 @@ jest.mock("next/router", () => ({
 }))
 
 describe("Me", () => {
+  // Without session
   it("should redirect to the login page if there is no session", () => {
     render(<Profile />)
 
     expect(mockPush).toHaveBeenCalledWith("/login")
   })
+
   // With session
-  it.todo("should show the user email")
+  it("should show the user email", () => {
+    const email = "aaaa@aaa.aa"
+
+    const { getByText } = renderAuthenticated(<Profile />, email)
+    const emailElement = getByText(email)
+
+    expect(emailElement).toBeInTheDocument()
+  })
 
   describe("it should have a change-password form", () => {
     it.todo('should have a "current password" field')
