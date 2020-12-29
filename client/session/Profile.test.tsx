@@ -11,7 +11,14 @@ import Profile, {
   currentPasswordInputText,
   newPasswordInputText,
   repeatNewPasswordInputText,
+  submitButtonText,
 } from "./Profile"
+
+const mockDispatch = jest.fn()
+jest.mock("react-redux", () => ({
+  ...(jest.requireActual("react-redux") as {}),
+  useDispatch: () => mockDispatch,
+}))
 
 describe("Me", () => {
   // Without session
@@ -67,7 +74,29 @@ describe("Me", () => {
         expect(validationSpy).toHaveBeenCalled()
       })
     })
-    it.todo("should have a submit button")
+    it("should have a submit button", () => {
+      const submitButtonElement = queries.getByRole("button", {
+        name: submitButtonText,
+      })
+
+      expect(submitButtonElement).toBeInTheDocument()
+    })
+    test("submitting the form should dispatch changePassword thunk", async () => {
+      expect.hasAssertions()
+      jest
+        .spyOn(changePasswordValidationSchema, "validate")
+        .mockImplementation(async () => ({} as any))
+
+      const submitButtonElement = queries.getByRole("button", {
+        name: submitButtonText,
+      })
+
+      userEvent.click(submitButtonElement)
+
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled()
+      })
+    })
   })
 
   it.todo("should have a logout button")

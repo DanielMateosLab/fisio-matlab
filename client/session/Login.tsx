@@ -7,6 +7,7 @@ import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { loginValidationSchema } from "../clientShared/Validation"
+import { useTypedSelector } from "../redux/rootReducer"
 import { authSuccess } from "./sessionSlice"
 
 export const loginTitle = "¿Quién eres?"
@@ -26,12 +27,21 @@ const useStyles = makeStyles((theme) => ({
   formElement: {
     marginTop: theme.spacing(2),
   },
+  successColor: {
+    color: theme.palette.success.dark,
+  },
 }))
+
+export const changedPasswordText =
+  "¡Ya tienes nueva contraseña! Debes volver a iniciar sesión."
 
 const Login = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const router = useRouter()
+  const changedPassword = useTypedSelector(
+    (state) => state.session.changedPassword
+  )
 
   useEffect(() => {
     router.prefetch("/profile")
@@ -75,6 +85,13 @@ const Login = () => {
                 type="password"
               />
             </div>
+            {changedPassword && (
+              <div className={classes.formElement}>
+                <Typography variant="body1" className={classes.successColor}>
+                  {changedPasswordText}
+                </Typography>
+              </div>
+            )}
             <div className={classes.formElement}>
               <Button
                 variant="contained"

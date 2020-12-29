@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { render as rtlRender, RenderOptions } from "@testing-library/react"
 import { Provider } from "react-redux"
-import { RootState } from "../redux/rootReducer"
+import rootReducer, { RootState } from "../redux/rootReducer"
 import store from "../redux/store"
 import reducer from "../redux/rootReducer"
 import theme from "../theme"
 import { ThemeProvider } from "@material-ui/core"
 import { RouterContext } from "next/dist/next-server/lib/router-context"
+import sessionReducer from "../session/sessionSlice"
 
 /**
  * Re-usable mockPush that is provided to all the tests.
@@ -16,6 +17,9 @@ import { RouterContext } from "next/dist/next-server/lib/router-context"
  * ```
  */
 export const mockPush = jest.fn(async () => false)
+
+export const initialState = rootReducer(undefined, { type: "" })
+export const sessionInitialState = sessionReducer(undefined, { type: "" })
 
 type CustomRenderOptions = RenderOptions & {
   initialState?: RootState
@@ -67,7 +71,10 @@ export const renderAuthenticated = (
   email: string = "aaaa@aaa.aa"
 ) =>
   render(ui, {
-    initialState: { session: { email } },
+    initialState: {
+      ...initialState,
+      session: { ...sessionInitialState, email },
+    },
   })
 
 export * from "@testing-library/react"

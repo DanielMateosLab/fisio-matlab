@@ -1,9 +1,11 @@
 import { Button, Container, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
+import { useDispatch } from "react-redux"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import useRedirectUnauth from "../clientShared/useRedirectUnauth"
 import { changePasswordValidationSchema } from "../clientShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
+import { changePassword } from "./sessionSlice"
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,14 +30,14 @@ const Profile: React.FC = () => {
   const classes = useStyles()
   const email = useTypedSelector((state) => state.session.email)
 
+  const dispatch = useDispatch()
+
   const Subtitle: React.FC = ({ children }) => (
     <Typography variant="h5" gutterBottom>
       {children}
     </Typography>
   )
 
-  // TODO: maybe make a grid layout to have two columns (it could just be flexbox)
-  // TODO: logout after successful password change. Kill all user sessions when changing pwd.
   return (
     <Container className={classes.container} maxWidth="sm" component="main">
       <Typography variant="h3" component="h2" gutterBottom>
@@ -60,6 +62,7 @@ const Profile: React.FC = () => {
           }}
           validationSchema={changePasswordValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            dispatch(changePassword())
             setSubmitting(false)
           }}
         >
@@ -69,7 +72,7 @@ const Profile: React.FC = () => {
                 <FormikTextInput
                   name="currentPassword"
                   label={currentPasswordInputText}
-                  type="currentPassword"
+                  type="password"
                 />
               </div>
               <div className={classes.formElement}>

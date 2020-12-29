@@ -1,8 +1,9 @@
 import {
+  initialState,
   mockPush,
   render,
   renderAuthenticated,
-  RenderResult,
+  sessionInitialState,
   waitFor,
 } from "../clientShared/testUtils"
 import Login, {
@@ -10,6 +11,7 @@ import Login, {
   emailInputText,
   passwordInputText,
   submitButtonText,
+  changedPasswordText,
 } from "./Login"
 import userEvent from "@testing-library/user-event"
 import { authSuccess } from "./sessionSlice"
@@ -21,38 +23,40 @@ jest.mock("react-redux", () => ({
 }))
 
 describe("Login", () => {
-  let queries: RenderResult
-  let getByLabelText: typeof queries.getByLabelText
-
-  beforeEach(() => {
-    queries = render(<Login />)
-    getByLabelText = queries.getByLabelText
-  })
-
   it("should render the login page title", () => {
-    const titleElement = queries.getByText(loginTitle)
+    const { getByText } = render(<Login />)
+
+    const titleElement = getByText(loginTitle)
 
     expect(titleElement).toBeInTheDocument()
   })
 
   it("should have an email input", () => {
+    const { getByLabelText } = render(<Login />)
+
     const emailInputElement = getByLabelText(emailInputText)
 
     expect(emailInputElement).toBeInTheDocument()
   })
   it("should have a password input", () => {
+    const { getByLabelText } = render(<Login />)
+
     const passwordInputElement = getByLabelText(passwordInputText)
 
     expect(passwordInputElement).toBeInTheDocument()
   })
   it("should have a submit button", () => {
-    const submitButtonElement = queries.getByRole("button", {
+    const { getByRole } = render(<Login />)
+
+    const submitButtonElement = getByRole("button", {
       name: submitButtonText,
     })
 
     expect(submitButtonElement).toBeInTheDocument()
   })
   test("writing in the form should trigger validation", async () => {
+    const { getByLabelText } = render(<Login />)
+
     const emailInputElement = getByLabelText(emailInputText)
 
     userEvent.type(emailInputElement, "aaaa")
@@ -63,9 +67,11 @@ describe("Login", () => {
     })
   })
   it("submitting the form should dispatch an action to save in the store the form values", async () => {
-    const emailElement = queries.getByLabelText(emailInputText)
-    const passwordElement = queries.getByLabelText(passwordInputText)
-    const submitButtonElement = queries.getByRole("button", {
+    const { getByLabelText, getByRole } = render(<Login />)
+
+    const emailElement = getByLabelText(emailInputText)
+    const passwordElement = getByLabelText(passwordInputText)
+    const submitButtonElement = getByRole("button", {
       name: submitButtonText,
     })
 
@@ -80,11 +86,25 @@ describe("Login", () => {
       expect(mockDispatch).toHaveBeenCalledWith(authSuccess({ email }))
     })
   })
+  it("should show a success text message when state.session.changePassword is true", () => {
+    const { getByText } = render(<Login />, {
+      initialState: {
+        ...initialState,
+        session: { ...sessionInitialState, changedPassword: true },
+      },
+    })
+
+    const changedPasswordTextElement = getByText(changedPasswordText)
+
+    expect(changedPasswordTextElement).toBeInTheDocument()
+  })
   describe("signup page link", () => {
     let signupPageLinkElement: HTMLElement
 
     beforeEach(() => {
-      signupPageLinkElement = queries.getByText("Regístrate")
+      const { getByText } = render(<Login />)
+
+      signupPageLinkElement = getByText("Regístrate")
     })
 
     it("should have a link to go to the signup page", () => {
