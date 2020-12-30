@@ -16,6 +16,8 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
       background: theme.palette.primary.light,
       display: ({ email }) => (email ? "flex" : "block"),
       alignItems: "center",
+      position: "sticky",
+      top: "0px",
     },
     appName: {
       fontSize: ({ email }) =>
