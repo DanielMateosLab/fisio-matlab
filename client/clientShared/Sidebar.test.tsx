@@ -13,9 +13,21 @@ jest.mock("react-redux", () => ({
 describe("Sidebar", () => {
   const email = "aaaa@aaa.aa"
 
-  const sidebarElement = <Sidebar sidebarOpened setSidebarOpened={() => {}} />
+  const mockSetSidebar = jest.fn()
+  const sidebarElement = (
+    <Sidebar sidebarOpened setSidebarOpened={mockSetSidebar} />
+  )
   const renderUnauth = () => render(sidebarElement)
   const renderAuth = () => renderAuthenticated(sidebarElement, email)
+
+  it("should close the sidebar when clicking a link", () => {
+    const { getByText } = renderAuth()
+
+    const emailElement = getByText(email)
+    userEvent.click(emailElement)
+
+    expect(mockSetSidebar).toHaveBeenCalledWith(false)
+  })
 
   describe("user email", () => {
     it("should show the user email when someone is authenticated", () => {

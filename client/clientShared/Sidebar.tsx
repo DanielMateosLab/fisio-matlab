@@ -4,6 +4,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  ListItemProps,
   ListItemText,
   SwipeableDrawer,
 } from "@material-ui/core"
@@ -25,6 +26,25 @@ const Sidebar: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
+  /**
+   * HOC that makes the ListItems close the sidebar after a click
+   * @param onClick click handler
+   */
+  const EnhancedListItem: React.FC<ListItemProps> = ({
+    children,
+    ...listItemProps
+  }) => (
+    <ListItem
+      {...(listItemProps as any)}
+      onClick={(event: any) => {
+        props.setSidebarOpened(false)
+        listItemProps.onClick && listItemProps.onClick(event)
+      }}
+    >
+      {children}
+    </ListItem>
+  )
+
   return (
     <SwipeableDrawer
       open={props.sidebarOpened}
@@ -38,7 +58,7 @@ const Sidebar: React.FC<Props> = (props) => {
       <List component="nav">
         {email && (
           <>
-            <ListItem
+            <EnhancedListItem
               button
               onClick={() => {
                 router.push("/profile")
@@ -48,7 +68,7 @@ const Sidebar: React.FC<Props> = (props) => {
                 <AccountCircle />
               </ListItemIcon>
               <ListItemText primary={email} />
-            </ListItem>
+            </EnhancedListItem>
             <ListItem
               button
               onClick={() => {
