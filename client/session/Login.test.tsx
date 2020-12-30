@@ -14,7 +14,7 @@ import Login, {
   changedPasswordText,
 } from "./Login"
 import userEvent from "@testing-library/user-event"
-import { authSuccess } from "./sessionSlice"
+import { login } from "./sessionSlice"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
@@ -66,7 +66,7 @@ describe("Login", () => {
       expect(emailInputElement).toBeInvalid()
     })
   })
-  it("submitting the form should dispatch an action to save in the store the form values", async () => {
+  it("submitting the form should dispatch a login action with the form values", async () => {
     const { getByLabelText, getByRole } = render(<Login />)
 
     const emailElement = getByLabelText(emailInputText)
@@ -76,14 +76,14 @@ describe("Login", () => {
     })
 
     const email = "aaaa@aaa.aa"
-    const pwd = "aaaaa"
+    const password = "aaaaa"
 
     userEvent.type(emailElement, email)
-    userEvent.type(passwordElement, pwd)
+    userEvent.type(passwordElement, password)
     userEvent.click(submitButtonElement)
 
     await waitFor(() => {
-      expect(mockDispatch).toHaveBeenCalledWith(authSuccess({ email }))
+      expect(mockDispatch).toHaveBeenCalled()
     })
   })
   it("should show a success text message when state.session.changePassword is true", () => {
@@ -97,6 +97,19 @@ describe("Login", () => {
     const changedPasswordTextElement = getByText(changedPasswordText)
 
     expect(changedPasswordTextElement).toBeInTheDocument()
+  })
+  it("should show the loginError when there is one", () => {
+    const mockError = "aaaaa"
+    const { getByText } = render(<Login />, {
+      initialState: {
+        ...initialState,
+        session: { ...sessionInitialState, loginError: mockError },
+      },
+    })
+
+    const errorElement = getByText(mockError)
+
+    expect(errorElement).toBeInTheDocument()
   })
   describe("signup page link", () => {
     let signupPageLinkElement: HTMLElement

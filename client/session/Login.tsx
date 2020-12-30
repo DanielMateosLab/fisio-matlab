@@ -1,14 +1,16 @@
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
+import { unwrapResult } from "@reduxjs/toolkit"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useEffect, useState } from "react"
+import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { loginValidationSchema } from "../clientShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
-import { authSuccess } from "./sessionSlice"
+import { useThunkDispatch } from "../redux/store"
+import { login } from "./sessionSlice"
 
 export const loginTitle = "¿Quién eres?"
 export const emailInputText = "Tu email"
@@ -37,10 +39,10 @@ export const changedPasswordText =
 
 const Login = () => {
   const classes = useStyles()
-  const dispatch = useDispatch()
+  const dispatch = useThunkDispatch()
   const router = useRouter()
-  const changedPassword = useTypedSelector(
-    (state) => state.session.changedPassword
+  const { changedPassword, loginError } = useTypedSelector(
+    (state) => state.session
   )
 
   useEffect(() => {
@@ -63,9 +65,9 @@ const Login = () => {
           password: "",
         }}
         validationSchema={loginValidationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          dispatch(authSuccess({ email: values.email }))
-          router.push("/profile")
+        onSubmit={async (values, { setSubmitting }) => {
+          const actionResponse = await dispatch(login({ ...values }))
+          login.fulfilled.match(actionResponse) && router.push("/profile")
           setSubmitting(false)
         }}
       >
@@ -90,6 +92,11 @@ const Login = () => {
                 <Typography variant="body1" className={classes.successColor}>
                   {changedPasswordText}
                 </Typography>
+              </div>
+            )}
+            {loginError && (
+              <div className={classes.formElement}>
+                <Typography color="error">{loginError}</Typography>
               </div>
             )}
             <div className={classes.formElement}>

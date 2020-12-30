@@ -1,26 +1,67 @@
 import sessionReducer, {
-  authSuccess,
   changePassword,
   changePasswordSuccess,
+  login,
   logoutSuccess,
+  signup,
 } from "./sessionSlice"
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
 
-describe("authSuccess reducer", () => {
-  it("should update the state email", () => {
-    const state = sessionReducer(undefined, authSuccess({ email }))
-
-    expect(state.email).toEqual(email)
-  })
-  it("should set session.changedPassword to false if it's true", () => {
+describe("loginReducer", () => {
+  test("login/pending action should set session.changedPassword to false if it's true", () => {
     const state = sessionReducer(
       { ...emptyInitialState, changedPassword: true },
-      authSuccess({ email })
+      login.pending("", {} as any)
     )
 
     expect(state.changedPassword).toEqual(false)
+  })
+  test("login/fulfilled should update the state email", () => {
+    const state = sessionReducer(
+      undefined,
+      login.fulfilled({ email }, "", {} as any)
+    )
+
+    expect(state.email).toEqual(email)
+  })
+  test("login/rejected should update state loginError", () => {
+    const message = "aaaa"
+    const state = sessionReducer(
+      undefined,
+      login.rejected({ message, name: "mockError" }, "", {} as any)
+    )
+    expect(state.loginError).toEqual(message)
+  })
+})
+describe("signupReducer", () => {
+  test("signup/fulfilled should update the state email", () => {
+    const state = sessionReducer(
+      undefined,
+      signup.fulfilled({ email }, "", {} as any)
+    )
+
+    expect(state.email).toEqual(email)
+  })
+  test("signup/rejected should update state signupError", () => {
+    const message = "aaaa"
+    const state = sessionReducer(
+      undefined,
+      signup.rejected({ message, name: "mockError" }, "", {} as any)
+    )
+    expect(state.signupError).toEqual(message)
+  })
+  // This means that the action has field errors, updated in the form component
+  test("signup/rejected should NOT update state signupError when there is an action payload", () => {
+    const message = "aaaa"
+    const state = sessionReducer(
+      undefined,
+      signup.rejected({ message, name: "mockError" }, "", {} as any, {
+        password: message,
+      })
+    )
+    expect(state.signupError).not.toEqual(message)
   })
 })
 describe("logoutSuccess", () => {

@@ -1,7 +1,9 @@
 import {
+  initialState,
   render,
   renderAuthenticated,
   RenderResult,
+  sessionInitialState,
   waitFor,
 } from "../clientShared/testUtils"
 import Signup, {
@@ -247,5 +249,18 @@ describe("Signup", () => {
     renderAuthenticated(<Signup />)
 
     expect(mockPush).toHaveBeenCalledWith("/profile")
+  })
+  it("should show the signupError when there is one", () => {
+    const mockError = "aaaaa"
+    const { getByText } = render(<Signup />, {
+      initialState: {
+        ...initialState,
+        session: { ...sessionInitialState, signupError: mockError },
+      },
+    })
+
+    const errorElement = getByText(mockError)
+
+    expect(errorElement).toBeInTheDocument()
   })
 })

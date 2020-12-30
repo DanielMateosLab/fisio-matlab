@@ -5,9 +5,12 @@ import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import { signupFormValidationSchema } from "../clientShared/Validation"
 import { useDispatch } from "react-redux"
-import { authSuccess } from "./sessionSlice"
+import { login, signup } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
+import { useThunkDispatch } from "../redux/store"
+import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
+import { useTypedSelector } from "../redux/rootReducer"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -33,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
 const Signup = () => {
   const classes = useStyles()
   const router = useRouter()
-  const dispatch = useDispatch()
+  const dispatch = useThunkDispatch()
+  const signupError = useTypedSelector((state) => state.session.signupError)
 
   useEffect(() => {
     router.prefetch("/profile")
@@ -56,9 +60,14 @@ const Signup = () => {
           repeatPassword: "",
         }}
         validationSchema={signupFormValidationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          dispatch(authSuccess({ email: values.email }))
-          router.push("/profile")
+        onSubmit={async (values, { setSubmitting, setErrors }) => {
+          const { error, payload } = (await dispatch(
+            signup({ email: values.email, password: values.password })
+          )) as AsyncThunkAction
+
+          error && payload && setErrors({ ...payload })
+          !error && router.push("/profile")
+
           setSubmitting(false)
         }}
       >
@@ -95,6 +104,11 @@ const Signup = () => {
                 {submitButtonText}
               </Button>
             </div>
+            {signupError && (
+              <div className={classes.formElement}>
+                <Typography color="error">{signupError}</Typography>
+              </div>
+            )}
             <div className={classes.formElement}>
               <Typography variant="body2">
                 ¿Ya tienes cuenta?{" "}
