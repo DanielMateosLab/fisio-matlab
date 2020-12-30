@@ -39,10 +39,10 @@ export const submitButtonText = "Cambiar contraseña"
 
 export const deleteAccountTitle = "Eliminar cuenta"
 export const deleteAccountDescription =
-  "Al eliminar la cuenta tus datos se borrarán de nuestra base de datos de forma irreversible."
+  "Al eliminar tu cuenta los datos se borrarán de nuestra base de datos de forma irreversible."
 export const deleteAccountButtonText = "Eliminar cuenta"
 export const deleteAccountWarningText =
-  "¡Cuidado! Esta acción no tiene vuelta atrás. Introduce tu contraseña para continuar"
+  "¡Cuidado! Esta acción no tiene vuelta atrás. Introduce tu contraseña para continuar:"
 export const deleteAccountPwdInputText = "Contraseña"
 
 const Profile: React.FC = () => {
