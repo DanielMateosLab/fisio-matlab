@@ -1,15 +1,27 @@
-import { Button, Container, makeStyles, Typography } from "@material-ui/core"
+import {
+  Button,
+  Container,
+  makeStyles,
+  Typography,
+  TypographyProps,
+} from "@material-ui/core"
 import { Formik } from "formik"
 import { useDispatch } from "react-redux"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import useRedirectUnauth from "../clientShared/useRedirectUnauth"
-import { changePasswordValidationSchema } from "../clientShared/Validation"
+import {
+  changePasswordValidationSchema,
+  deleteAccountValidationSchema,
+} from "../clientShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
-import { changePassword } from "./sessionSlice"
+import { changePassword, deleteAccount } from "./sessionSlice"
 
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: "16px",
+    "& section": {
+      marginBottom: "16px",
+    },
   },
   form: {
     display: "flex",
@@ -25,6 +37,14 @@ export const newPasswordInputText = "Nueva contraseña"
 export const repeatNewPasswordInputText = "Repite la nueva contraseña"
 export const submitButtonText = "Cambiar contraseña"
 
+export const deleteAccountTitle = "Eliminar cuenta"
+export const deleteAccountDescription =
+  "Al eliminar la cuenta tus datos se borrarán de nuestra base de datos de forma irreversible."
+export const deleteAccountButtonText = "Eliminar cuenta"
+export const deleteAccountWarningText =
+  "¡Cuidado! Esta acción no tiene vuelta atrás. Introduce tu contraseña para continuar"
+export const deleteAccountPwdInputText = "Contraseña"
+
 const Profile: React.FC = () => {
   useRedirectUnauth()
   const classes = useStyles()
@@ -32,8 +52,8 @@ const Profile: React.FC = () => {
 
   const dispatch = useDispatch()
 
-  const Subtitle: React.FC = ({ children }) => (
-    <Typography variant="h5" gutterBottom>
+  const Subtitle: React.FC<TypographyProps> = ({ children, ...props }) => (
+    <Typography variant="h5" gutterBottom {...props}>
       {children}
     </Typography>
   )
@@ -45,13 +65,11 @@ const Profile: React.FC = () => {
       </Typography>
       <section>
         <Subtitle>Correo electrónico</Subtitle>
-        <Typography variant="body1" gutterBottom>
-          {email}
-        </Typography>
+        <Typography>{email}</Typography>
       </section>
       <section>
         <Subtitle>Cambiar contraseña</Subtitle>
-        <Typography variant="body1">
+        <Typography>
           Aquí puedes cambiar la contraseña que utilizas para iniciar sesión.
         </Typography>
         <Formik
@@ -97,6 +115,45 @@ const Profile: React.FC = () => {
                   disabled={formik.isSubmitting}
                 >
                   {submitButtonText}
+                </Button>
+              </div>
+            </form>
+          )}
+        </Formik>
+      </section>
+      <section>
+        <Formik
+          initialValues={{
+            password: "",
+          }}
+          validationSchema={deleteAccountValidationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            dispatch(deleteAccount(values.password))
+            setSubmitting(false)
+          }}
+        >
+          {(formik) => (
+            <form onSubmit={formik.handleSubmit} className={classes.form}>
+              <Subtitle>{deleteAccountTitle}</Subtitle>
+              <Typography>{deleteAccountDescription}</Typography>
+              <Typography color="error" gutterBottom>
+                {deleteAccountWarningText}
+              </Typography>
+              <div>
+                <FormikTextInput
+                  name="password"
+                  label={deleteAccountPwdInputText}
+                  type="password"
+                />
+              </div>
+              <div className={classes.formElement}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                >
+                  {deleteAccountButtonText}
                 </Button>
               </div>
             </form>

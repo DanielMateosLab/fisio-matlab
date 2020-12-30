@@ -47,3 +47,11 @@ describe("changePassword", () => {
     expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
   })
 })
+describe("deleteAccount", () => {
+  it("should call logoutSuccess", () => {
+    const mockDispatch = jest.fn()
+    changePassword()(mockDispatch as any, () => ({} as any), null)
+
+    expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+  })
+})

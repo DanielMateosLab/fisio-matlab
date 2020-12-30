@@ -77,3 +77,7 @@ export const changePasswordValidationSchema = yup.object().shape({
   password: newPasswordValidation.validator,
   repeatPassword: repeatPasswordValidator,
 })
+
+export const deleteAccountValidationSchema = yup.object().shape({
+  password: currentPasswordValidation.validator,
+})

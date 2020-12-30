@@ -6,9 +6,17 @@ import {
   RenderResult,
   waitFor,
 } from "../clientShared/testUtils"
-import { changePasswordValidationSchema } from "../clientShared/Validation"
+import {
+  changePasswordValidationSchema,
+  deleteAccountValidationSchema,
+} from "../clientShared/Validation"
 import Profile, {
   currentPasswordInputText,
+  deleteAccountButtonText,
+  deleteAccountDescription,
+  deleteAccountPwdInputText,
+  deleteAccountTitle,
+  deleteAccountWarningText,
   newPasswordInputText,
   repeatNewPasswordInputText,
   submitButtonText,
@@ -20,7 +28,7 @@ jest.mock("react-redux", () => ({
   useDispatch: () => mockDispatch,
 }))
 
-describe("Me", () => {
+describe("Profile", () => {
   // Without session
   it("should redirect to the login page if there is no session", () => {
     render(<Profile />)
@@ -61,18 +69,23 @@ describe("Me", () => {
       expect(repeatPwdElement).toBeInTheDocument()
     })
     test("writing in the form should trigger validation", async () => {
-      expect.hasAssertions()
-      const validationSpy = jest.spyOn(
-        changePasswordValidationSchema,
-        "validate"
-      )
+      try {
+        const validationSpy = jest.spyOn(
+          changePasswordValidationSchema,
+          "validate"
+        )
 
-      const currentPwdElement = queries.getByLabelText(currentPasswordInputText)
-      userEvent.type(currentPwdElement, "aaaa")
+        const currentPwdElement = queries.getByLabelText(
+          currentPasswordInputText
+        )
+        userEvent.type(currentPwdElement, "aaaa")
 
-      await waitFor(() => {
-        expect(validationSpy).toHaveBeenCalled()
-      })
+        await waitFor(() => {
+          expect(validationSpy).toHaveBeenCalled()
+        })
+      } catch (e) {
+        expect(e).toBeUndefined()
+      }
     })
     it("should have a submit button", () => {
       const submitButtonElement = queries.getByRole("button", {
@@ -94,13 +107,64 @@ describe("Me", () => {
       userEvent.click(submitButtonElement)
 
       await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled() // Impossible to test with strict equality
+      })
+    })
+  })
+  describe("delete account section", () => {
+    it("should have a title", () => {
+      const { getByRole } = renderAuthenticated(<Profile />, email)
+
+      const titleElement = getByRole("heading", { name: deleteAccountTitle })
+      expect(titleElement).toBeInTheDocument()
+    })
+    it("should have a description", () => {
+      const { getByText } = renderAuthenticated(<Profile />, email)
+
+      const descriptionElement = getByText(deleteAccountDescription)
+
+      expect(descriptionElement).toBeInTheDocument()
+    })
+    it("should have a warning", () => {
+      const { getByText } = renderAuthenticated(<Profile />, email)
+
+      const warningElement = getByText(deleteAccountWarningText)
+
+      expect(warningElement).toBeInTheDocument()
+    })
+    it("should have a password input", () => {
+      const { getByLabelText } = renderAuthenticated(<Profile />, email)
+
+      const passwordInputElemenet = getByLabelText(deleteAccountPwdInputText)
+
+      expect(passwordInputElemenet).toBeInTheDocument()
+    })
+    it("should have a submit button", async () => {
+      const { getByRole } = renderAuthenticated(<Profile />, email)
+
+      const buttonElement = getByRole("button", {
+        name: deleteAccountButtonText,
+      })
+
+      expect(buttonElement).toBeInTheDocument()
+    })
+    test("clicking the submit button calls dispatch(deleteAccount(password))", async () => {
+      expect.hasAssertions()
+      const password = "aaaaa"
+      jest
+        .spyOn(deleteAccountValidationSchema, "validate")
+        .mockImplementation(async () => ({ password }))
+
+      const { getByRole } = renderAuthenticated(<Profile />, email)
+
+      const buttonElement = getByRole("button", {
+        name: deleteAccountButtonText,
+      })
+      userEvent.click(buttonElement)
+
+      await waitFor(() => {
         expect(mockDispatch).toHaveBeenCalled()
       })
     })
   })
-
-  it.todo("should have a logout button")
-
-  it.todo("should have a delete account button")
-  it.todo("the delete account button should trigger the delete account dialog")
 })

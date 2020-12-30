@@ -44,3 +44,9 @@ export const changePassword = (): AppThunk => async (dispatch) => {
   dispatch(changePasswordSuccess())
   dispatch(logoutSuccess())
 }
+
+export const deleteAccount = (password: string): AppThunk => async (
+  dispatch
+) => {
+  dispatch(logoutSuccess())
+}
