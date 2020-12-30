@@ -1,9 +1,11 @@
 import userEvent from "@testing-library/user-event"
 import {
+  initialState,
   mockPush,
   render,
   renderAuthenticated,
   RenderResult,
+  sessionInitialState,
   waitFor,
 } from "../clientShared/testUtils"
 import {
@@ -21,6 +23,7 @@ import Profile, {
   repeatNewPasswordInputText,
   submitButtonText,
 } from "./Profile"
+import { changePassword } from "./sessionSlice"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
@@ -86,6 +89,19 @@ describe("Profile", () => {
       } catch (e) {
         expect(e).toBeUndefined()
       }
+    })
+    it("should show the changePasswordError when there is one", () => {
+      const mockError = "aaaaa"
+      const { getByText } = render(<Profile />, {
+        initialState: {
+          ...initialState,
+          session: { ...sessionInitialState, changePasswordError: mockError },
+        },
+      })
+
+      const errorElement = getByText(mockError)
+
+      expect(errorElement).toBeInTheDocument()
     })
     it("should have a submit button", () => {
       const submitButtonElement = queries.getByRole("button", {

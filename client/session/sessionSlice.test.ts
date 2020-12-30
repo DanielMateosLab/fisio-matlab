@@ -1,6 +1,7 @@
+import { waitFor } from "@testing-library/react"
 import sessionReducer, {
   changePassword,
-  changePasswordSuccess,
+  deleteAccount,
   login,
   logoutSuccess,
   signup,
@@ -75,23 +76,38 @@ describe("logoutSuccess", () => {
   })
 })
 describe("changePassword", () => {
-  test("the changePasswordSuccess action should turn state.changedPassword to true", () => {
-    const state = sessionReducer(undefined, changePasswordSuccess())
+  const currentPassword = "aaaaa"
+  const password = "bbbbb"
+  test("changePassword.fullfilled action should turn state.changedPassword to true", () => {
+    const state = sessionReducer(
+      undefined,
+      changePassword.fulfilled(undefined, "", {} as any)
+    )
 
     expect(state.changedPassword).toEqual(true)
   })
-  it("should call logoutSuccess and changePasswordSuccess", () => {
+  it("should call logoutSuccess and changePasswordSuccess", async () => {
     const mockDispatch = jest.fn()
-    changePassword()(mockDispatch as any, () => ({} as any), null)
+    changePassword({ password, currentPassword })(
+      mockDispatch as any,
+      () => ({} as any),
+      null
+    )
 
-    expect(mockDispatch).toHaveBeenCalledWith(changePasswordSuccess())
-    expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+    await waitFor(() => {
+      // First, the pending action is called, then logoutSuccess and finally fulfilled
+      expect(mockDispatch.mock.calls[2][0].type).toEqual(
+        changePassword.fulfilled(undefined, "", {} as any).type
+      )
+      expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+    })
   })
 })
 describe("deleteAccount", () => {
   it("should call logoutSuccess", () => {
+    const password = "aaaaa"
     const mockDispatch = jest.fn()
-    changePassword()(mockDispatch as any, () => ({} as any), null)
+    deleteAccount(password)(mockDispatch as any, () => ({} as any), null)
 
     expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
   })

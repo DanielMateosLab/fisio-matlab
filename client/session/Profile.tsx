@@ -6,7 +6,9 @@ import {
   TypographyProps,
 } from "@material-ui/core"
 import { Formik } from "formik"
+import { useRouter } from "next/router"
 import { useDispatch } from "react-redux"
+import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import useRedirectUnauth from "../clientShared/useRedirectUnauth"
 import {
@@ -14,6 +16,7 @@ import {
   deleteAccountValidationSchema,
 } from "../clientShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
+import { useThunkDispatch } from "../redux/store"
 import { changePassword, deleteAccount } from "./sessionSlice"
 
 const useStyles = makeStyles((theme) => ({
@@ -48,9 +51,12 @@ export const deleteAccountPwdInputText = "Contraseña"
 const Profile: React.FC = () => {
   useRedirectUnauth()
   const classes = useStyles()
-  const email = useTypedSelector((state) => state.session.email)
+  const { email, changePasswordError } = useTypedSelector(
+    (state) => state.session
+  )
+  const router = useRouter()
 
-  const dispatch = useDispatch()
+  const dispatch = useThunkDispatch()
 
   const Subtitle: React.FC<TypographyProps> = ({ children, ...props }) => (
     <Typography variant="h5" gutterBottom {...props}>
@@ -79,8 +85,17 @@ const Profile: React.FC = () => {
             repeatPassword: "",
           }}
           validationSchema={changePasswordValidationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            dispatch(changePassword())
+          onSubmit={async (
+            { password, currentPassword },
+            { setSubmitting, setErrors }
+          ) => {
+            const { error, payload } = (await dispatch(
+              changePassword({ password, currentPassword })
+            )) as AsyncThunkAction
+
+            error && payload && setErrors({ ...payload })
+            !error && router.push("/login")
+
             setSubmitting(false)
           }}
         >
@@ -107,6 +122,12 @@ const Profile: React.FC = () => {
                   type="password"
                 />
               </div>
+              {changePasswordError && (
+                <div className={classes.formElement}>
+                  <Typography color="error">{changePasswordError}</Typography>
+                </div>
+              )}
+
               <div className={classes.formElement}>
                 <Button
                   variant="contained"

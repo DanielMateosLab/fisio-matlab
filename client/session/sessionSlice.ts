@@ -23,7 +23,7 @@ export const signup = createAsyncThunk<
   { email: string },
   Credentials,
   { rejectValue: Partial<Credentials> }
->("sesion/signup", async ({ email }, { rejectWithValue }) => {
+>("session/signup", async ({ email }, { rejectWithValue }) => {
   const alreadyExists = email == "daniel.mat.lab@usal.es"
   if (alreadyExists) {
     return rejectWithValue({
@@ -36,11 +36,34 @@ export const signup = createAsyncThunk<
   return { email }
 })
 
+interface ChangePasswordArgs {
+  currentPassword: string
+  password: string
+}
+export const changePassword = createAsyncThunk<
+  void,
+  ChangePasswordArgs,
+  { rejectValue: Partial<ChangePasswordArgs> }
+>(
+  "session/changePassword",
+  async ({ currentPassword }, { rejectWithValue, dispatch }) => {
+    const invalidPassword = currentPassword !== "aaaaa"
+    if (invalidPassword) {
+      return rejectWithValue({
+        currentPassword: "Contraseña incorrecta",
+      })
+    }
+    dispatch(logoutSuccess())
+    return
+  }
+)
+
 interface UserState {
   email: string
   changedPassword: boolean
   loginError: string
   signupError: string
+  changePasswordError: string
 }
 
 const initialState: UserState = {
@@ -48,6 +71,7 @@ const initialState: UserState = {
   changedPassword: false,
   loginError: "",
   signupError: "",
+  changePasswordError: "",
 }
 
 const sessionSlice = createSlice({
@@ -85,19 +109,27 @@ const sessionSlice = createSlice({
         state.signupError = action.error.message
       }
     })
+
+    builder.addCase(changePassword.fulfilled, (state) => {
+      state.changedPassword = true
+    })
+    builder.addCase(changePassword.rejected, (state, action) => {
+      if (action.payload) return
+      if (action.error && action.error.message) {
+        state.changePasswordError = action.error.message
+      }
+    })
   },
 })
 
-export const { logoutSuccess, changePasswordSuccess } = sessionSlice.actions
+export const { logoutSuccess } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 
 export default sessionReducer
 
-export const changePassword = (): AppThunk => async (dispatch) => {
-  dispatch(changePasswordSuccess())
-  dispatch(logoutSuccess())
-}
+// TODO: use createAsyncThunk to create these thunks
+// TODO: preserve the session with a cookie
 
 export const deleteAccount = (password: string): AppThunk => async (
   dispatch
