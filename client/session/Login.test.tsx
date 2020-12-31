@@ -14,7 +14,6 @@ import Login, {
   changedPasswordText,
 } from "./Login"
 import userEvent from "@testing-library/user-event"
-import { login } from "./sessionSlice"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({

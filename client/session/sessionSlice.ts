@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { AppThunk } from "../redux/store"
 
 interface Credentials {
   email: string

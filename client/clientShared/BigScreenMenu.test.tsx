@@ -1,5 +1,4 @@
 import userEvent from "@testing-library/user-event"
-import { logout } from "../session/sessionSlice"
 import BigScreenMenu from "./BigScreenMenu"
 import { logoutButtonText } from "./Header"
 import { mockPush, render, renderAuthenticated } from "./testUtils"

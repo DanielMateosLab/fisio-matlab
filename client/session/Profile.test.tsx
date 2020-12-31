@@ -23,7 +23,6 @@ import Profile, {
   repeatNewPasswordInputText,
   submitButtonText,
 } from "./Profile"
-import { changePassword } from "./sessionSlice"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
