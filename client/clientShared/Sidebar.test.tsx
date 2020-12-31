@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event"
-import { logoutSuccess } from "../session/sessionSlice"
+import { logout, logoutSuccess } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
 import Sidebar from "./Sidebar"
 import { mockPush, render, renderAuthenticated } from "./testUtils"
@@ -69,7 +69,7 @@ describe("Sidebar", () => {
 
       expect(logoutButtonElement).not.toBeInTheDocument()
     })
-    test("the logout button should dispatch a logoutSucess action", () => {
+    test("the logout button should dispatch a logout action", () => {
       const { getByRole } = renderAuth()
       const logoutButtonElement = getByRole("button", {
         name: logoutButtonText,
@@ -77,7 +77,7 @@ describe("Sidebar", () => {
 
       userEvent.click(logoutButtonElement)
 
-      expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+      expect(mockDispatch).toHaveBeenCalled()
     })
   })
 })

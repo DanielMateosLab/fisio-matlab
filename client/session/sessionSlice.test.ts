@@ -3,9 +3,10 @@ import sessionReducer, {
   changePassword,
   deleteAccount,
   login,
-  logoutSuccess,
+  logout,
   signup,
 } from "./sessionSlice"
+import { findActionByType } from "../clientShared/testUtils"
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
@@ -65,11 +66,21 @@ describe("signupReducer", () => {
     expect(state.signupError).not.toEqual(message)
   })
 })
-describe("logoutSuccess", () => {
-  it("should handle logoutSuccess and clean the state email", () => {
+describe("logout", () => {
+  test("dispatching logout.fulfilled should clean the state email", () => {
     const state = sessionReducer(
       { ...emptyInitialState, email },
-      logoutSuccess()
+      logout.fulfilled(undefined, "", undefined)
+    )
+
+    expect(state.email).toEqual("")
+  })
+  // We do this because we should be able to close the session offline
+  // TODO: later, see in passport how to make this possible (to not use the server session if the client one is not available)
+  test("dispatching logout.pending should clean the state email", () => {
+    const state = sessionReducer(
+      { ...emptyInitialState, email },
+      logout.fulfilled(undefined, "", undefined)
     )
 
     expect(state.email).toEqual("")
@@ -86,29 +97,32 @@ describe("changePassword", () => {
 
     expect(state.changedPassword).toEqual(true)
   })
-  it("should call logoutSuccess and changePasswordSuccess", async () => {
+  // this might not be useful or possible to test in isolation
+  it("should call changePassword.fulfilled", async () => {
     const mockDispatch = jest.fn()
-    changePassword({ password, currentPassword })(
+    await changePassword({ password, currentPassword })(
       mockDispatch as any,
       () => ({} as any),
       null
     )
 
     await waitFor(() => {
-      // First, the pending action is called, then logoutSuccess and finally fulfilled
-      expect(mockDispatch.mock.calls[2][0].type).toEqual(
+      const changePasswordFullfilledAction = findActionByType(
+        mockDispatch,
         changePassword.fulfilled(undefined, "", {} as any).type
       )
-      expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+      expect(changePasswordFullfilledAction).toBeTruthy()
     })
   })
 })
 describe("deleteAccount", () => {
-  it("should call logoutSuccess", () => {
+  test("deleteAccount.fulfilled action dispatch should clean session.email", () => {
     const password = "aaaaa"
-    const mockDispatch = jest.fn()
-    deleteAccount(password)(mockDispatch as any, () => ({} as any), null)
+    const state = sessionReducer(
+      { ...emptyInitialState, email },
+      deleteAccount.fulfilled(undefined, "", { password })
+    )
 
-    expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+    expect(state.email).toEqual("")
   })
 })

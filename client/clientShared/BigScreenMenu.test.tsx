@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event"
-import { logoutSuccess } from "../session/sessionSlice"
+import { logout } from "../session/sessionSlice"
 import BigScreenMenu from "./BigScreenMenu"
 import { logoutButtonText } from "./Header"
 import { mockPush, render, renderAuthenticated } from "./testUtils"
@@ -58,7 +58,7 @@ describe("Big Screens' Menu", () => {
 
       userEvent.click(logoutButtonElement)
 
-      expect(mockDispatch).toHaveBeenCalledWith(logoutSuccess())
+      expect(mockDispatch).toHaveBeenCalled()
     })
   })
 })

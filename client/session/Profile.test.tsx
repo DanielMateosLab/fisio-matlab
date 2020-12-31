@@ -155,6 +155,23 @@ describe("Profile", () => {
 
       expect(passwordInputElemenet).toBeInTheDocument()
     })
+    it("should show the changePasswordError when there is one", () => {
+      const mockError = "aaaaa"
+      const { getByText } = render(<Profile />, {
+        initialState: {
+          ...initialState,
+          session: {
+            ...sessionInitialState,
+            deleteAccountError: mockError,
+          },
+        },
+      })
+
+      const errorElement = getByText(mockError)
+
+      expect(errorElement).toBeInTheDocument()
+    })
+
     it("should have a submit button", async () => {
       const { getByRole } = renderAuthenticated(<Profile />, email)
 

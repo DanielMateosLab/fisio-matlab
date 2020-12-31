@@ -19,6 +19,11 @@ export const login = createAsyncThunk<{ email: string }, Credentials>(
   }
 )
 
+export const logout = createAsyncThunk("session/logout", async () => {
+  // TODO: deleteCookie
+  return
+})
+
 export const signup = createAsyncThunk<
   { email: string },
   Credentials,
@@ -33,6 +38,7 @@ export const signup = createAsyncThunk<
   if (email == "daniel.mat.lab@gmail.com") {
     throw { message: "Ha ocurrido un error desconocido" }
   }
+  // TODO: save user session in cookie
   return { email }
 })
 
@@ -53,10 +59,25 @@ export const changePassword = createAsyncThunk<
         currentPassword: "Contraseña incorrecta",
       })
     }
-    dispatch(logoutSuccess())
+    await dispatch(logout())
     return
   }
 )
+
+export const deleteAccount = createAsyncThunk<
+  void,
+  { password: string },
+  { rejectValue: { password?: string } }
+>("session/deleteAccount", async ({ password }, { rejectWithValue }) => {
+  const invalidPassword = password !== "aaaaa"
+  if (invalidPassword) {
+    return rejectWithValue({
+      password: "Contraseña incorrecta",
+    })
+  }
+  // TODO: delete session cookie
+  return
+})
 
 interface UserState {
   email: string
@@ -64,6 +85,7 @@ interface UserState {
   loginError: string
   signupError: string
   changePasswordError: string
+  deleteAccountError: string
 }
 
 const initialState: UserState = {
@@ -72,19 +94,13 @@ const initialState: UserState = {
   loginError: "",
   signupError: "",
   changePasswordError: "",
+  deleteAccountError: "",
 }
 
 const sessionSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    logoutSuccess(state) {
-      state.email = ""
-    },
-    changePasswordSuccess(state) {
-      state.changedPassword = true
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       if (state.changedPassword) {
@@ -119,20 +135,28 @@ const sessionSlice = createSlice({
         state.changePasswordError = action.error.message
       }
     })
+
+    builder.addCase(deleteAccount.fulfilled, (state) => {
+      state.email = ""
+    })
+    builder.addCase(deleteAccount.rejected, (state, action) => {
+      if (action.payload) return
+      if (action.error && action.error.message) {
+        state.changePasswordError = action.error.message
+      }
+    })
+
+    builder.addCase(logout.pending, (state) => {
+      state.email = ""
+    })
+    builder.addCase(logout.fulfilled, (state) => {
+      state.email = ""
+    })
   },
 })
-
-export const { logoutSuccess } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 
 export default sessionReducer
 
-// TODO: use createAsyncThunk to create these thunks
 // TODO: preserve the session with a cookie
-
-export const deleteAccount = (password: string): AppThunk => async (
-  dispatch
-) => {
-  dispatch(logoutSuccess())
-}

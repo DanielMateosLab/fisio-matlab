@@ -51,7 +51,7 @@ export const deleteAccountPwdInputText = "Contraseña"
 const Profile: React.FC = () => {
   useRedirectUnauth()
   const classes = useStyles()
-  const { email, changePasswordError } = useTypedSelector(
+  const { email, changePasswordError, deleteAccountError } = useTypedSelector(
     (state) => state.session
   )
   const router = useRouter()
@@ -127,7 +127,6 @@ const Profile: React.FC = () => {
                   <Typography color="error">{changePasswordError}</Typography>
                 </div>
               )}
-
               <div className={classes.formElement}>
                 <Button
                   variant="contained"
@@ -148,8 +147,13 @@ const Profile: React.FC = () => {
             password: "",
           }}
           validationSchema={deleteAccountValidationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            dispatch(deleteAccount(values.password))
+          onSubmit={async ({ password }, { setSubmitting, setErrors }) => {
+            const { error, payload } = (await dispatch(
+              deleteAccount({ password })
+            )) as AsyncThunkAction
+
+            error && payload && setErrors({ ...payload })
+
             setSubmitting(false)
           }}
         >
@@ -167,6 +171,11 @@ const Profile: React.FC = () => {
                   type="password"
                 />
               </div>
+              {deleteAccountError && (
+                <div className={classes.formElement}>
+                  <Typography color="error">{deleteAccountError}</Typography>
+                </div>
+              )}
               <div className={classes.formElement}>
                 <Button
                   variant="contained"

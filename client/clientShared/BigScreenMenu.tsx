@@ -2,7 +2,7 @@ import { Button, Typography } from "@material-ui/core"
 import { useTypedSelector } from "../redux/rootReducer"
 import FlexSpace from "./FlexSpace"
 import { useDispatch } from "react-redux"
-import { logoutSuccess } from "../session/sessionSlice"
+import { logout } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
 import { useRouter } from "next/router"
 
@@ -14,7 +14,7 @@ const BigScreenMenu: React.FC = () => {
   const LogoutButton = () => (
     <Button
       onClick={() => {
-        dispatch(logoutSuccess())
+        dispatch(logout())
       }}
     >
       {logoutButtonText}

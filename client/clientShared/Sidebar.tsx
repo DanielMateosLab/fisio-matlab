@@ -11,7 +11,7 @@ import {
 import { Dispatch, SetStateAction } from "react"
 import { useTypedSelector } from "../redux/rootReducer"
 import { useDispatch } from "react-redux"
-import { logoutSuccess } from "../session/sessionSlice"
+import { logout } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
 import { useRouter } from "next/router"
 
@@ -72,7 +72,7 @@ const Sidebar: React.FC<Props> = (props) => {
             <ListItem
               button
               onClick={() => {
-                dispatch(logoutSuccess())
+                dispatch(logout())
               }}
             >
               <ListItemIcon>

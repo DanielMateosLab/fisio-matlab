@@ -91,3 +91,17 @@ export const callHookInComponent = (hook: Function) => {
   }
   render(<Component />)
 }
+
+/** Function to check whether an action has been dispatched.
+ * Useful when testing thunks that have a lot of calls and difficult-to-mock action objects
+ * Important! This function wont get actions called by other thunks,
+ * as they are only recorded as anonymous function calls
+ * */
+export const findActionByType = (
+  mockDispatch: jest.Mock<any, any>,
+  actionType: string
+) => {
+  let actions = mockDispatch.mock.calls
+  actions = actions.map((e) => e[0])
+  return actions.find((e) => e.type === actionType)
+}
