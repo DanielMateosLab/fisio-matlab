@@ -102,9 +102,8 @@ const sessionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
-      if (state.changedPassword) {
-        state.changedPassword = false
-      }
+      state.loginError = ""
+      state.changedPassword = false
     })
     builder.addCase(login.fulfilled, (state, action) => {
       state.email = action.payload.email

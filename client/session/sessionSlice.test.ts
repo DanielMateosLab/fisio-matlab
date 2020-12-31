@@ -20,6 +20,14 @@ describe("loginReducer", () => {
 
     expect(state.changedPassword).toEqual(false)
   })
+  test("login/pending action should clean loginError", () => {
+    const state = sessionReducer(
+      { ...emptyInitialState, loginError: "aaaaaa" },
+      login.pending("", {} as any)
+    )
+
+    expect(state.loginError).toEqual("")
+  })
   test("login/fulfilled should update the state email", () => {
     const state = sessionReducer(
       undefined,
