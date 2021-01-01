@@ -2,11 +2,20 @@ import { waitFor } from "@testing-library/react"
 import sessionReducer, {
   changePassword,
   deleteAccount,
+  deleteAccountPayloadCreator,
   login,
+  loginPayloadCreator,
   logout,
+  logoutPayloadCreator,
+  sessionCookieName,
+  sessionExpiration,
   signup,
+  signupPayloadCreator,
 } from "./sessionSlice"
-import { findActionByType } from "../clientShared/testUtils"
+import { mockThunkAPI } from "../clientShared/testUtils"
+import Cookies from "js-cookie"
+
+jest.mock("js-cookie")
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
@@ -44,6 +53,18 @@ describe("loginReducer", () => {
     )
     expect(state.loginError).toEqual(message)
   })
+  test("login should call Cookies.set() with the email with valid input", async () => {
+    expect.hasAssertions()
+    const email = "daniel.mat.lab@usal.es"
+    const password = "bbbbb"
+    await loginPayloadCreator({ email, password }, {} as any)
+
+    await waitFor(() => {
+      expect(Cookies.set).toHaveBeenCalledWith(sessionCookieName, email, {
+        expires: sessionExpiration,
+      })
+    })
+  })
 })
 describe("signupReducer", () => {
   test("signup/fulfilled should update the state email", () => {
@@ -73,8 +94,28 @@ describe("signupReducer", () => {
     )
     expect(state.signupError).not.toEqual(message)
   })
+  test("signup should call Cookies.set() with the email with valid input", async () => {
+    expect.hasAssertions()
+    const email = "aaaaa"
+    const password = "bbbbb"
+    await signupPayloadCreator({ email, password }, mockThunkAPI as any)
+
+    await waitFor(() => {
+      expect(Cookies.set).toHaveBeenCalledWith(sessionCookieName, email, {
+        expires: sessionExpiration,
+      })
+    })
+  })
 })
 describe("logout", () => {
+  test("logout should call Cookies.remove() with a 200 api response", async () => {
+    expect.hasAssertions()
+    await logoutPayloadCreator(undefined, mockThunkAPI as any)
+
+    await waitFor(() => {
+      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+    })
+  })
   test("dispatching logout.fulfilled should clean the state email", () => {
     const state = sessionReducer(
       { ...emptyInitialState, email },
@@ -95,8 +136,6 @@ describe("logout", () => {
   })
 })
 describe("changePassword", () => {
-  const currentPassword = "aaaaa"
-  const password = "bbbbb"
   test("changePassword.fullfilled action should turn state.changedPassword to true", () => {
     const state = sessionReducer(
       undefined,
@@ -104,23 +143,6 @@ describe("changePassword", () => {
     )
 
     expect(state.changedPassword).toEqual(true)
-  })
-  // this might not be useful or possible to test in isolation
-  it("should call changePassword.fulfilled", async () => {
-    const mockDispatch = jest.fn()
-    await changePassword({ password, currentPassword })(
-      mockDispatch as any,
-      () => ({} as any),
-      null
-    )
-
-    await waitFor(() => {
-      const changePasswordFullfilledAction = findActionByType(
-        mockDispatch,
-        changePassword.fulfilled(undefined, "", {} as any).type
-      )
-      expect(changePasswordFullfilledAction).toBeTruthy()
-    })
   })
 })
 describe("deleteAccount", () => {
@@ -132,5 +154,14 @@ describe("deleteAccount", () => {
     )
 
     expect(state.email).toEqual("")
+  })
+  test("deleteAccount should call Cookies.remove() with a 200 api response", async () => {
+    const password = "aaaaa"
+    expect.hasAssertions()
+    await deleteAccountPayloadCreator({ password }, mockThunkAPI as any)
+
+    await waitFor(() => {
+      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+    })
   })
 })

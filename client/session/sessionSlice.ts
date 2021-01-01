@@ -1,33 +1,48 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import {
+  AsyncThunkPayloadCreator,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit"
+import Cookies from "js-cookie"
+
+// In days
+export const sessionExpiration = 7
+export const sessionCookieName = "ss"
 
 interface Credentials {
   email: string
   password: string
 }
+export const loginPayloadCreator: AsyncThunkPayloadCreator<
+  { email: string },
+  Credentials
+> = async ({ email }) => {
+  const isValid = email == "daniel.mat.lab@usal.es"
+  if (!isValid) {
+    const error = {
+      message: "Email o contraseña incorrectos",
+    }
+    throw error
+  }
+  Cookies.set(sessionCookieName, email, { expires: sessionExpiration })
+  return { email }
+}
 export const login = createAsyncThunk<{ email: string }, Credentials>(
   "session/login",
-  async ({ email }) => {
-    const isValid = email == "daniel.mat.lab@usal.es"
-    if (!isValid) {
-      const error = {
-        message: "Email o contraseña incorrectos",
-      }
-      throw error
-    }
-    return { email }
-  }
+  loginPayloadCreator
 )
 
-export const logout = createAsyncThunk("session/logout", async () => {
-  // TODO: deleteCookie
+export const logoutPayloadCreator: AsyncThunkPayloadCreator<void> = async () => {
+  Cookies.remove(sessionCookieName)
   return
-})
+}
+export const logout = createAsyncThunk("session/logout", logoutPayloadCreator)
 
-export const signup = createAsyncThunk<
+export const signupPayloadCreator: AsyncThunkPayloadCreator<
   { email: string },
   Credentials,
   { rejectValue: Partial<Credentials> }
->("session/signup", async ({ email }, { rejectWithValue }) => {
+> = async ({ email }, { rejectWithValue }) => {
   const alreadyExists = email == "daniel.mat.lab@usal.es"
   if (alreadyExists) {
     return rejectWithValue({
@@ -37,46 +52,58 @@ export const signup = createAsyncThunk<
   if (email == "daniel.mat.lab@gmail.com") {
     throw { message: "Ha ocurrido un error desconocido" }
   }
-  // TODO: save user session in cookie
+  Cookies.set(sessionCookieName, email, { expires: sessionExpiration })
   return { email }
-})
+}
+export const signup = createAsyncThunk<
+  { email: string },
+  Credentials,
+  { rejectValue: Partial<Credentials> }
+>("session/signup", signupPayloadCreator)
 
 interface ChangePasswordArgs {
   currentPassword: string
   password: string
 }
+export const changePasswordPayloadCreator: AsyncThunkPayloadCreator<
+  void,
+  ChangePasswordArgs,
+  { rejectValue: Partial<ChangePasswordArgs> }
+> = async ({ currentPassword }, { rejectWithValue, dispatch }) => {
+  const invalidPassword = currentPassword !== "aaaaa"
+  if (invalidPassword) {
+    return rejectWithValue({
+      currentPassword: "Contraseña incorrecta",
+    })
+  }
+  await dispatch(logout())
+  return
+}
 export const changePassword = createAsyncThunk<
   void,
   ChangePasswordArgs,
   { rejectValue: Partial<ChangePasswordArgs> }
->(
-  "session/changePassword",
-  async ({ currentPassword }, { rejectWithValue, dispatch }) => {
-    const invalidPassword = currentPassword !== "aaaaa"
-    if (invalidPassword) {
-      return rejectWithValue({
-        currentPassword: "Contraseña incorrecta",
-      })
-    }
-    await dispatch(logout())
-    return
-  }
-)
+>("session/changePassword", changePasswordPayloadCreator)
 
-export const deleteAccount = createAsyncThunk<
+export const deleteAccountPayloadCreator: AsyncThunkPayloadCreator<
   void,
   { password: string },
   { rejectValue: { password?: string } }
->("session/deleteAccount", async ({ password }, { rejectWithValue }) => {
+> = async ({ password }, { rejectWithValue }) => {
   const invalidPassword = password !== "aaaaa"
   if (invalidPassword) {
     return rejectWithValue({
       password: "Contraseña incorrecta",
     })
   }
-  // TODO: delete session cookie
+  Cookies.remove(sessionCookieName)
   return
-})
+}
+export const deleteAccount = createAsyncThunk<
+  void,
+  { password: string },
+  { rejectValue: { password?: string } }
+>("session/deleteAccount", deleteAccountPayloadCreator)
 
 interface UserState {
   email: string
@@ -156,5 +183,3 @@ const sessionSlice = createSlice({
 const sessionReducer = sessionSlice.reducer
 
 export default sessionReducer
-
-// TODO: preserve the session with a cookie

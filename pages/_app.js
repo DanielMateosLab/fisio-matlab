@@ -5,6 +5,7 @@ import { Provider } from "react-redux"
 import { appName } from "../appShared/appData"
 import theme from "../client/theme"
 import store from "../client/redux/store"
+import AuthenticateOnLoad from "../client/session/AuthenticateOnLoad"
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -19,8 +20,10 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <Header />
-          <Component {...pageProps} />
+          <AuthenticateOnLoad>
+            <Header />
+            <Component {...pageProps} />
+          </AuthenticateOnLoad>
         </Provider>
       </ThemeProvider>
     </>

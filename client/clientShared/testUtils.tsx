@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { AsyncThunkPayloadCreator, configureStore } from "@reduxjs/toolkit"
 import { render as rtlRender, RenderOptions } from "@testing-library/react"
 import { Provider } from "react-redux"
 import rootReducer, { RootState } from "../redux/rootReducer"
@@ -104,4 +104,13 @@ export const findActionByType = (
   let actions = mockDispatch.mock.calls
   actions = actions.map((e) => e[0])
   return actions.find((e) => e.type === actionType)
+}
+
+export const mockThunkAPI: Parameters<AsyncThunkPayloadCreator<void>>[1] = {
+  dispatch: jest.fn(),
+  getState: jest.fn(),
+  rejectWithValue: jest.fn(),
+  extra: "",
+  requestId: "",
+  signal: {} as any,
 }
