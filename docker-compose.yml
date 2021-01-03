@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  rs1:
+    image: mongo:4.4.2
+    volumes:
+      - simplisiodb1:/data/db
+    ports:
+      - 27017:27017
+    command: --replSet replSet
+
+  rs2:
+    image: mongo:4.4.2
+    volumes:
+      - simplisiodb2:/data/db
+    command: --replSet replSet
+
+  rs3:
+    image: mongo:4.4.2
+    volumes:
+      - simplisiodb3:/data/db
+    command: --replSet replSet
+
+volumes:
+  simplisiodb1:
+  simplisiodb2:
+  simplisiodb3:
