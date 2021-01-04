@@ -5,35 +5,21 @@
 1. Write tests BEFORE code (Test Driven Development)
 2. Try to write less integration tests and more unit tests.
 
-# Set up and settings
+# Backend design
 
-## Docker mongoDB set up
+## API routes
 
-In order to set up the replica sets:
+- /users/:id GET, POST, PUT, DEL
+- /login POST, DEL
 
-```
-docker-compose up -d &&
-docker-compose exec rs1 mongo
+## UsersDAO
 
-...
+- addUser
+- getUserById
+- getUserByEmail
+- updateUser
+- deleteUser
 
-> rs.initiate({
-  "_id" : "replSet",
-  "members" : [
-    {
-      "_id" : 0,
-      "host" : "rs1:27017"
-    },
-    {
-      "_id" : 1,
-      "host" : "rs2:27017"
-    },
-    {
-      "_id" : 2,
-      "host" : "rs3:27017"
-    }
-  ]}
-)
-```
+## Authentication method
 
-Note that this set up is a basic set up just for testing as it has not authentication or security settings.
+https://github.com/vercel/next.js/tree/canary/examples/auth0
