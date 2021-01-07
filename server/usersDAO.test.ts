@@ -46,7 +46,9 @@ describe("usersDAO", () => {
     it("should add the user", async () => {
       const user = await UsersDAO.addUser(mockUser)
 
-      expect(user).toEqual(user)
+      const insertedUser = await users.findOne({})
+
+      expect(user).toEqual(insertedUser)
     })
     it("should throw an exception if the user already exists", async () => {
       try {
@@ -55,10 +57,35 @@ describe("usersDAO", () => {
         const user = await UsersDAO.addUser(mockUser)
         expect(user).toBeUndefined()
       } catch (e) {
-        console.log(e.message)
         expect(e).toBeDefined()
         expect(e).toBeInstanceOf(FieldValidationError)
       }
     })
+    it("should hash the password", async () => {
+      const user = await UsersDAO.addUser(mockUser)
+
+      expect(user.password).not.toEqual(mockUser.password)
+    })
+  })
+  describe("getUserByEmail", () => {
+    it("should return the user", async () => {
+      await users.insertOne(mockUser)
+
+      const user = await UsersDAO.getUserByEmail(mockUser.email)
+
+      expect(user).toBeDefined()
+      expect(user!.email).toEqual(mockUser.email)
+    })
+    it("should return null if no user is found", async () => {
+      const user = await UsersDAO.getUserByEmail(mockUser.email)
+
+      expect(user).toBeNull()
+    })
+  })
+  describe("updateUserPassword", () => {
+    it.todo(
+      "should return { success: true } if the password has been successfully changed"
+    )
+    it.todo("should hash the new password")
   })
 })

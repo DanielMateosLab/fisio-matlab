@@ -15,9 +15,8 @@
 ## UsersDAO
 
 - addUser
-- getUserById
 - getUserByEmail
-- updateUser
+- updateUserPassword
 - deleteUser
 
 ## Authentication method

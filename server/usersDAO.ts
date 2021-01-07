@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs"
 import { Collection, MongoClient } from "mongodb"
 import { appName } from "../appShared/appData"
 import { FieldValidationError } from "../appShared/errors"
@@ -20,8 +21,17 @@ export default class UsersDAO {
       })
     }
 
-    const insertedUser = await users.insertOne(user).then((r) => r.ops[0])
+    const insertedUser = await users
+      .insertOne({
+        ...user,
+        password: await bcrypt.hash(user.password, 12),
+      })
+      .then((r) => r.ops[0])
 
     return insertedUser
   }
+  static async getUserByEmail(email: string) {
+    return await users.findOne({ email })
+  }
+  static async updateUserPassword(password: string) {}
 }
