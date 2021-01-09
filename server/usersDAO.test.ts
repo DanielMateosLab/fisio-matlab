@@ -1,7 +1,12 @@
 import { Collection, MongoClient } from "mongodb"
 import { appName } from "../appShared/appData"
-import { FieldValidationError } from "../appShared/errors"
+import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
 import UsersDAO from "./usersDAO"
+
+// Mock bcrypt to cut tests' execution time
+jest.mock("bcryptjs", () => ({
+  hash: async () => "mockedHash",
+}))
 
 require("dotenv").config()
 
@@ -24,6 +29,9 @@ describe("usersDAO", () => {
     })
     users = client.db(appName).collection("users")
   })
+  beforeEach(() => {
+    UsersDAO.setUsersCollection(users)
+  })
   afterEach(async () => {
     await users.deleteMany({})
   })
@@ -34,10 +42,11 @@ describe("usersDAO", () => {
 
   describe("injectDB", () => {
     it("should call client.db only in the first call", () => {
+      UsersDAO.setUsersCollection(undefined)
       const spy = jest.spyOn(client, "db")
 
-      UsersDAO.injectDB(client)
-      UsersDAO.injectDB(client)
+      UsersDAO.injectDb(client)
+      UsersDAO.injectDb(client)
 
       expect(spy).toHaveBeenCalledTimes(1)
     })
@@ -69,23 +78,71 @@ describe("usersDAO", () => {
   })
   describe("getUserByEmail", () => {
     it("should return the user", async () => {
-      await users.insertOne(mockUser)
+      try {
+        await users.insertOne(mockUser)
 
-      const user = await UsersDAO.getUserByEmail(mockUser.email)
+        const user = await UsersDAO.getUserByEmail(mockUser.email)
 
-      expect(user).toBeDefined()
-      expect(user!.email).toEqual(mockUser.email)
+        expect(user).toBeDefined()
+        expect(user!.email).toEqual(mockUser.email)
+      } catch (e) {
+        expect(e).toBeUndefined()
+      }
     })
     it("should return null if no user is found", async () => {
-      const user = await UsersDAO.getUserByEmail(mockUser.email)
+      try {
+        const user = await UsersDAO.getUserByEmail(mockUser.email)
 
-      expect(user).toBeNull()
+        expect(user).toBeNull()
+      } catch (e) {
+        expect(e).toBeUndefined()
+      }
     })
   })
   describe("updateUserPassword", () => {
-    it.todo(
-      "should return { success: true } if the password has been successfully changed"
-    )
-    it.todo("should hash the new password")
+    it("should return { success: true } if the password has been successfully changed", async () => {
+      try {
+        await users.insertOne(mockUser)
+
+        const newPassword = "bbbbbb"
+        const result = await UsersDAO.updateUserPassword(
+          mockUser.email,
+          newPassword
+        )
+        const user = await users.findOne({ email: mockUser.email })
+
+        expect(result).toEqual({ success: true })
+        // Check that the pwd has been changed
+        expect(user.password).not.toEqual(mockUser.password)
+      } catch (e) {
+        expect(e).toBeUndefined()
+      }
+    })
+    it("should throw an exception if no user is found", async () => {
+      try {
+        const newPassword = "bbbbbb"
+        await UsersDAO.updateUserPassword(mockUser.email, newPassword)
+      } catch (e) {
+        expect(e).toBeInstanceOf(UserNotFoundError)
+      }
+    })
+    it("should hash the new password", async () => {
+      try {
+        await users.insertOne(mockUser)
+
+        const newPassword = "bbbbbb"
+        const result = await UsersDAO.updateUserPassword(
+          mockUser.email,
+          newPassword
+        )
+        const user = await users.findOne({ email: mockUser.email })
+
+        expect(result).toEqual({ success: true })
+        // Check that the pwd is different than the one set, so it is hashed
+        expect(user.password).not.toEqual(newPassword)
+      } catch (e) {
+        expect(e).toBeUndefined()
+      }
+    })
   })
 })

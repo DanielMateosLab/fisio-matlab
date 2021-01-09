@@ -1,6 +1,6 @@
 export class FieldValidationError<T> {
   name = "FieldValidationError"
-  message = "Validation failed for one of the fields"
+  message = "Alguno de los campos tiene un formato incorrecto"
   payload: Partial<T>
 
   constructor(payload: Partial<T>) {
@@ -12,4 +12,9 @@ export class FieldValidationError<T> {
       this.message = payload[field]
     }
   }
+}
+
+export class UserNotFoundError {
+  name = "UserNotFoundError"
+  message = "No se ha podido encontrar el usuario"
 }

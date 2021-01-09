@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --watch"
+    "test": "docker-compose up -d && jest --watch"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

@@ -1,18 +1,29 @@
 import bcrypt from "bcryptjs"
 import { Collection, MongoClient } from "mongodb"
 import { appName } from "../appShared/appData"
-import { FieldValidationError } from "../appShared/errors"
-import { User } from "./types"
+import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
+import { SuccessResponse, User } from "./types"
 
 let users: Collection<User>
 
 export default class UsersDAO {
-  static injectDB(mongoClient: MongoClient): void {
+  static injectDb(mongoClient: MongoClient): void {
     if (users) {
       return
     }
     users = mongoClient.db(appName).collection("users")
   }
+
+  /** Utility function to mock the users collection in tests */
+  static setUsersCollection(
+    mockUsersCollection: Partial<Collection<User>> | undefined
+  ) {
+    if (process.env.NODE_ENV !== "test") {
+      throw "setDb() can only be used for testing purposes. Use injectDb instead."
+    }
+    users = mockUsersCollection as any
+  }
+
   static async addUser(user: User) {
     const alreadyExists = await users.findOne({ email: user.email })
     if (alreadyExists) {
@@ -30,8 +41,31 @@ export default class UsersDAO {
 
     return insertedUser
   }
+
   static async getUserByEmail(email: string) {
+    // TODO: put an index in the users.email field
     return await users.findOne({ email })
   }
-  static async updateUserPassword(password: string) {}
+
+  static async updateUserPassword(
+    email: string,
+    password: string
+  ): Promise<SuccessResponse> {
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const result = await users.updateOne(
+      { email },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      }
+    )
+
+    if (result.matchedCount == 0) {
+      throw new UserNotFoundError()
+    }
+
+    return { success: true }
+  }
 }
