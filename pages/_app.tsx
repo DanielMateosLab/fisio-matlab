@@ -5,9 +5,10 @@ import { Provider } from "react-redux"
 import { appName } from "../appShared/appData"
 import theme from "../client/theme"
 import store from "../client/redux/store"
-import AuthenticateOnLoad from "../client/session/AuthenticateOnLoad"
+import { Auth0Provider } from "@auth0/auth0-react"
+import { AppProps } from "next/app"
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -19,12 +20,15 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <AuthenticateOnLoad>
-            <Header />
+        <Auth0Provider
+          domain="danielmatlab.eu.auth0.com"
+          clientId="hd4e0uouw2zYEJiQrTueXPXsbJGsYycc"
+          redirectUri="http://localhost:3000/profile"
+        >
+          <Provider store={store}>
             <Component {...pageProps} />
-          </AuthenticateOnLoad>
-        </Provider>
+          </Provider>
+        </Auth0Provider>
       </ThemeProvider>
     </>
   )

@@ -9,11 +9,9 @@ import {
   SwipeableDrawer,
 } from "@material-ui/core"
 import { Dispatch, SetStateAction } from "react"
-import { useTypedSelector } from "../redux/rootReducer"
-import { useDispatch } from "react-redux"
-import { logout } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
 import { useRouter } from "next/router"
+import { useAuth0 } from "@auth0/auth0-react"
 
 interface Props {
   sidebarOpened: boolean
@@ -22,8 +20,9 @@ interface Props {
 
 const Sidebar: React.FC<Props> = (props) => {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
-  const email = useTypedSelector((state) => state.session.email)
-  const dispatch = useDispatch()
+  const { user, logout } = useAuth0()
+  const email = user && (user.email || user.nickname)
+
   const router = useRouter()
 
   /**
@@ -69,12 +68,7 @@ const Sidebar: React.FC<Props> = (props) => {
               </ListItemIcon>
               <ListItemText primary={email} />
             </EnhancedListItem>
-            <ListItem
-              button
-              onClick={() => {
-                dispatch(logout())
-              }}
-            >
+            <ListItem button onClick={() => logout()}>
               <ListItemIcon>
                 <MeetingRoom />
               </ListItemIcon>

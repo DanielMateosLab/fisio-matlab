@@ -1,25 +1,14 @@
 import { Button, Typography } from "@material-ui/core"
-import { useTypedSelector } from "../redux/rootReducer"
 import FlexSpace from "./FlexSpace"
-import { useDispatch } from "react-redux"
-import { logout } from "../session/sessionSlice"
 import { logoutButtonText } from "./Header"
 import { useRouter } from "next/router"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const BigScreenMenu: React.FC = () => {
-  const dispatch = useDispatch()
-  const email = useTypedSelector((state) => state.session.email)
-  const router = useRouter()
+  const { user, logout } = useAuth0()
+  const email = user && (user.email || user.nickname)
 
-  const LogoutButton = () => (
-    <Button
-      onClick={() => {
-        dispatch(logout())
-      }}
-    >
-      {logoutButtonText}
-    </Button>
-  )
+  const router = useRouter()
 
   return (
     <>
@@ -41,7 +30,7 @@ const BigScreenMenu: React.FC = () => {
       <FlexSpace />
       {email && (
         <div>
-          <LogoutButton />
+          <Button onClick={() => logout()}>{logoutButtonText}</Button>
         </div>
       )}
     </>

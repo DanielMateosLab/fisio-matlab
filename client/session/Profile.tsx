@@ -1,6 +1,8 @@
+import { useAuth0 } from "@auth0/auth0-react"
 import {
   Button,
   Container,
+  Link,
   makeStyles,
   Typography,
   TypographyProps,
@@ -9,13 +11,14 @@ import { Formik } from "formik"
 import { useRouter } from "next/router"
 import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
 import FormikTextInput from "../clientShared/FormikTextInput"
-import useRedirectUnauth from "../clientShared/useRedirectUnauth"
+import Header from "../clientShared/Header"
 import {
   changePasswordValidationSchema,
   deleteAccountValidationSchema,
 } from "../clientShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
 import { useThunkDispatch } from "../redux/store"
+import AuthenticationRequired from "./AuthenticationRequired"
 import { changePassword, deleteAccount } from "./sessionSlice"
 
 const useStyles = makeStyles((theme) => ({
@@ -48,9 +51,11 @@ export const deleteAccountWarningText =
 export const deleteAccountPwdInputText = "Contraseña"
 
 const Profile: React.FC = () => {
-  useRedirectUnauth()
   const classes = useStyles()
-  const { email, changePasswordError, deleteAccountError } = useTypedSelector(
+  const { user, isAuthenticated, isLoading } = useAuth0()
+  const email = user && (user.email || user.nickname)
+
+  const { changePasswordError, deleteAccountError } = useTypedSelector(
     (state) => state.session
   )
   const router = useRouter()
@@ -63,133 +68,138 @@ const Profile: React.FC = () => {
     </Typography>
   )
 
+  if (!isAuthenticated && !isLoading) return <AuthenticationRequired />
+
   return (
-    <Container className={classes.container} maxWidth="sm" component="main">
-      <Typography variant="h3" component="h2" gutterBottom>
-        Perfil
-      </Typography>
-      <section>
-        <Subtitle>Correo electrónico</Subtitle>
-        <Typography>{email}</Typography>
-      </section>
-      <section>
-        <Subtitle>Cambiar contraseña</Subtitle>
-        <Typography>
-          Aquí puedes cambiar la contraseña que utilizas para iniciar sesión.
+    <div>
+      <Header />
+      <Container className={classes.container} maxWidth="sm" component="main">
+        <Typography variant="h3" component="h2" gutterBottom>
+          Perfil
         </Typography>
-        <Formik
-          initialValues={{
-            currentPassword: "",
-            password: "",
-            repeatPassword: "",
-          }}
-          validationSchema={changePasswordValidationSchema}
-          onSubmit={async (
-            { password, currentPassword },
-            { setSubmitting, setErrors }
-          ) => {
-            const { error, payload } = (await dispatch(
-              changePassword({ password, currentPassword })
-            )) as AsyncThunkAction
+        <section>
+          <Subtitle>Correo electrónico</Subtitle>
+          {isLoading ? <br /> : <Typography>{email}</Typography>}
+        </section>
+        <section>
+          <Subtitle>Cambiar contraseña</Subtitle>
+          <Typography>
+            Aquí puedes cambiar la contraseña que utilizas para iniciar sesión.
+          </Typography>
+          <Formik
+            initialValues={{
+              currentPassword: "",
+              password: "",
+              repeatPassword: "",
+            }}
+            validationSchema={changePasswordValidationSchema}
+            onSubmit={async (
+              { password, currentPassword },
+              { setSubmitting, setErrors }
+            ) => {
+              const { error, payload } = (await dispatch(
+                changePassword({ password, currentPassword })
+              )) as AsyncThunkAction
 
-            error && payload && setErrors({ ...payload })
-            !error && router.push("/login")
+              error && payload && setErrors({ ...payload })
+              !error && router.push("/login")
 
-            setSubmitting(false)
-          }}
-        >
-          {(formik) => (
-            <form onSubmit={formik.handleSubmit} className={classes.form}>
-              <div className={classes.formElement}>
-                <FormikTextInput
-                  name="currentPassword"
-                  label={currentPasswordInputText}
-                  type="password"
-                />
-              </div>
-              <div className={classes.formElement}>
-                <FormikTextInput
-                  name="password"
-                  label={newPasswordInputText}
-                  type="password"
-                />
-              </div>
-              <div className={classes.formElement}>
-                <FormikTextInput
-                  name="repeatPassword"
-                  label={repeatNewPasswordInputText}
-                  type="password"
-                />
-              </div>
-              {changePasswordError && (
+              setSubmitting(false)
+            }}
+          >
+            {(formik) => (
+              <form onSubmit={formik.handleSubmit} className={classes.form}>
                 <div className={classes.formElement}>
-                  <Typography color="error">{changePasswordError}</Typography>
+                  <FormikTextInput
+                    name="currentPassword"
+                    label={currentPasswordInputText}
+                    type="password"
+                  />
                 </div>
-              )}
-              <div className={classes.formElement}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                  disabled={formik.isSubmitting}
-                >
-                  {submitButtonText}
-                </Button>
-              </div>
-            </form>
-          )}
-        </Formik>
-      </section>
-      <section>
-        <Formik
-          initialValues={{
-            password: "",
-          }}
-          validationSchema={deleteAccountValidationSchema}
-          onSubmit={async ({ password }, { setSubmitting, setErrors }) => {
-            const { error, payload } = (await dispatch(
-              deleteAccount({ password })
-            )) as AsyncThunkAction
-
-            error && payload && setErrors({ ...payload })
-
-            setSubmitting(false)
-          }}
-        >
-          {(formik) => (
-            <form onSubmit={formik.handleSubmit} className={classes.form}>
-              <Subtitle>{deleteAccountTitle}</Subtitle>
-              <Typography>{deleteAccountDescription}</Typography>
-              <Typography color="error" gutterBottom>
-                {deleteAccountWarningText}
-              </Typography>
-              <div>
-                <FormikTextInput
-                  name="password"
-                  label={deleteAccountPwdInputText}
-                  type="password"
-                />
-              </div>
-              {deleteAccountError && (
                 <div className={classes.formElement}>
-                  <Typography color="error">{deleteAccountError}</Typography>
+                  <FormikTextInput
+                    name="password"
+                    label={newPasswordInputText}
+                    type="password"
+                  />
                 </div>
-              )}
-              <div className={classes.formElement}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                  disabled={formik.isSubmitting}
-                >
-                  {deleteAccountButtonText}
-                </Button>
-              </div>
-            </form>
-          )}
-        </Formik>
-      </section>
-    </Container>
+                <div className={classes.formElement}>
+                  <FormikTextInput
+                    name="repeatPassword"
+                    label={repeatNewPasswordInputText}
+                    type="password"
+                  />
+                </div>
+                {changePasswordError && (
+                  <div className={classes.formElement}>
+                    <Typography color="error">{changePasswordError}</Typography>
+                  </div>
+                )}
+                <div className={classes.formElement}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    disabled={formik.isSubmitting}
+                  >
+                    {submitButtonText}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </Formik>
+        </section>
+        <section>
+          <Formik
+            initialValues={{
+              password: "",
+            }}
+            validationSchema={deleteAccountValidationSchema}
+            onSubmit={async ({ password }, { setSubmitting, setErrors }) => {
+              const { error, payload } = (await dispatch(
+                deleteAccount({ password })
+              )) as AsyncThunkAction
+
+              error && payload && setErrors({ ...payload })
+
+              setSubmitting(false)
+            }}
+          >
+            {(formik) => (
+              <form onSubmit={formik.handleSubmit} className={classes.form}>
+                <Subtitle>{deleteAccountTitle}</Subtitle>
+                <Typography>{deleteAccountDescription}</Typography>
+                <Typography color="error" gutterBottom>
+                  {deleteAccountWarningText}
+                </Typography>
+                <div>
+                  <FormikTextInput
+                    name="password"
+                    label={deleteAccountPwdInputText}
+                    type="password"
+                  />
+                </div>
+                {deleteAccountError && (
+                  <div className={classes.formElement}>
+                    <Typography color="error">{deleteAccountError}</Typography>
+                  </div>
+                )}
+                <div className={classes.formElement}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    disabled={formik.isSubmitting}
+                  >
+                    {deleteAccountButtonText}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </Formik>
+        </section>
+      </Container>
+    </div>
   )
 }
 

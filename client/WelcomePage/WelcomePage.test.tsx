@@ -5,7 +5,7 @@ import {
   renderAuthenticated,
 } from "../clientShared/testUtils"
 import WelcomePage, {
-  loginButtonText,
+  authButtonText,
   principles,
   signupButtonText,
 } from "./WelcomePage"
@@ -24,63 +24,36 @@ describe("WelcomePage", () => {
     })
   })
 
-  describe("Login button", () => {
-    it("should render a log in button", () => {
+  describe("Auth button", () => {
+    it("should render an auth button", () => {
       const { getByText } = render(<WelcomePage />)
 
-      const loginButtonElement = getByText(loginButtonText)
+      const authButtonElement = getByText(authButtonText)
 
-      expect(loginButtonElement).toBeInTheDocument()
+      expect(authButtonElement).toBeInTheDocument()
     })
-    it("redirects to the login page when clicking it", () => {
+    it("call auth0 login()", () => {
       const { getByText } = render(<WelcomePage />)
 
-      const loginButtonElement = getByText(loginButtonText)
-      userEvent.click(loginButtonElement)
+      const authButtonElement = getByText(authButtonText)
+      userEvent.click(authButtonElement)
 
       expect(mockPush.mock.calls[0]).toContain("/login")
     })
     it("should not be present if there is an active session", () => {
       const { queryByText } = renderAuthenticated(<WelcomePage />)
 
-      const loginButtonElement = queryByText(loginButtonText)
+      const authButtonElement = queryByText(authButtonText)
 
-      expect(loginButtonElement).not.toBeInTheDocument()
+      expect(authButtonElement).not.toBeInTheDocument()
     })
   })
 
-  describe("Signup button", () => {
-    it("should render a signup button", () => {
-      const { getByText } = render(<WelcomePage />)
-
-      const signupButtonElement = getByText(signupButtonText)
-
-      expect(signupButtonElement).toBeInTheDocument()
-    })
-    it("should redirect to the signup page", () => {
-      const { getByText } = render(<WelcomePage />)
-
-      const signupButtonElement = getByText(signupButtonText)
-      userEvent.click(signupButtonElement)
-
-      expect(mockPush.mock.calls[0]).toContain("/signup")
-    })
-    it("should not be present if there is an active session", () => {
-      const { queryByText } = renderAuthenticated(<WelcomePage />)
-
-      const signupButtonElement = queryByText(signupButtonText)
-
-      expect(signupButtonElement).not.toBeInTheDocument()
-    })
-  })
-
-  test("Login and Signup buttons should not be present if there is an active session", () => {
+  test("Auth button should not be present if there is an active session", () => {
     const { queryByText } = renderAuthenticated(<WelcomePage />)
 
-    const signupButtonElement = queryByText(signupButtonText)
-    const loginButtonElement = queryByText(loginButtonText)
+    const authButtonElement = queryByText(authButtonText)
 
-    expect(signupButtonElement).not.toBeInTheDocument()
-    expect(loginButtonElement).not.toBeInTheDocument()
+    expect(authButtonElement).not.toBeInTheDocument()
   })
 })

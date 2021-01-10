@@ -1,7 +1,8 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
-import React from "react"
-import { useTypedSelector } from "../redux/rootReducer"
-import Link from "next/link"
+import React, { useEffect } from "react"
+import { useAuth0 } from "@auth0/auth0-react"
+import Header from "../clientShared/Header"
+import { useRouter } from "next/router"
 
 export const principles: Array<{ name: string; description: string }> = [
   {
@@ -21,8 +22,7 @@ export const principles: Array<{ name: string; description: string }> = [
   },
 ]
 
-export const loginButtonText = "Inicia sesión"
-export const signupButtonText = "Regístrate"
+export const authButtonText = "Acceder"
 
 const useStyles = makeStyles((theme) => ({
   authButtonsContainer: {
@@ -44,31 +44,36 @@ const useStyles = makeStyles((theme) => ({
 
 const WelcomePage = () => {
   const classes = useStyles()
-  const email = useTypedSelector((state) => state.session.email)
+  const router = useRouter()
+  const { loginWithPopup, isAuthenticated } = useAuth0()
+
+  useEffect(() => {
+    router.prefetch("/profile")
+  }, [])
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/profile")
+    }
+  }, [isAuthenticated])
+
+  const { user } = useAuth0()
+  const email = user && (user.email || user.nickname)
 
   return (
     <div>
+      <Header />
       <main>
         {!email && (
           <div className={classes.authButtonsContainer}>
-            <Link href="/login">
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.authButton}
-              >
-                {loginButtonText}
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.authButton}
-              >
-                {signupButtonText}
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.authButton}
+              onClick={() => loginWithPopup()}
+            >
+              {authButtonText}
+            </Button>
           </div>
         )}
         <div className={classes.principles}>

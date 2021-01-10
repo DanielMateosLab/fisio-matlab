@@ -9,6 +9,7 @@
     "test": "docker-compose up -d && jest --watch"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.2.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@reduxjs/toolkit": "^1.4.0",

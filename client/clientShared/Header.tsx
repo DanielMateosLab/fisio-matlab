@@ -1,9 +1,9 @@
 import { makeStyles, Theme, Typography, useMediaQuery } from "@material-ui/core"
 import { useRouter } from "next/router"
 import { appName, appDescription } from "../../appShared/appData"
-import { useTypedSelector } from "../redux/rootReducer"
 import FlexSpace from "./FlexSpace"
 import dynamic from "next/dynamic"
+import { useAuth0 } from "@auth0/auth0-react"
 const BigScreenMenu = dynamic(() => import("./BigScreenMenu"))
 const SmallScreenMenu = dynamic(() => import("./SmallScreenMenu"))
 
@@ -31,7 +31,8 @@ const useStyles = makeStyles<Theme, { email: string; pathIsNotHome: boolean }>(
 export const HeaderWithCustomScreenSize: React.FC<{ smallScreen: boolean }> = ({
   smallScreen,
 }) => {
-  const email = useTypedSelector((state) => state.session.email)
+  const { user } = useAuth0()
+  const email = user && (user.email || user.nickname)
   const bigScreen = !smallScreen
 
   const router = useRouter()
