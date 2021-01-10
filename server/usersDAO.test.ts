@@ -146,7 +146,14 @@ describe("usersDAO", () => {
     })
   })
   describe("deleteUser", () => {
-    it.todo("should delete the user")
-    it.todo("should throw an exception if the user is not found")
+    it("should delete the user and return { success: true }", async () => {
+      await users.insertOne(mockUser)
+
+      const { success } = await UsersDAO.deleteUser(mockUser.email)
+      const user = await users.findOne({ email: mockUser.email })
+
+      expect(success).toEqual(true)
+      expect(user).toBeNull()
+    })
   })
 })

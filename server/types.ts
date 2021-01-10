@@ -3,6 +3,6 @@ export interface User {
   password: string
 }
 
-export interface SuccessResponse {
+export interface DAOResponse {
   success: true
 }

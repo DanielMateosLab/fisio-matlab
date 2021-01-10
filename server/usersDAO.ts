@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs"
 import { Collection, MongoClient } from "mongodb"
 import { appName } from "../appShared/appData"
 import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
-import { SuccessResponse, User } from "./types"
+import { DAOResponse, User } from "./types"
 
 let users: Collection<User>
 
@@ -50,7 +50,7 @@ export default class UsersDAO {
   static async updateUserPassword(
     email: string,
     password: string
-  ): Promise<SuccessResponse> {
+  ): Promise<DAOResponse> {
     const hashedPassword = await bcrypt.hash(password, 12)
 
     const result = await users.updateOne(
@@ -67,5 +67,18 @@ export default class UsersDAO {
     }
 
     return { success: true }
+  }
+
+  static async deleteUser(email: string): Promise<DAOResponse> {
+    const result = await users.deleteOne({ email })
+    if (result.deletedCount == 1) {
+      return { success: true }
+    } else {
+      throw {
+        name: "UserNotDeletedError",
+        message:
+          "No se ha podido eliminar el usuario. Prueba de nuevo más tarde",
+      }
+    }
   }
 }
