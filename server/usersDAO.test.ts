@@ -20,14 +20,14 @@ if (!DB_URI)
   throw "Lacking db uri. Set it in the TEST_DB_URI environment variable"
 
 describe("usersDAO", () => {
-  let client: MongoClient
+  let conn: MongoClient
   let users: Collection
   beforeAll(async () => {
-    client = await MongoClient.connect(DB_URI, {
+    conn = await MongoClient.connect(DB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    users = client.db(appName).collection("users")
+    users = conn.db(appName).collection("users")
   })
   beforeEach(() => {
     UsersDAO.setUsersCollection(users)
@@ -37,16 +37,16 @@ describe("usersDAO", () => {
   })
   afterAll(async () => {
     await users.deleteMany({})
-    await client.close()
+    await conn.close()
   })
 
   describe("injectDB", () => {
     it("should call client.db only in the first call", () => {
       UsersDAO.setUsersCollection(undefined)
-      const spy = jest.spyOn(client, "db")
+      const spy = jest.spyOn(conn, "db")
 
-      UsersDAO.injectDb(client)
-      UsersDAO.injectDb(client)
+      UsersDAO.injectDb(conn)
+      UsersDAO.injectDb(conn)
 
       expect(spy).toHaveBeenCalledTimes(1)
     })
@@ -144,5 +144,9 @@ describe("usersDAO", () => {
         expect(e).toBeUndefined()
       }
     })
+  })
+  describe("deleteUser", () => {
+    it.todo("should delete the user")
+    it.todo("should throw an exception if the user is not found")
   })
 })

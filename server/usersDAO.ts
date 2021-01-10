@@ -7,11 +7,11 @@ import { SuccessResponse, User } from "./types"
 let users: Collection<User>
 
 export default class UsersDAO {
-  static injectDb(mongoClient: MongoClient): void {
+  static injectDb(conn: MongoClient): void {
     if (users) {
       return
     }
-    users = mongoClient.db(appName).collection("users")
+    users = conn.db(appName).collection("users")
   }
 
   /** Utility function to mock the users collection in tests */
