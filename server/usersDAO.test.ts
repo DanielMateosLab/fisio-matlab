@@ -1,5 +1,4 @@
 import { Collection, MongoClient } from "mongodb"
-import { appName } from "../appShared/appData"
 import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
 import UsersDAO from "./usersDAO"
 
@@ -19,6 +18,9 @@ const DB_URI = process.env.TEST_DB_URI
 if (!DB_URI)
   throw "Lacking db uri. Set it in the TEST_DB_URI environment variable"
 
+const DB_NAME = process.env.DB_NAME
+if (!DB_NAME) throw "Lacking DB_NAME environment variable"
+
 describe("usersDAO", () => {
   let conn: MongoClient
   let users: Collection
@@ -27,7 +29,7 @@ describe("usersDAO", () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    users = conn.db(appName).collection("users")
+    users = conn.db(DB_NAME).collection("users")
   })
   beforeEach(() => {
     UsersDAO.setUsersCollection(users)
