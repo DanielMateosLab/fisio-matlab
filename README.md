@@ -21,4 +21,9 @@
 
 ## Authentication method
 
-https://github.com/vercel/next.js/tree/canary/examples/auth0
+Hacer un sistema con sessiones con métodos de:
+
+- Usuario/e-mail y contraseña.
+- Oauth2 the Google y github. Seguir sus documentaciones.
+
+Si no sabes como crear la store consulta los videos de codeRealm.
