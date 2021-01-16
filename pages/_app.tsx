@@ -6,8 +6,9 @@ import { appName } from "../appShared/appData"
 import theme from "../client/theme"
 import store from "../client/redux/store"
 import AuthenticateOnLoad from "../client/session/AuthenticateOnLoad"
+import { AppProps } from "next/dist/next-server/lib/router/router"
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
