@@ -41,7 +41,7 @@ export const emailErrorText = "La dirección de correo electrónico no es válid
 emailValidation.validator = emailValidation.validator.email(emailErrorText)
 
 // Signup Password Validation
-const passwordMinCharacters = 5
+const passwordMinCharacters = 8
 const passwordMaxCharacters = 128
 export const newPasswordValidation = new FieldValidationObject(
   passwordMinCharacters,
@@ -58,7 +58,7 @@ export const repeatPasswordValidator = yup
   })
 
 // Login Password Validation (no min length)
-export const currentPasswordValidation = new FieldValidationObject(0, 128, true)
+export const currentPasswordValidation = new FieldValidationObject(8, 128, true)
 
 // Form Schemas
 export const signupFormValidationSchema = yup.object().shape({
