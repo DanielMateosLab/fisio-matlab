@@ -15,9 +15,8 @@ const mockUser = {
   password: "aaaaaa",
 }
 
-const DB_URI = process.env.TEST_DB_URI
-if (!DB_URI)
-  throw "Lacking db uri. Set it in the TEST_DB_URI environment variable"
+const DB_URI = process.env.DB_URI
+if (!DB_URI) throw "Lacking db uri. Set it in the DB_URI environment variable"
 
 const DB_NAME = appName
 if (!DB_NAME) throw "Lacking DB_NAME environment variable"
