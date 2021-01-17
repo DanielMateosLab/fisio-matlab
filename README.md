@@ -24,6 +24,7 @@
 Hacer un sistema con sessiones con métodos de:
 
 - Usuario/e-mail y contraseña.
-- Oauth2 the Google y github. Seguir sus documentaciones.
+- Oauth2 the Google y Facebook. Seguir sus documentaciones.
+- Passwordless email.
 
 Si no sabes como crear la store consulta los videos de codeRealm.

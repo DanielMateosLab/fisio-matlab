@@ -1,6 +1,7 @@
 export class FieldValidationError<T> {
+  status = 400
   name = "FieldValidationError"
-  message = "Alguno de los campos tiene un formato incorrecto"
+  message = "One of the fields has an invalid format"
   payload: Partial<T>
 
   constructor(payload: Partial<T>) {
@@ -15,6 +16,17 @@ export class FieldValidationError<T> {
 }
 
 export class UserNotFoundError {
+  status = 404
   name = "UserNotFoundError"
-  message = "No se ha podido encontrar el usuario"
+  message = "User not found"
+}
+
+export class MissingEnvVarError {
+  status = 500
+  name = "MissingEnvVarError"
+  message: string
+
+  constructor(envVar: string) {
+    this.message = `Missing ${envVar} environment variable.`
+  }
 }
