@@ -122,6 +122,14 @@ describe("current password validation", () => {
       currentPasswordValidation.validator.validateSync(testString)
     ).not.toThrow()
   })
+  test("the password validation should fail with more characters than the maxium length allowed", () => {
+    const testString = "a".repeat(currentPasswordValidation.maxCharacters + 1)
+
+    expectPasswordValidationError(
+      testString,
+      currentPasswordValidation.maxErrorText
+    )
+  })
 })
 
 describe("repeatPassword validation", () => {

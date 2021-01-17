@@ -57,8 +57,8 @@ export const repeatPasswordValidator = yup
     return this.parent.password === value
   })
 
-// Login Password Validation (no min. or max. length)
-export const currentPasswordValidation = new FieldValidationObject(0, 0, true)
+// Login Password Validation (no min length)
+export const currentPasswordValidation = new FieldValidationObject(0, 128, true)
 
 // Form Schemas
 export const signupFormValidationSchema = yup.object().shape({
