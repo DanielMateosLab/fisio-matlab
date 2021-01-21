@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb"
+import httpRequest from "node-mocks-http"
 import { MissingEnvVarError } from "../appShared/errors"
-import connectToDb, { resetConn } from "./connectToDb"
+import database, { resetConn } from "./database"
 require("dotenv").config()
 
 jest.mock("mongodb", () => ({
@@ -9,19 +10,22 @@ jest.mock("mongodb", () => ({
   },
 }))
 
-describe("connectToDb", () => {
+describe("database", () => {
+  let req: any, res: any
   beforeEach(() => {
     resetConn()
+    req = httpRequest.createRequest()
+    res = httpRequest.createResponse()
   })
-  it("should return the conn", async () => {
-    const conn = await connectToDb()
+  it("should add the conn to the req object", async () => {
+    await database(req, res)
 
     // true is the return value of the mocked connect()
-    expect(conn).toEqual(true)
+    expect(req.conn).toEqual(true)
   })
   it("should call MongoClient.connect only in the first call", async () => {
-    await connectToDb()
-    await connectToDb()
+    await database(req, res)
+    await database(req, res)
 
     expect(MongoClient.connect).toHaveBeenCalledTimes(1)
   })
@@ -30,7 +34,7 @@ describe("connectToDb", () => {
     process.env.DB_URI = ""
 
     try {
-      await connectToDb()
+      await database(req, res)
     } catch (e) {
       expect(e).toBeInstanceOf(MissingEnvVarError)
     }

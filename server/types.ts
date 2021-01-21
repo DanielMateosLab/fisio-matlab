@@ -1,4 +1,5 @@
 import { Session } from "express-session"
+import { MongoClient } from "mongodb"
 import { NextApiRequest } from "next"
 
 export interface User {
@@ -11,5 +12,6 @@ export interface DAOResponse {
 }
 
 export type ExtendedRequest = NextApiRequest & {
-  session: Session
+  session: Session & { email: string | undefined }
+  conn: MongoClient | undefined
 }
