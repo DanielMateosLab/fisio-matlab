@@ -42,7 +42,7 @@ emailValidation.validator = emailValidation.validator.email(emailErrorText)
 
 // Signup Password Validation
 const passwordMinCharacters = 8
-const passwordMaxCharacters = 128
+const passwordMaxCharacters = 72
 export const newPasswordValidation = new FieldValidationObject(
   passwordMinCharacters,
   passwordMaxCharacters,
@@ -58,10 +58,10 @@ export const repeatPasswordValidator = yup
   })
 
 // Login Password Validation (no min length)
-export const currentPasswordValidation = new FieldValidationObject(8, 128, true)
+export const currentPasswordValidation = new FieldValidationObject(8, 72, true)
 
 // Form Schemas
-export const signupFormValidationSchema = yup.object().shape({
+export const signupValidationSchema = yup.object().shape({
   email: emailValidation.validator,
   password: newPasswordValidation.validator,
   repeatPassword: repeatPasswordValidator,
