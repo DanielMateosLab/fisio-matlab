@@ -1,11 +1,17 @@
 import * as yup from "yup"
 import {
+  email,
   emailErrorText,
-  emailValidation,
-  newPasswordValidation,
+  getMaxErrorText,
+  newPassword,
   repeatPasswordErrorText,
   repeatPasswordValidator,
-  currentPasswordValidation,
+  emailMaxCharacters,
+  requiredErrorText,
+  passwordMinCharacters,
+  passwordMaxCharacters,
+  getMinErrorText,
+  currentPassword,
 } from "./Validation"
 
 type TestString = string | undefined
@@ -25,7 +31,7 @@ describe("email validation", () => {
     testString: TestString,
     expectedError: string
   ) {
-    expectValidationError(emailValidation.validator, testString, expectedError)
+    expectValidationError(email, testString, expectedError)
   }
 
   test("the email validation should fail with a random word", () => {
@@ -36,18 +42,18 @@ describe("email validation", () => {
   test("the email validation should fail with an empty email", () => {
     const testString = undefined
 
-    expectEmailValidationError(testString, emailValidation.requiredErrorText)
+    expectEmailValidationError(testString, requiredErrorText)
   })
   test("the email validation should fail with a 257 characters email", () => {
     const testString = "a".repeat(250) + "@aaa.aa"
 
-    expectEmailValidationError(testString, emailValidation.maxErrorText)
+    expectEmailValidationError(testString, getMaxErrorText(emailMaxCharacters))
   })
   test("the email validation should pass", () => {
     const testString = "aaaaa@aaaa.com"
 
     expect(() => {
-      emailValidation.validator.validateSync(testString)
+      email.validateSync(testString)
     }).not.toThrow()
   })
 })
@@ -57,42 +63,33 @@ describe("new password validation", () => {
     testString: TestString,
     expectedError: string
   ) {
-    expectValidationError(
-      newPasswordValidation.validator,
-      testString,
-      expectedError
-    )
+    expectValidationError(newPassword, testString, expectedError)
   }
   test("the password validation should fail with no input", () => {
     const testString = undefined
 
-    expectPasswordValidationError(
-      testString,
-      newPasswordValidation.requiredErrorText
-    )
+    expectPasswordValidationError(testString, requiredErrorText)
   })
   test("the password validation should fail with less characters than the minium length allowed", () => {
-    const testString = "a".repeat(newPasswordValidation.minCharacters - 1)
+    const testString = "a".repeat(passwordMinCharacters - 1)
 
     expectPasswordValidationError(
       testString,
-      newPasswordValidation.minErrorText
+      getMinErrorText(passwordMinCharacters)
     )
   })
   test("the password validation should fail with more characters than the maxium length allowed", () => {
-    const testString = "a".repeat(newPasswordValidation.maxCharacters + 1)
+    const testString = "a".repeat(passwordMaxCharacters + 1)
 
     expectPasswordValidationError(
       testString,
-      newPasswordValidation.maxErrorText
+      getMaxErrorText(passwordMaxCharacters)
     )
   })
   test("the password validation should pass with a 20 letters password", () => {
     const testString = "a".repeat(20)
 
-    expect(() =>
-      newPasswordValidation.validator.validateSync(testString)
-    ).not.toThrow()
+    expect(() => newPassword.validateSync(testString)).not.toThrow()
   })
 })
 
@@ -101,33 +98,24 @@ describe("current password validation", () => {
     testString: TestString,
     expectedError: string
   ) {
-    expectValidationError(
-      currentPasswordValidation.validator,
-      testString,
-      expectedError
-    )
+    expectValidationError(currentPassword, testString, expectedError)
   }
   test("the password validation should fail with no input", () => {
     const testString = undefined
 
-    expectPasswordValidationError(
-      testString,
-      currentPasswordValidation.requiredErrorText
-    )
+    expectPasswordValidationError(testString, requiredErrorText)
   })
   test("the password validation should pass with a 20 letters password", () => {
     const testString = "a".repeat(20)
 
-    expect(() =>
-      currentPasswordValidation.validator.validateSync(testString)
-    ).not.toThrow()
+    expect(() => currentPassword.validateSync(testString)).not.toThrow()
   })
   test("the password validation should fail with more characters than the maxium length allowed", () => {
-    const testString = "a".repeat(currentPasswordValidation.maxCharacters + 1)
+    const testString = "a".repeat(passwordMaxCharacters + 1)
 
     expectPasswordValidationError(
       testString,
-      currentPasswordValidation.maxErrorText
+      getMaxErrorText(passwordMaxCharacters)
     )
   })
 })
