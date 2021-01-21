@@ -8,7 +8,7 @@ import { signup } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { useThunkDispatch } from "../redux/store"
-import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
+import { AsyncThunkAction } from "../clientShared/types"
 import { useTypedSelector } from "../redux/rootReducer"
 
 export const signupComponentTitle =
@@ -61,7 +61,7 @@ const Signup = () => {
         validationSchema={signupValidationSchema}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           const { error, payload } = (await dispatch(
-            signup({ email: values.email, password: values.password })
+            signup(values)
           )) as AsyncThunkAction
 
           error && payload && setErrors({ ...payload })

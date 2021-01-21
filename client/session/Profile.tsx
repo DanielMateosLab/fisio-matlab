@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
-import { AsyncThunkAction } from "../clientShared/asyncThunkActionType"
+import { AsyncThunkAction } from "../clientShared/types"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import useRedirectUnauth from "../clientShared/useRedirectUnauth"
 import {
