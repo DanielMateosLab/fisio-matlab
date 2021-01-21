@@ -1,4 +1,5 @@
 import * as yup from "yup"
+import { LoginData, SignupData } from "appShared/types"
 
 export const requiredErrorText = "Campo obligatorio"
 export const getMaxErrorText = (max: number) =>
@@ -46,13 +47,14 @@ export const currentPassword = yup
   .required(requiredErrorText)
 
 // Form Schemas
-export const signupValidationSchema = yup.object().shape({
+
+export const signupValidationSchema = yup.object().shape<SignupData>({
   email,
   password: newPassword,
   repeatPassword: repeatPasswordValidator,
 })
 
-export const loginValidationSchema = yup.object().shape({
+export const loginValidationSchema = yup.object().shape<LoginData>({
   email,
   password: currentPassword,
 })
