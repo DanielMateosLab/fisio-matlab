@@ -8,8 +8,6 @@ jest.mock("bcryptjs", () => ({
   hash: async () => "mockedHash",
 }))
 
-require("dotenv").config()
-
 const mockUser = {
   email: "aaaa@aaa.aa",
   password: "aaaaaa",

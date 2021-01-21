@@ -10,6 +10,8 @@ const config: Config.InitialOptions = {
   moduleNameMapper: { "\\.(css|less)$": "identity-obj-proxy" },
   clearMocks: true,
   coverageDirectory: "__coverage__",
+  moduleDirectories: ["node_modules", "."],
+  roots: ["<rootDir>/."],
 }
 
 export default config
