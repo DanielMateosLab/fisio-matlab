@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
   clearMocks: true,
   coverageDirectory: "__coverage__",
   moduleDirectories: ["<rootDir>/node_modules", "<rootDir>/."],
+  roots: ["<rootDir>/."],
 }
 
 export default config
