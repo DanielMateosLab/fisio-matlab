@@ -53,14 +53,12 @@ export const signupPayloadCreator: AsyncThunkPayloadCreator<
     const { payload, message, email } = (await res.json()) as ResponseBody<
       UsersPostResponse
     >
-    if (payload) {
-      return rejectWithValue({ ...payload })
-    } else if (message) {
-      throw { message }
-    } else if (email) {
+    if (email) {
       return { email }
+    } else if (payload) {
+      return rejectWithValue({ ...payload })
     } else {
-      throw { message: "Unknown error." }
+      throw { message: message || "Unknown error." }
     }
   } catch (e) {
     console.error(e)
