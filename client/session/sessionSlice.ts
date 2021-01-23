@@ -6,6 +6,7 @@ import {
 import {
   APIErrorResponse,
   LoginData,
+  ResponseBody,
   SignupData,
   UsersPostResponse,
 } from "appShared/types"
@@ -48,14 +49,18 @@ export const signupPayloadCreator: AsyncThunkPayloadCreator<
 > = async (data, { rejectWithValue }) => {
   try {
     const res = await fetchPostOrPut("/api/users", data)
-    if (!res.ok) {
-      const { payload, message } = (await res.json()) as APIErrorResponse
-      if (payload) {
-        return rejectWithValue({ ...payload })
-      } else throw { message }
+    const { payload, message, email } = (await res.json()) as ResponseBody<
+      UsersPostResponse
+    >
+    if (payload) {
+      return rejectWithValue({ ...payload })
+    } else if (message) {
+      throw { message }
+    } else if (email) {
+      return { email }
+    } else {
+      throw { message: "Unknown error." }
     }
-    const { email } = (await res.json()) as UsersPostResponse
-    return { email }
   } catch (e) {
     console.error(e)
     throw {

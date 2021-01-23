@@ -5,6 +5,12 @@ export interface APIErrorResponse {
   payload?: {}
 }
 
+export interface UsersPostResponse {
+  email: string
+}
+
+export type ResponseBody<SuccessBody> = Partial<SuccessBody & APIErrorResponse>
+
 export interface SignupData {
   email: string
   password: string
@@ -14,8 +20,4 @@ export interface SignupData {
 export interface LoginData {
   email: string
   password: string
-}
-
-export interface UsersPostResponse {
-  email: string
 }
