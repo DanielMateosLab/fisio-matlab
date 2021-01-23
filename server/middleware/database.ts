@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb"
 import { NextApiResponse } from "next"
-import { MissingEnvVarError } from "../appShared/errors"
-import { ExtendedRequest } from "./types"
+import { MissingEnvVarError } from "../../appShared/errors"
+import { ExtendedRequest } from "../types"
 
 let conn: MongoClient | undefined
 

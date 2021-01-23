@@ -1,6 +1,5 @@
-import { findNonSerializableValue } from "@reduxjs/toolkit"
 import { NextApiResponse } from "next"
-import { ExtendedRequest } from "./types"
+import { ExtendedRequest } from "../types"
 
 const runMiddlewares = async (
   req: ExtendedRequest,

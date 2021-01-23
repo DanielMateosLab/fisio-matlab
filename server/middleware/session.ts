@@ -1,6 +1,6 @@
 import session from "express-session"
 import connectMongo from "connect-mongodb-session"
-import { MissingEnvVarError } from "../appShared/errors"
+import { MissingEnvVarError } from "../../appShared/errors"
 
 const MongoStore = connectMongo(session)
 

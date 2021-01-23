@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb"
 import httpRequest from "node-mocks-http"
-import { MissingEnvVarError } from "../appShared/errors"
+import { MissingEnvVarError } from "../../appShared/errors"
 import database, { resetConn } from "./database"
 require("dotenv").config()
 
