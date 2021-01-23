@@ -3,19 +3,22 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit"
+import {
+  APIErrorResponse,
+  LoginData,
+  SignupData,
+  UsersPostResponse,
+} from "appShared/types"
 import Cookies from "js-cookie"
+import { fetchPostOrPut } from "server/apiUtils"
 
 // In days
 export const sessionExpiration = 7
 export const sessionCookieName = "ss"
 
-interface Credentials {
-  email: string
-  password: string
-}
 export const loginPayloadCreator: AsyncThunkPayloadCreator<
   { email: string },
-  Credentials
+  LoginData
 > = async ({ email }) => {
   const isValid = email == "daniel.mat.lab@usal.es"
   if (!isValid) {
@@ -27,7 +30,7 @@ export const loginPayloadCreator: AsyncThunkPayloadCreator<
   Cookies.set(sessionCookieName, email, { expires: sessionExpiration })
   return { email }
 }
-export const login = createAsyncThunk<{ email: string }, Credentials>(
+export const login = createAsyncThunk<{ email: string }, LoginData>(
   "session/login",
   loginPayloadCreator
 )
@@ -40,25 +43,31 @@ export const logout = createAsyncThunk("session/logout", logoutPayloadCreator)
 
 export const signupPayloadCreator: AsyncThunkPayloadCreator<
   { email: string },
-  Credentials,
-  { rejectValue: Partial<Credentials> }
-> = async ({ email }, { rejectWithValue }) => {
-  const alreadyExists = email == "daniel.mat.lab@usal.es"
-  if (alreadyExists) {
-    return rejectWithValue({
-      email: "Ya existe un usuario con ese correo electrónico",
-    })
+  SignupData,
+  { rejectValue: Partial<SignupData> }
+> = async (data, { rejectWithValue }) => {
+  try {
+    const res = await fetchPostOrPut("/api/users", data)
+    if (!res.ok) {
+      const { payload, message } = (await res.json()) as APIErrorResponse
+      if (payload) {
+        return rejectWithValue({ ...payload })
+      } else throw { message }
+    }
+    const { email } = (await res.json()) as UsersPostResponse
+    return { email }
+  } catch (e) {
+    console.error(e)
+    throw {
+      message:
+        "No se ha podido completar el registro. Vuelve a intentarlo más tarde.",
+    }
   }
-  if (email == "daniel.mat.lab@gmail.com") {
-    throw { message: "Ha ocurrido un error desconocido" }
-  }
-  Cookies.set(sessionCookieName, email, { expires: sessionExpiration })
-  return { email }
 }
 export const signup = createAsyncThunk<
   { email: string },
-  Credentials,
-  { rejectValue: Partial<Credentials> }
+  SignupData,
+  { rejectValue: Partial<SignupData> }
 >("session/signup", signupPayloadCreator)
 
 interface ChangePasswordArgs {

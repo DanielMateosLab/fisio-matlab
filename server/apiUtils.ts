@@ -3,14 +3,13 @@ export async function fetchPostOrPut(
   body: {},
   method: "POST" | "PUT" = "POST"
 ) {
-  const res = await fetch(path, {
+  return await fetch(path, {
     method,
     headers: {
       "Content-type": "application/json",
     },
     body: JSON.stringify(body),
   })
-  return await res.json()
 }
 
 export const fetcher = (url: string) => fetch(url).then((r) => r.json())
