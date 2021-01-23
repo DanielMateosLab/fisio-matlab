@@ -1,32 +1,18 @@
-export class FieldValidationError<T> {
-  status = 400
-  name = "FieldValidationError"
-  message = "One of the fields has an invalid format"
-  payload: Partial<T>
-
-  constructor(payload: Partial<T>) {
-    this.payload = payload
-
-    const field = !!Object.keys(payload).length && Object.keys(payload)[0]
-    if (field) {
-      // @ts-ignore
-      this.message = payload[field]
-    }
-  }
+abstract class HttpError extends Error {
+  abstract status: number
 }
 
-export class UserNotFoundError {
+export class UserNotFoundError extends HttpError {
   status = 404
   name = "UserNotFoundError"
   message = "User not found"
 }
 
-export class MissingEnvVarError {
+export class MissingEnvVarError extends HttpError {
   status = 500
   name = "MissingEnvVarError"
-  message: string
 
   constructor(envVar: string) {
-    this.message = `Missing ${envVar} environment variable.`
+    super(`Missing ${envVar} environment variable.`)
   }
 }
