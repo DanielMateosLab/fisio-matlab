@@ -10,7 +10,6 @@ import sessionReducer, {
   sessionCookieName,
   sessionExpiration,
   signup,
-  signupPayloadCreator,
 } from "./sessionSlice"
 import { mockThunkAPI } from "../clientShared/testUtils"
 import Cookies from "js-cookie"
@@ -94,18 +93,6 @@ describe("signupReducer", () => {
     )
     expect(state.signupError).not.toEqual(message)
   })
-  test("signup should call Cookies.set() with the email with valid input", async () => {
-    expect.hasAssertions()
-    const email = "aaaaa"
-    const password = "bbbbb"
-    await signupPayloadCreator({ email, password }, mockThunkAPI as any)
-
-    await waitFor(() => {
-      expect(Cookies.set).toHaveBeenCalledWith(sessionCookieName, email, {
-        expires: sessionExpiration,
-      })
-    })
-  })
 })
 describe("logout", () => {
   test("logout should call Cookies.remove() with a 200 api response", async () => {
@@ -126,6 +113,7 @@ describe("logout", () => {
   })
   // We do this because we should be able to close the session offline
   // TODO: later, see in passport how to make this possible (to not use the server session if the client one is not available)
+  // Possible solution: set a cookie with { pendingLogout: true } and write a middleware to check the flag and call logout
   test("dispatching logout.pending should clean the state email", () => {
     const state = sessionReducer(
       { ...emptyInitialState, email },

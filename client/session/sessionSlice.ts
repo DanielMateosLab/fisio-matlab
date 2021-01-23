@@ -48,6 +48,7 @@ export const signupPayloadCreator: AsyncThunkPayloadCreator<
   { rejectValue: Partial<SignupData> }
 > = async (data, { rejectWithValue }) => {
   try {
+    // TODO: extract this logic to reusable functions and write tests for them
     const res = await fetchPostOrPut("/api/users", data)
     const { payload, message, email } = (await res.json()) as ResponseBody<
       UsersPostResponse

@@ -60,6 +60,7 @@ const Signup = () => {
         }}
         validationSchema={signupValidationSchema}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
+          // TODO: extract this logic to a reusable function and write tests for it
           const { error, payload } = (await dispatch(
             signup(values)
           )) as AsyncThunkAction

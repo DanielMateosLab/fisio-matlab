@@ -231,24 +231,6 @@ describe("Signup", () => {
     it("should have a submit button", () => {
       expect(submitButtonElement).toBeInTheDocument()
     })
-    it("should dispatch an action to save in the store the form values", async () => {
-      const emailElement = queries.getByLabelText(emailInputText)
-      const passwordElement = queries.getByLabelText(passwordInputText)
-      const repeatPasswordElement = queries.getByLabelText(
-        repeatPasswordInputText
-      )
-      const email = "aaaa@aaa.aa"
-      const pwd = "aaaaa"
-
-      userEvent.type(emailElement, email)
-      userEvent.type(passwordElement, pwd)
-      userEvent.type(repeatPasswordElement, pwd)
-      userEvent.click(submitButtonElement)
-
-      await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalled()
-      })
-    })
   })
 
   it("should redirect to the profile page when there is a session", () => {
