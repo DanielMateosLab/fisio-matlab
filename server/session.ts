@@ -13,16 +13,19 @@ if (!uri) throw new MissingEnvVarError("DB_URI")
 const sess: session.SessionOptions = {
   secret,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
+    maxAge: 1000 * 60 * 30, // HALF AN HOUR
+    secure: process.env.NODE_ENV == "production" ? true : false,
+    sameSite: true,
   },
+  rolling: true,
+  resave: false,
+  saveUninitialized: false,
   store: new MongoStore({
     uri,
-    databaseName: "sessions",
+    databaseName: "auth",
     collection: "sessions",
     connectionOptions: { useNewUrlParser: true, useUnifiedTopology: true },
   }),
-  saveUninitialized: true,
-  resave: true,
 }
 
 export default session(sess)
