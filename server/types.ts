@@ -1,6 +1,6 @@
 import { Session } from "express-session"
 import { MongoClient } from "mongodb"
-import { NextApiRequest } from "next"
+import { NextApiRequest, NextApiResponse } from "next"
 
 export interface User {
   email: string
@@ -14,4 +14,16 @@ export interface DAOResponse {
 export type ExtendedRequest = NextApiRequest & {
   session: Session & { email: string | undefined }
   conn: MongoClient | undefined
+}
+
+interface NextFunction {
+  (result?: any): any
+}
+
+export interface Middleware {
+  (
+    req: ExtendedRequest,
+    res: NextApiResponse,
+    next: NextFunction
+  ): void | Promise<void>
 }
