@@ -1,6 +1,8 @@
+import { yupToFormErrors } from "formik"
 import { Collection, MongoClient } from "mongodb"
+import { ValidationError } from "yup"
 import { appName } from "../appShared/appData"
-import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
+import { UserNotFoundError } from "../appShared/errors"
 import UsersDAO from "./usersDAO"
 
 // Mock bcrypt to cut tests' execution time
@@ -67,7 +69,7 @@ describe("usersDAO", () => {
         expect(user).toBeUndefined()
       } catch (e) {
         expect(e).toBeDefined()
-        expect(e).toBeInstanceOf(FieldValidationError)
+        expect(e).toBeInstanceOf(ValidationError)
       }
     })
     it("should hash the password", async () => {

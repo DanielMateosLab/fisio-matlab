@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs"
+import { emailErrorText } from "client/clientShared/Validation"
 import { Collection, MongoClient } from "mongodb"
+import { ValidationError } from "yup"
 import { appName } from "../appShared/appData"
 import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
 import { DAOResponse, User } from "./types"
@@ -27,9 +29,7 @@ export default class UsersDAO {
   static async addUser(user: User) {
     const alreadyExists = await users.findOne({ email: user.email })
     if (alreadyExists) {
-      throw new FieldValidationError<User>({
-        email: "Ya existe un usuario con ese correo electrónico.",
-      })
+      throw new ValidationError(emailErrorText, user.email, "email")
     }
 
     const insertedUser = await users
