@@ -16,3 +16,11 @@ export class MissingEnvVarError extends HttpError {
     super(`Missing ${envVar} environment variable.`)
   }
 }
+
+export class InternalServerError extends HttpError {
+  status = 500
+  name = "InternalServerError"
+  constructor(message: string) {
+    super(message)
+  }
+}
