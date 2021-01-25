@@ -13,7 +13,7 @@ import useRedirectUnauth from "../clientShared/useRedirectUnauth"
 import {
   changePasswordValidationSchema,
   deleteAccountValidationSchema,
-} from "../clientShared/Validation"
+} from "../../appShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
 import { useThunkDispatch } from "../redux/store"
 import { changePassword, deleteAccount } from "./sessionSlice"

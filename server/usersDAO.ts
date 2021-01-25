@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs"
-import { emailErrorText } from "client/clientShared/Validation"
+import { emailErrorText } from "appShared/Validation"
 import { Collection, MongoClient } from "mongodb"
 import { ValidationError } from "yup"
 import { appName } from "../appShared/appData"

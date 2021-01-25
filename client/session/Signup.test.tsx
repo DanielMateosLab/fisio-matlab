@@ -25,7 +25,7 @@ import {
   passwordMinCharacters,
   getMinErrorText,
   passwordMaxCharacters,
-} from "../clientShared/Validation"
+} from "../../appShared/Validation"
 import { mockPush } from "../clientShared/testUtils"
 
 jest.mock("react-redux", () => ({

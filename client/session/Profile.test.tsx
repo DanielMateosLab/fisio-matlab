@@ -11,7 +11,7 @@ import {
 import {
   changePasswordValidationSchema,
   deleteAccountValidationSchema,
-} from "../clientShared/Validation"
+} from "../../appShared/Validation"
 import Profile, {
   currentPasswordInputText,
   deleteAccountButtonText,

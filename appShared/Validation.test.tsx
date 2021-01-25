@@ -12,7 +12,7 @@ import {
   passwordMaxCharacters,
   getMinErrorText,
   currentPassword,
-} from "./Validation"
+} from "appShared/Validation"
 
 type TestString = string | undefined
 
