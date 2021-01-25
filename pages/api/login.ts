@@ -1,14 +1,13 @@
 import { NextApiResponse } from "next"
-import runMiddleware from "../../server/runMiddleware"
-import session from "../../server/session"
-import { ExtendedRequest } from "../../server/types"
+import runMiddlewares from "server/middleware/runMiddlewares"
+import session from "server/middleware/session"
+import { ExtendedRequest } from "server/types"
 
 export default async (req: ExtendedRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    res.statusCode = 400
-    res.send("Invalid method")
+    res.status(405).json({ message: "Invalid method" })
   }
-  await runMiddleware(req, res, session)
+  await runMiddlewares(req, res, session)
   res.statusCode = 200
   res.json({ name: "John Doe" })
 }
