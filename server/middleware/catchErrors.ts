@@ -11,14 +11,14 @@ const catchErrors = (handler: ExtendedApiHandler) => async (
     await handler(req, res)
   } catch (e) {
     if (e instanceof ValidationError) {
-      res.status(400).json({
+      return res.status(400).json({
         name: e.name,
         message: "Validation Error",
         payload: yupToFormErrors(e),
       })
     }
 
-    res.status(e.status || 500).json({
+    return res.status(e.status || 500).json({
       name: e.name || "InternalServerError",
       message: e.message || "Internal Server Error",
     })
