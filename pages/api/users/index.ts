@@ -20,7 +20,8 @@ export const usersHandler: ExtendedApiHandler = async (
 
   await runMiddlewares(req, res, session, database, users)
 
-  await signupValidationSchema.validate(req.body, { abortEarly: false }) // Throws if validation fails
+  // Throws if validation fails
+  await signupValidationSchema.validate(req.body, { abortEarly: false })
 
   const { email, password } = req.body
 
