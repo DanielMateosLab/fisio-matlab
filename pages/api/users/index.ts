@@ -31,7 +31,7 @@ export const usersHandler: ExtendedApiHandler = async (
   await UsersDAO.addUser({ email, password })
   logIn(req, email)
 
-  return res.status(201).end()
+  return res.status(201).json({ email })
 }
 
 export default catchErrors(usersHandler)
