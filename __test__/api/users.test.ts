@@ -90,7 +90,16 @@ describe("/api/users", () => {
         expect(e).toBeInstanceOf(ValidationError)
       }
     })
-    it.todo("should add the user to the db")
+    it("should add the user to the db", async () => {
+      const spy = jest.spyOn(UsersDAO, "addUser")
+
+      await usersHandler(req, res)
+
+      expect(spy).toHaveBeenCalledWith({
+        email: user.email,
+        password: user.password,
+      })
+    })
     it.todo("should logIn the user")
     it.todo("should close the db connection")
     // TODO: Write a test for the login function
