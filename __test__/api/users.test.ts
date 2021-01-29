@@ -108,7 +108,5 @@ describe("/api/users", () => {
 
       expect(spy).toHaveBeenCalledWith(req, user.email)
     })
-    it.todo("should close the db connection")
-    // TODO: Write a test for the login function
   })
 })
