@@ -10,14 +10,13 @@ import { ValidationError } from "yup"
 import { APIErrorResponse, UsersPostResponse } from "appShared/types"
 import users from "server/middleware/users"
 import catchErrors from "server/middleware/catchErrors"
+import { MethodNotAllowedError } from "appShared/errors"
 
 export const usersHandler: ExtendedApiHandler = async (
   req: ExtendedRequest,
   res: NextApiResponse<UsersPostResponse | APIErrorResponse>
 ) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" })
-  }
+  if (req.method !== "POST") throw new MethodNotAllowedError()
 
   await runMiddlewares(req, res, session, database, users)
 

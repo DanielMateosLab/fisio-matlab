@@ -10,6 +10,7 @@ import { signupValidationSchema } from "appShared/Validation"
 import { SignupData } from "appShared/types"
 import { ValidationError } from "yup"
 import UsersDAO from "server/usersDAO"
+import { MethodNotAllowedError } from "appShared/errors"
 
 jest.mock("server/usersDAO")
 
@@ -37,7 +38,7 @@ describe("/api/users", () => {
       })
       res = createResponse()
     })
-    it("should 405 invalid method with get, put, patch or del", async () => {
+    it("should throw a MethodNotAllowedError with get, put, patch or del", async () => {
       const notAllowedMethods: RequestOptions["method"][] = [
         "GET",
         "PUT",
@@ -52,9 +53,11 @@ describe("/api/users", () => {
           method: method as RequestOptions["method"],
         })
 
-        await usersHandler(req as any, res as any)
-
-        expect(res.statusCode).toEqual(405)
+        try {
+          await usersHandler(req as any, res as any)
+        } catch (e) {
+          expect(e).toBeInstanceOf(MethodNotAllowedError)
+        }
       }
     })
     it("should run session, database and users middlewares", async () => {
