@@ -23,7 +23,7 @@ describe("/api/users", () => {
       repeatPassword: "bbbbbb",
     }
 
-    const jestSpy = jest
+    const validationSpy = jest
       .spyOn(signupValidationSchema, "validate")
       .mockImplementation(async (data) => data)
     const getUserSpy = jest
@@ -77,7 +77,7 @@ describe("/api/users", () => {
     it("should validate the request body", async () => {
       await usersHandler(req, res)
 
-      expect(jestSpy.mock.calls[0]).toContainEqual(user)
+      expect(validationSpy.mock.calls[0]).toContainEqual(user)
     })
     it("should throw if the user exists", async () => {
       expect.hasAssertions()
