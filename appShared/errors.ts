@@ -24,3 +24,9 @@ export class InternalServerError extends HttpError {
     super(message)
   }
 }
+
+export class MethodNotAllowedError extends HttpError {
+  status = 405
+  name = "MethodNotAllowedError"
+  message = "Method not allowed"
+}
