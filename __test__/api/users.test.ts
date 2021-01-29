@@ -1,3 +1,4 @@
+import * as auth from "server/auth"
 import { usersHandler } from "pages/api/users"
 import {
   createMocks,
@@ -100,7 +101,13 @@ describe("/api/users", () => {
         password: user.password,
       })
     })
-    it.todo("should logIn the user")
+    it("should logIn the user", async () => {
+      const spy = jest.spyOn(auth, "logIn")
+
+      await usersHandler(req, res)
+
+      expect(spy).toHaveBeenCalledWith(req, user.email)
+    })
     it.todo("should close the db connection")
     // TODO: Write a test for the login function
   })
