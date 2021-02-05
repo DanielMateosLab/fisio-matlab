@@ -1,15 +1,16 @@
-// TODO: check if the failed requests are logged in console with the res body
-export interface APIErrorResponse {
+export interface APIErrorResponse<PayloadType> {
   name?: string
   message: string
-  payload?: {}
+  payload?: PayloadType
 }
 
-export interface UsersPostResponse {
-  email: string
-}
+export type UsersPostResponse = Partial<
+  { email: string } & APIErrorResponse<Partial<SignupData>>
+>
 
-export type ResponseBody<SuccessBody> = Partial<SuccessBody & APIErrorResponse>
+export type ResponseBody<SuccessBody, PayloadType = {}> = Partial<
+  SuccessBody & APIErrorResponse<PayloadType>
+>
 
 export interface SignupData {
   email: string
