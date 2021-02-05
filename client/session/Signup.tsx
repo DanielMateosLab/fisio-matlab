@@ -1,15 +1,15 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import { signupValidationSchema } from "../../appShared/Validation"
-import { signup } from "./sessionSlice"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { useThunkDispatch } from "../redux/store"
-import { AsyncThunkAction } from "../clientShared/types"
-import { useTypedSelector } from "../redux/rootReducer"
+import { fetchPostOrPut } from "server/apiUtils"
+import { UsersPostResponse } from "appShared/types"
+import { authFulfilled } from "./sessionSlice"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -32,11 +32,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Signup = () => {
+interface Props {
+  // For testing purposes
+  defaultSignupError?: string
+}
+const Signup: React.FC<Props> = ({ defaultSignupError = "" }) => {
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useThunkDispatch()
-  const signupError = useTypedSelector((state) => state.session.signupError)
+  const [signupError, setSignupError] = useState(defaultSignupError)
 
   useEffect(() => {
     router.prefetch("/profile")
@@ -60,15 +64,29 @@ const Signup = () => {
         }}
         validationSchema={signupValidationSchema}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
-          // TODO: extract this logic to a reusable function and write tests for it
-          const { error, payload } = (await dispatch(
-            signup(values)
-          )) as AsyncThunkAction
-
-          error && payload && setErrors({ ...payload })
-          !error && router.push("/profile")
-
-          setSubmitting(false)
+          try {
+            const { email, payload } = (await fetchPostOrPut(
+              "/api/users",
+              values
+            )) as UsersPostResponse
+            if (email) {
+              dispatch(authFulfilled({ email }))
+              router.push("/profile")
+            } else if (payload) {
+              setErrors(payload)
+            } else {
+              /*  If there is no email or payload, an error happened, but we don't want
+              to give details to the client, so we throw null to pass control to the catch
+              block, where a default error message is set. */
+              throw null
+            }
+          } catch (e) {
+            setSignupError(
+              "No se ha podido completar el registro. Vuelve a intentarlo más tarde."
+            )
+          } finally {
+            setSubmitting(false)
+          }
         }}
       >
         {(formik) => (

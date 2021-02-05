@@ -2,16 +2,10 @@ import {
   AsyncThunkPayloadCreator,
   createAsyncThunk,
   createSlice,
+  PayloadAction,
 } from "@reduxjs/toolkit"
-import {
-  APIErrorResponse,
-  LoginData,
-  ResponseBody,
-  SignupData,
-  UsersPostResponse,
-} from "appShared/types"
+import { LoginData } from "appShared/types"
 import Cookies from "js-cookie"
-import { fetchPostOrPut } from "server/apiUtils"
 
 // In days
 export const sessionExpiration = 7
@@ -41,38 +35,6 @@ export const logoutPayloadCreator: AsyncThunkPayloadCreator<void> = async () => 
   return
 }
 export const logout = createAsyncThunk("session/logout", logoutPayloadCreator)
-
-export const signupPayloadCreator: AsyncThunkPayloadCreator<
-  { email: string },
-  SignupData,
-  { rejectValue: Partial<SignupData> }
-> = async (data, { rejectWithValue }) => {
-  try {
-    // TODO: extract this logic to reusable functions and write tests for them
-    const res = await fetchPostOrPut("/api/users", data)
-    const { payload, message, email } = (await res.json()) as ResponseBody<
-      UsersPostResponse
-    >
-    if (email) {
-      return { email }
-    } else if (payload) {
-      return rejectWithValue({ ...payload })
-    } else {
-      throw { message: message || "Unknown error." }
-    }
-  } catch (e) {
-    console.error(e)
-    throw {
-      message:
-        "No se ha podido completar el registro. Vuelve a intentarlo más tarde.",
-    }
-  }
-}
-export const signup = createAsyncThunk<
-  { email: string },
-  SignupData,
-  { rejectValue: Partial<SignupData> }
->("session/signup", signupPayloadCreator)
 
 interface ChangePasswordArgs {
   currentPassword: string
@@ -122,7 +84,6 @@ interface UserState {
   email: string
   changedPassword: boolean
   loginError: string
-  signupError: string
   changePasswordError: string
   deleteAccountError: string
 }
@@ -131,7 +92,6 @@ const initialState: UserState = {
   email: "",
   changedPassword: false,
   loginError: "",
-  signupError: "",
   changePasswordError: "",
   deleteAccountError: "",
 }
@@ -139,7 +99,11 @@ const initialState: UserState = {
 const sessionSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    authFulfilled(state, action: PayloadAction<{ email: string }>) {
+      state.email = action.payload.email
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       state.loginError = ""
@@ -153,17 +117,6 @@ const sessionSlice = createSlice({
         state.loginError = action.error.message
       }
     })
-
-    builder.addCase(signup.fulfilled, (state, action) => {
-      state.email = action.payload.email
-    })
-    builder.addCase(signup.rejected, (state, action) => {
-      if (action.payload) return
-      if (action.error && action.error.message) {
-        state.signupError = action.error.message
-      }
-    })
-
     builder.addCase(changePassword.fulfilled, (state) => {
       state.changedPassword = true
     })
@@ -192,6 +145,8 @@ const sessionSlice = createSlice({
     })
   },
 })
+
+export const { authFulfilled } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 

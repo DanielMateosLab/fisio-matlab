@@ -1,5 +1,6 @@
 import { waitFor } from "@testing-library/react"
 import sessionReducer, {
+  authFulfilled,
   changePassword,
   deleteAccount,
   deleteAccountPayloadCreator,
@@ -9,7 +10,6 @@ import sessionReducer, {
   logoutPayloadCreator,
   sessionCookieName,
   sessionExpiration,
-  signup,
 } from "./sessionSlice"
 import { mockThunkAPI } from "../clientShared/testUtils"
 import Cookies from "js-cookie"
@@ -19,6 +19,12 @@ jest.mock("js-cookie")
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
 
+describe("authenticationFulfilled", () => {
+  it("should update the state email", () => {
+    const state = sessionReducer(undefined, authFulfilled({ email }))
+    expect(state.email).toEqual(email)
+  })
+})
 describe("loginReducer", () => {
   test("login/pending action should set session.changedPassword to false if it's true", () => {
     const state = sessionReducer(
@@ -63,35 +69,6 @@ describe("loginReducer", () => {
         expires: sessionExpiration,
       })
     })
-  })
-})
-describe("signupReducer", () => {
-  test("signup/fulfilled should update the state email", () => {
-    const state = sessionReducer(
-      undefined,
-      signup.fulfilled({ email }, "", {} as any)
-    )
-
-    expect(state.email).toEqual(email)
-  })
-  test("signup/rejected should update state signupError", () => {
-    const message = "aaaa"
-    const state = sessionReducer(
-      undefined,
-      signup.rejected({ message, name: "mockError" }, "", {} as any)
-    )
-    expect(state.signupError).toEqual(message)
-  })
-  // This means that the action has field errors, updated in the form component
-  test("signup/rejected should NOT update state signupError when there is an action payload", () => {
-    const message = "aaaa"
-    const state = sessionReducer(
-      undefined,
-      signup.rejected({ message, name: "mockError" }, "", {} as any, {
-        password: message,
-      })
-    )
-    expect(state.signupError).not.toEqual(message)
   })
 })
 describe("logout", () => {

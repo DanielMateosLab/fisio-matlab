@@ -233,6 +233,20 @@ describe("Signup", () => {
     })
   })
 
+  describe("api responses", () => {
+    describe("response succeeded", () => {
+      it.todo("should dispatch authFulfilled with the email")
+      it.todo("should redirect to /profile")
+    })
+    describe("response failed", () => {
+      it.todo(
+        "should call setErrors if the response has a payload (validation error details)"
+      )
+      it.todo("should call setSignupError otherwise")
+    })
+    it.todo("should call setSubmitting(false)")
+  })
+
   it("should redirect to the profile page when there is a session", () => {
     renderAuthenticated(<Signup />)
 
@@ -240,12 +254,7 @@ describe("Signup", () => {
   })
   it("should show the signupError when there is one", () => {
     const mockError = "aaaaa"
-    const { getByText } = render(<Signup />, {
-      initialState: {
-        ...initialState,
-        session: { ...sessionInitialState, signupError: mockError },
-      },
-    })
+    const { getByText } = render(<Signup defaultSignupError={mockError} />)
 
     const errorElement = getByText(mockError)
 
