@@ -42,6 +42,22 @@
 			"  const router = useRouter()"
 		],
 		"description": "material UI useStyles hook. Returns a classes object"
+	},
+	"arrow function": {
+		"scope": "javascript,typescript,javascriptreact,typescriptreact",
+		"prefix": "af",
+		"body": [
+			"(${1}) => {${2}}"
+		],
+		"description": "Arrow function"
+	},
+	"Async arrow function": {
+		"scope": "javascript,typescript,javascriptreact,typescriptreact",
+		"prefix": "aaf",
+		"body": [
+			"async (${1}) => {${2}}"
+		],
+		"description": "Async arrow function"
 	}
 }
 
