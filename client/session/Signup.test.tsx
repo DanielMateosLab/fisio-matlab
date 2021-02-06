@@ -1,9 +1,7 @@
 import {
-  initialState,
   render,
   renderAuthenticated,
   RenderResult,
-  sessionInitialState,
   waitFor,
 } from "../clientShared/testUtils"
 import Signup, {
@@ -17,8 +15,6 @@ import userEvent from "@testing-library/user-event"
 import {
   emailErrorText,
   repeatPasswordErrorText,
-  email,
-  newPassword,
   requiredErrorText,
   emailMaxCharacters,
   getMaxErrorText,
@@ -27,6 +23,7 @@ import {
   passwordMaxCharacters,
 } from "../../appShared/Validation"
 import { mockPush } from "../clientShared/testUtils"
+import { authFulfilled } from "./sessionSlice"
 
 jest.mock("react-redux", () => ({
   ...(jest.requireActual("react-redux") as {}),
@@ -234,9 +231,43 @@ describe("Signup", () => {
   })
 
   describe("api responses", () => {
+    const email = "aaaaa@aaaa.com"
+    const password = "a".repeat(8)
+
+    const submitForm = () => {
+      const emailInputElement = queries.getByLabelText(emailInputText)
+      userEvent.type(emailInputElement, email)
+
+      const passwordInputElement = queries.getByLabelText(passwordInputText)
+      userEvent.type(passwordInputElement, password)
+
+      const repeatPasswordElement = queries.getByLabelText(
+        repeatPasswordInputText
+      )
+      userEvent.type(repeatPasswordElement, password)
+
+      const submitButtonElement = queries.getByRole("button", {
+        name: submitButtonText,
+      })
+      userEvent.click(submitButtonElement)
+    }
     describe("response succeeded", () => {
-      it.todo("should dispatch authFulfilled with the email")
-      it.todo("should redirect to /profile")
+      it("should dispatch authFulfilled with the email", async () => {
+        fetchMock.once(JSON.stringify({ email }))
+        submitForm()
+
+        await waitFor(() => {
+          expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
+        })
+      })
+      it("should redirect to /profile", async () => {
+        fetchMock.once(JSON.stringify({ email }))
+        submitForm()
+
+        await waitFor(() => {
+          expect(mockPush).toHaveBeenCalledWith("/profile")
+        })
+      })
     })
     describe("response failed", () => {
       it.todo(
@@ -247,6 +278,7 @@ describe("Signup", () => {
     it.todo("should call setSubmitting(false)")
   })
 
+  // TODO: delete the following tests when api responses block is completed
   it("should redirect to the profile page when there is a session", () => {
     renderAuthenticated(<Signup />)
 
