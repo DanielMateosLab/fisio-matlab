@@ -270,10 +270,17 @@ describe("Signup", () => {
       })
     })
     describe("response failed", () => {
-      it.todo(
-        "should call setErrors if the response has a payload (validation error details)"
-      )
-      it.todo("should call setSignupError otherwise")
+      it("should set an email error if the response has a payload with an email property)", async () => {
+        const error = "mock validation error"
+        fetchMock.once(JSON.stringify({ payload: { email: error } }))
+        submitForm()
+
+        await waitFor(() => {
+          const errorElement = queries.getByText(error)
+          expect(errorElement).toBeInTheDocument()
+        })
+      })
+      it.todo("should set a form error if the response has a message")
     })
     it.todo("should call setSubmitting(false)")
   })
