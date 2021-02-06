@@ -316,19 +316,4 @@ describe("Signup", () => {
       })
     })
   })
-
-  // TODO: delete the following tests when api responses block is completed
-  it("should redirect to the profile page when there is a session", () => {
-    renderAuthenticated(<Signup />)
-
-    expect(mockPush).toHaveBeenCalledWith("/profile")
-  })
-  it("should show the signupError when there is one", () => {
-    const mockError = "aaaaa"
-    const { getByText } = render(<Signup defaultSignupError={mockError} />)
-
-    const errorElement = getByText(mockError)
-
-    expect(errorElement).toBeInTheDocument()
-  })
 })

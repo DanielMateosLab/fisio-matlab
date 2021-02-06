@@ -34,15 +34,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface Props {
-  // For testing purposes
-  defaultSignupError?: string
-}
-const Signup: React.FC<Props> = ({ defaultSignupError = "" }) => {
+const Signup: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useThunkDispatch()
-  const [signupError, setSignupError] = useState(defaultSignupError)
+  const [signupError, setSignupError] = useState("")
 
   useEffect(() => {
     router.prefetch("/profile")
