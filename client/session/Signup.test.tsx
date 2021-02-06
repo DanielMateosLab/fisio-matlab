@@ -10,6 +10,7 @@ import Signup, {
   passwordInputText,
   repeatPasswordInputText,
   submitButtonText,
+  signupFormError,
 } from "./Signup"
 import userEvent from "@testing-library/user-event"
 import {
@@ -280,9 +281,40 @@ describe("Signup", () => {
           expect(errorElement).toBeInTheDocument()
         })
       })
-      it.todo("should set a form error if the response has a message")
+      it("should set a form error if the response has nor payload or email", async () => {
+        fetchMock.once(JSON.stringify({ message: "mock error" }))
+        submitForm()
+
+        await waitFor(() => {
+          const errorElement = queries.getByText(signupFormError)
+          expect(errorElement).toBeInTheDocument()
+        })
+      })
     })
-    it.todo("should call setSubmitting(false)")
+    it("should enable the submit button when the submission handling is done", async () => {
+      const submitButtonElement = queries.getByRole("button", {
+        name: submitButtonText,
+      })
+
+      fetchMock.once(JSON.stringify({ email }))
+      submitForm()
+      await waitFor(() => {
+        expect(submitButtonElement).toBeEnabled()
+      })
+
+      const error = "mock validation error"
+      fetchMock.once(JSON.stringify({ payload: { email: error } }))
+      submitForm()
+      await waitFor(() => {
+        expect(submitButtonElement).toBeEnabled()
+      })
+
+      fetchMock.once(JSON.stringify({ message: "mock error" }))
+      submitForm()
+      await waitFor(() => {
+        expect(submitButtonElement).toBeEnabled()
+      })
+    })
   })
 
   // TODO: delete the following tests when api responses block is completed

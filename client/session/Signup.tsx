@@ -17,6 +17,8 @@ export const emailInputText = "Tu email"
 export const passwordInputText = "Una contraseña"
 export const repeatPasswordInputText = "Que repitas tu contraseña"
 export const submitButtonText = "¡Dale candela!"
+export const signupFormError =
+  "No se ha podido completar el registro. Vuelve a intentarlo más tarde."
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -81,9 +83,7 @@ const Signup: React.FC<Props> = ({ defaultSignupError = "" }) => {
               throw null
             }
           } catch (e) {
-            setSignupError(
-              "No se ha podido completar el registro. Vuelve a intentarlo más tarde."
-            )
+            setSignupError(signupFormError)
           } finally {
             setSubmitting(false)
           }
