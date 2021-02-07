@@ -8,6 +8,4 @@ export default async (req: ExtendedRequest, res: NextApiResponse) => {
     res.status(405).json({ message: "Invalid method" })
   }
   await runMiddlewares(req, res, session)
-  res.statusCode = 200
-  res.json({ name: "John Doe" })
 }
