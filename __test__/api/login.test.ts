@@ -25,4 +25,11 @@ describe("/api/login", () => {
       }
     }
   })
+  it.todo("should validate the request body")
+  it.todo("should check if the password is true")
+  it.todo("should throw if the password is wrong")
+  it.todo("should call req.logIn if the password is valid")
+  it.todo(
+    "should return a res with 201 status and { success: true } as response body"
+  )
 })
