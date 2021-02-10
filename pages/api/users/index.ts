@@ -21,10 +21,10 @@ export const usersHandler: ExtendedApiHandler<
 > = async (req, res) => {
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
-  await runMiddlewares(req, res, session, database, users)
-
   // Throws if validation fails
   await signupValidationSchema.validate(req.body, { abortEarly: false })
+
+  await runMiddlewares(req, res, session, database, users)
 
   const { email, password } = req.body
 
