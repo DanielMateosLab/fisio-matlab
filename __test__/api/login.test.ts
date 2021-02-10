@@ -56,8 +56,10 @@ describe("/api/login", () => {
 
     expect(spy).toHaveBeenCalledWith(user)
   })
+  it.todo("should try to find the user in the db")
+  it.todo("should throw an InvalidCredentialsError if the user does not exist")
   it.todo("should check if the password is true")
-  it.todo("should throw if the password is wrong")
+  it.todo("should throw an InvalidCredentialsError the password is wrong")
   it.todo("should call req.logIn if the password is valid")
   it.todo(
     "should return a res with 201 status and { success: true } as response body"
