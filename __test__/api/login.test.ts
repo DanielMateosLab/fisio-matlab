@@ -56,6 +56,23 @@ describe("/api/login", () => {
 
     expect(spy).toHaveBeenCalledWith(user)
   })
+  it("should run session, database and users middlewares", async () => {
+    const sessionSpy = jest.spyOn(
+      require("server/middleware/session"),
+      "default"
+    )
+    const databaseSpy = jest.spyOn(
+      require("server/middleware/database"),
+      "default"
+    )
+    const usersSpy = jest.spyOn(require("server/middleware/users"), "default")
+
+    await loginHandler(req, res)
+
+    expect(sessionSpy).toHaveBeenCalled()
+    expect(databaseSpy).toHaveBeenCalled()
+    expect(usersSpy).toHaveBeenCalled()
+  })
   it.todo("should try to find the user in the db")
   it.todo("should throw an InvalidCredentialsError if the user does not exist")
   it.todo("should check if the password is true")
