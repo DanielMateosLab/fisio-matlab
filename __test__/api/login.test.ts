@@ -128,7 +128,12 @@ describe("/api/login", () => {
 
     expect(loginSpy).toHaveBeenCalled()
   })
-  it.todo(
-    "should return a res with 201 status and { success: true } as response body"
-  )
+  it("should return a res with 201 status and { success: true } as response body", async () => {
+    const jsonSpy = jest.spyOn(res, "json")
+
+    await loginHandler(req, res)
+
+    expect(res.statusCode).toEqual(201)
+    expect(jsonSpy).toHaveBeenCalledWith({ success: true })
+  })
 })

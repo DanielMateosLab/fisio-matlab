@@ -28,6 +28,8 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
   if (!isValidPwd) throw new InvalidCredentialsError()
 
   logIn(req, email)
+
+  return res.status(201).json({ success: true })
 }
 
 export default catchErrors(loginHandler)
