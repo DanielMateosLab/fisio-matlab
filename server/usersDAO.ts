@@ -3,7 +3,7 @@ import { emailErrorText } from "appShared/Validation"
 import { Collection, MongoClient } from "mongodb"
 import { ValidationError } from "yup"
 import { appName } from "../appShared/appData"
-import { FieldValidationError, UserNotFoundError } from "../appShared/errors"
+import { UserNotFoundError } from "../appShared/errors"
 import { DAOResponse, User } from "./types"
 
 let users: Collection<User>
