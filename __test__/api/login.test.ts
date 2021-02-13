@@ -21,6 +21,10 @@ describe("/api/login", () => {
     .spyOn(UsersDAO, "getUserByEmail")
     .mockImplementation(async () => ({ email, password }))
 
+  const bcryptSpy = jest
+    .spyOn(bcrypt, "compare")
+    .mockImplementation(async () => true)
+
   const user: LoginData = {
     email: "aaaa@aaa.aa",
     password: "bbbbbb",
@@ -102,13 +106,20 @@ describe("/api/login", () => {
     }
   })
   it("should check if the password is true", async () => {
-    const bcryptSpy = jest.spyOn(bcrypt, "compare")
-
     await loginHandler(req, res)
 
     expect(bcryptSpy).toHaveBeenCalled()
   })
-  it.todo("should throw an InvalidCredentialsError the password is wrong")
+  it("should throw an InvalidCredentialsError the password is wrong", async () => {
+    jest.spyOn(bcrypt, "compare").mockImplementationOnce(async () => false)
+    expect.hasAssertions()
+
+    try {
+      await loginHandler(req, res)
+    } catch (e) {
+      expect(e).toBeInstanceOf(InvalidCredentialsError)
+    }
+  })
   it.todo("should call req.logIn if the password is valid")
   it.todo(
     "should return a res with 201 status and { success: true } as response body"

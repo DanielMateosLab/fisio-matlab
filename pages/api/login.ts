@@ -4,7 +4,6 @@ import {
   MethodNotAllowedError,
 } from "appShared/errors"
 import { loginValidationSchema } from "appShared/Validation"
-import { NextApiResponse } from "next"
 import catchErrors from "server/middleware/catchErrors"
 import database from "server/middleware/database"
 import runMiddlewares from "server/middleware/runMiddlewares"
@@ -24,7 +23,8 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
   const user = await UsersDAO.getUserByEmail(email)
   if (!user) throw new InvalidCredentialsError()
 
-  const isValidPwd = bcrypt.compare(password, user.password)
+  const isValidPwd = await bcrypt.compare(password, user.password)
+  if (!isValidPwd) throw new InvalidCredentialsError()
 }
 
 export default catchErrors(loginHandler)
