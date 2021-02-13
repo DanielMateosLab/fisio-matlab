@@ -1,3 +1,4 @@
+import { logIn } from "server/auth"
 import bcrypt from "bcryptjs"
 import {
   InvalidCredentialsError,
@@ -25,6 +26,8 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
 
   const isValidPwd = await bcrypt.compare(password, user.password)
   if (!isValidPwd) throw new InvalidCredentialsError()
+
+  logIn(req, email)
 }
 
 export default catchErrors(loginHandler)
