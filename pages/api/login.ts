@@ -1,4 +1,7 @@
-import { MethodNotAllowedError } from "appShared/errors"
+import {
+  InvalidCredentialsError,
+  MethodNotAllowedError,
+} from "appShared/errors"
 import { loginValidationSchema } from "appShared/Validation"
 import { NextApiResponse } from "next"
 import catchErrors from "server/middleware/catchErrors"
@@ -18,6 +21,7 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
   await runMiddlewares(req, res, session, database, users)
 
   const user = await UsersDAO.getUserByEmail(email)
+  if (!user) throw new InvalidCredentialsError()
 }
 
 export default catchErrors(loginHandler)

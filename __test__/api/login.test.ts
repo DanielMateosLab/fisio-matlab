@@ -1,4 +1,7 @@
-import { MethodNotAllowedError } from "appShared/errors"
+import {
+  MethodNotAllowedError,
+  InvalidCredentialsError,
+} from "appShared/errors"
 import { LoginData } from "appShared/types"
 import { loginValidationSchema } from "appShared/Validation"
 import {
@@ -12,6 +15,10 @@ import UsersDAO from "server/usersDAO"
 
 describe("/api/login", () => {
   let req: any, res: any
+
+  const getUserByEmailSpy = jest
+    .spyOn(UsersDAO, "getUserByEmail")
+    .mockImplementation(async () => ({ email, password }))
 
   const user: LoginData = {
     email: "aaaa@aaa.aa",
@@ -77,15 +84,22 @@ describe("/api/login", () => {
     expect(usersSpy).toHaveBeenCalled()
   })
   it("should try to find the user in the db", async () => {
-    const spy = jest
-      .spyOn(UsersDAO, "getUserByEmail")
-      .mockImplementationOnce(async () => ({ email, password }))
-
     await loginHandler(req, res)
 
-    expect(spy).toHaveBeenCalledWith(email)
+    expect(getUserByEmailSpy).toHaveBeenCalledWith(email)
   })
-  it.todo("should throw an InvalidCredentialsError if the user does not exist")
+  it("should throw an InvalidCredentialsError if the user does not exist", async () => {
+    expect.hasAssertions()
+    try {
+      jest
+        .spyOn(UsersDAO, "getUserByEmail")
+        .mockImplementationOnce(async () => null)
+
+      await loginHandler(req, res)
+    } catch (e) {
+      expect(e).toBeInstanceOf(InvalidCredentialsError)
+    }
+  })
   it.todo("should check if the password is true")
   it.todo("should throw an InvalidCredentialsError the password is wrong")
   it.todo("should call req.logIn if the password is valid")
