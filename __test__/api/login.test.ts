@@ -8,6 +8,7 @@ import {
   RequestOptions,
 } from "node-mocks-http"
 import { loginHandler } from "pages/api/login"
+import UsersDAO from "server/usersDAO"
 
 describe("/api/login", () => {
   let req: any, res: any
@@ -16,6 +17,8 @@ describe("/api/login", () => {
     email: "aaaa@aaa.aa",
     password: "bbbbbb",
   }
+
+  const { email, password } = user
 
   beforeEach(() => {
     req = createRequest({
@@ -73,7 +76,15 @@ describe("/api/login", () => {
     expect(databaseSpy).toHaveBeenCalled()
     expect(usersSpy).toHaveBeenCalled()
   })
-  it.todo("should try to find the user in the db")
+  it("should try to find the user in the db", async () => {
+    const spy = jest
+      .spyOn(UsersDAO, "getUserByEmail")
+      .mockImplementationOnce(async () => ({ email, password }))
+
+    await loginHandler(req, res)
+
+    expect(spy).toHaveBeenCalledWith(email)
+  })
   it.todo("should throw an InvalidCredentialsError if the user does not exist")
   it.todo("should check if the password is true")
   it.todo("should throw an InvalidCredentialsError the password is wrong")

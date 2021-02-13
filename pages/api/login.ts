@@ -6,14 +6,18 @@ import database from "server/middleware/database"
 import runMiddlewares from "server/middleware/runMiddlewares"
 import session from "server/middleware/session"
 import users from "server/middleware/users"
-import { ExtendedApiHandler } from "server/types"
+import { ExtendedApiHandler, User } from "server/types"
+import UsersDAO from "server/usersDAO"
 
 export const loginHandler: ExtendedApiHandler = async (req, res) => {
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
   await loginValidationSchema.validate(req.body)
 
+  const { email, password } = req.body as User
   await runMiddlewares(req, res, session, database, users)
+
+  const user = await UsersDAO.getUserByEmail(email)
 }
 
 export default catchErrors(loginHandler)
