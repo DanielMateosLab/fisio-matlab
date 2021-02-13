@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs"
 import {
   InvalidCredentialsError,
   MethodNotAllowedError,
@@ -22,6 +23,8 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
 
   const user = await UsersDAO.getUserByEmail(email)
   if (!user) throw new InvalidCredentialsError()
+
+  const isValidPwd = bcrypt.compare(password, user.password)
 }
 
 export default catchErrors(loginHandler)

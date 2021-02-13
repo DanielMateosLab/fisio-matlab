@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs"
 import {
   MethodNotAllowedError,
   InvalidCredentialsError,
@@ -100,7 +101,13 @@ describe("/api/login", () => {
       expect(e).toBeInstanceOf(InvalidCredentialsError)
     }
   })
-  it.todo("should check if the password is true")
+  it("should check if the password is true", async () => {
+    const bcryptSpy = jest.spyOn(bcrypt, "compare")
+
+    await loginHandler(req, res)
+
+    expect(bcryptSpy).toHaveBeenCalled()
+  })
   it.todo("should throw an InvalidCredentialsError the password is wrong")
   it.todo("should call req.logIn if the password is valid")
   it.todo(
