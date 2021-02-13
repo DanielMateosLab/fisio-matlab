@@ -28,6 +28,8 @@ export interface Middleware {
   ): void | Promise<void>
 }
 
-export interface ExtendedApiHandler {
-  (req: ExtendedRequest, res: NextApiResponse): void | Promise<void>
+export interface ExtendedApiHandler<JSONBodyType = any> {
+  (req: ExtendedRequest, res: NextApiResponse<JSONBodyType>): void | Promise<
+    void
+  >
 }

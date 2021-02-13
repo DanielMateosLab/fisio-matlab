@@ -30,3 +30,9 @@ export class MethodNotAllowedError extends HttpError {
   name = "MethodNotAllowedError"
   message = "Method not allowed"
 }
+
+export class InvalidCredentialsError extends HttpError {
+  status = 400
+  name = "InvalidCredentialsError"
+  message = "Invalid email or password"
+}

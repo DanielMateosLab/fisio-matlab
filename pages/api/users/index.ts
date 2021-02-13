@@ -16,16 +16,15 @@ import users from "server/middleware/users"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "appShared/errors"
 
-export const usersHandler: ExtendedApiHandler = async (
-  req: ExtendedRequest,
-  res: NextApiResponse<UsersPostResponse | APIErrorResponse<SignupData>>
-) => {
+export const usersHandler: ExtendedApiHandler<
+  UsersPostResponse | APIErrorResponse<SignupData>
+> = async (req, res) => {
   if (req.method !== "POST") throw new MethodNotAllowedError()
-
-  await runMiddlewares(req, res, session, database, users)
 
   // Throws if validation fails
   await signupValidationSchema.validate(req.body, { abortEarly: false })
+
+  await runMiddlewares(req, res, session, database, users)
 
   const { email, password } = req.body
 
