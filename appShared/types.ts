@@ -23,7 +23,9 @@ export interface LoginData {
   password: string
 }
 
-type SuccessResponse<Payload> = {
+export type LoginResponse = SuccessResponse | ErrorResponse<LoginData>
+
+type SuccessResponse<Payload = undefined> = {
   status: "success"
 } & Payload
 
