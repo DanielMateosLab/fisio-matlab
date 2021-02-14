@@ -12,8 +12,12 @@ import session from "server/middleware/session"
 import users from "server/middleware/users"
 import { ExtendedApiHandler, User } from "server/types"
 import UsersDAO from "server/usersDAO"
+import { LoginResponse } from "appShared/types"
 
-export const loginHandler: ExtendedApiHandler = async (req, res) => {
+export const loginHandler: ExtendedApiHandler<LoginResponse> = async (
+  req,
+  res
+) => {
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
   await loginValidationSchema.validate(req.body)
@@ -29,7 +33,7 @@ export const loginHandler: ExtendedApiHandler = async (req, res) => {
 
   logIn(req, email)
 
-  return res.status(201).json({ success: true })
+  return res.status(201).json({ status: "success" })
 }
 
 export default catchErrors(loginHandler)
