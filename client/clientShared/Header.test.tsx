@@ -1,6 +1,6 @@
 import { mockPush, render } from "./testUtils"
 import { appName, appDescription } from "../../appShared/appData"
-import Header, { HeaderWithCustomScreenSize } from "./Header"
+import Header from "./Header"
 import userEvent from "@testing-library/user-event"
 
 describe("Header", () => {

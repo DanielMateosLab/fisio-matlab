@@ -63,18 +63,21 @@ const Signup: React.FC = () => {
         validationSchema={signupValidationSchema}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           try {
-            const { email, payload } = (await fetchPostOrPut(
+            const response: UsersPostResponse = await fetchPostOrPut(
               "/api/users",
               values
-            )) as UsersPostResponse
-            if (email) {
-              dispatch(authFulfilled({ email }))
+            )
+
+            if (response.status == "success") {
+              dispatch(authFulfilled({ email: values.email }))
               router.push("/profile")
-            } else if (payload) {
-              setErrors(payload)
+            } else if (
+              response.status == "error" &&
+              response.payload !== undefined
+            ) {
+              setErrors(response.payload)
             } else {
-              /*  If there is no email or payload, an error happened, but we don't want
-              to give details to the client, so we throw null to pass control to the catch
+              /*  Throwing null passes control to the catch
               block, where a default error message is set. */
               throw null
             }

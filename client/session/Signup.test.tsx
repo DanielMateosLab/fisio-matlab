@@ -212,12 +212,16 @@ describe("Signup", () => {
   })
 
   describe("api responses", () => {
-    const successfulApiRes = JSON.stringify({ email })
+    const successfulApiRes = JSON.stringify({ status: "success" })
     const error = "mock error"
     const validationErrorApiRes = JSON.stringify({
+      status: "error",
       payload: { email: error },
     })
-    const formErrorApiRes = JSON.stringify({ message: error })
+    const formErrorApiRes = JSON.stringify({
+      status: "error",
+      message: error,
+    })
 
     const submitForm = () => {
       const emailInputElement = queries.getByLabelText(emailInputText)
