@@ -1,7 +1,7 @@
 import { UserNotFoundError } from "appShared/errors"
 import { NextApiResponse } from "next"
 import { createRequest, createResponse } from "node-mocks-http"
-import { ExtendedApiHandler, ExtendedRequest } from "server/types"
+import { ExtendedRequest } from "server/types"
 import { ValidationError } from "yup"
 import catchErrors from "./catchErrors"
 
@@ -36,6 +36,7 @@ describe("catchErrors", () => {
     )
 
     expect(jsonSpy).toHaveBeenCalledWith({
+      status: "error",
       name: "ValidationError",
       message: "Validation Error",
       payload: {
@@ -51,6 +52,7 @@ describe("catchErrors", () => {
     await catchErrors(mockHanlder(exception))(req, res)
 
     expect(jsonSpy).toHaveBeenCalledWith({
+      status: "error",
       name: "InternalServerError",
       message: "Internal Server Error",
     })
@@ -63,9 +65,10 @@ describe("catchErrors", () => {
     await catchErrors(mockHanlder(error))(req, res)
 
     expect(jsonSpy).toHaveBeenCalledWith({
+      status: "error",
       name: error.name,
       message: error.message,
     })
-    expect(statusSpy).toHaveBeenCalledWith(error.status)
+    expect(statusSpy).toHaveBeenCalledWith(error.statusCode)
   })
 })

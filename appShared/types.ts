@@ -29,7 +29,7 @@ type SuccessResponse<Payload = {}> = {
   status: "success"
 } & Payload
 
-type ErrorResponse<Payload> = {
+export type ErrorResponse<Payload> = {
   status: "error"
   name: string
   message: string
