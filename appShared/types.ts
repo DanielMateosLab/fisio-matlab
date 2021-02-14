@@ -15,7 +15,7 @@ export interface SignupData {
   password: string
   repeatPassword: string
 }
-export type NewUsersPostResponse = ErrorResponse<SignupData> | SuccessResponse
+export type UsersPostResponse = ErrorResponse<SignupData> | SuccessResponse
 
 export interface LoginData {
   email: string

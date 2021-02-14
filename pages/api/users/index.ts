@@ -7,12 +7,12 @@ import session from "server/middleware/session"
 import { ExtendedApiHandler, ExtendedRequest } from "server/types"
 import UsersDAO from "server/usersDAO"
 import { ValidationError } from "yup"
-import { NewUsersPostResponse } from "appShared/types"
+import { UsersPostResponse } from "appShared/types"
 import users from "server/middleware/users"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "appShared/errors"
 
-export const usersHandler: ExtendedApiHandler<NewUsersPostResponse> = async (
+export const usersHandler: ExtendedApiHandler<UsersPostResponse> = async (
   req,
   res
 ) => {

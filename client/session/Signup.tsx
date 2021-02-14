@@ -8,7 +8,7 @@ import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { useThunkDispatch } from "../redux/store"
 import { fetchPostOrPut } from "server/apiUtils"
-import { NewUsersPostResponse, UsersPostResponse } from "appShared/types"
+import { UsersPostResponse } from "appShared/types"
 import { authFulfilled } from "./sessionSlice"
 
 export const signupComponentTitle =
@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
         validationSchema={signupValidationSchema}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           try {
-            const response: NewUsersPostResponse = await fetchPostOrPut(
+            const response: UsersPostResponse = await fetchPostOrPut(
               "/api/users",
               values
             )
