@@ -1,4 +1,3 @@
-import { NextApiResponse } from "next"
 import { emailErrorText, signupValidationSchema } from "appShared/Validation"
 import { logIn } from "server/auth"
 import database from "server/middleware/database"
