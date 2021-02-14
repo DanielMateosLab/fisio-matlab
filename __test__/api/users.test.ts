@@ -111,13 +111,13 @@ describe("/api/users", () => {
 
       expect(spy).toHaveBeenCalledWith(req, user.email)
     })
-    it("should send the email as response with a 201 status", async () => {
+    it("should send a 201 response with { status: 'success' }", async () => {
       const jsonSpy = jest.spyOn(res, "json")
 
       await usersHandler(req, res)
 
       expect(res.statusCode).toEqual(201)
-      expect(jsonSpy).toHaveBeenCalledWith({ email: user.email })
+      expect(jsonSpy).toHaveBeenCalledWith({ status: "success" })
     })
   })
 })
