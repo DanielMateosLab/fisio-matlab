@@ -22,3 +22,15 @@ export interface LoginData {
   email: string
   password: string
 }
+
+type SuccessResponse<Payload> = {
+  status: "success"
+} & Payload
+
+type ErrorResponse<Payload> = {
+  status: "error"
+  name: string
+  message: string
+  /** Used in field validation */
+  payload?: Payload
+}
