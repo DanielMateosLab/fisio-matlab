@@ -17,12 +17,12 @@ export interface SignupData {
   password: string
   repeatPassword: string
 }
+export type NewUsersPostResponse = ErrorResponse<SignupData> | SuccessResponse
 
 export interface LoginData {
   email: string
   password: string
 }
-
 export type LoginResponse = ErrorResponse<LoginData> | SuccessResponse
 
 type SuccessResponse<Payload = {}> = {
