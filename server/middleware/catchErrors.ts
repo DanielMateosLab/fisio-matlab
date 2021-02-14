@@ -3,7 +3,7 @@ import { yupToFormErrors } from "formik"
 import { ExtendedApiHandler } from "server/types"
 import { ValidationError } from "yup"
 
-const catchErrors = (handler: ExtendedApiHandler<ErrorResponse<{}>>) =>
+const catchErrors = (handler: ExtendedApiHandler<any>) =>
   (async (req, res) => {
     try {
       await handler(req, res)
