@@ -1,15 +1,13 @@
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
-import { UsersPostResponse } from "appShared/types"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { fetchPostOrPut } from "server/apiUtils"
 import { signupValidationSchema } from "../../appShared/Validation"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { useThunkDispatch } from "../redux/store"
-import { authFulfilled } from "./sessionSlice"
+import handleAuthResponse from "./handleAuthResponse"
 
 export const signupComponentTitle =
   "¡Buena elección! Para comenzar solo necesitamos..."
@@ -61,32 +59,16 @@ const Signup: React.FC = () => {
           repeatPassword: "",
         }}
         validationSchema={signupValidationSchema}
-        onSubmit={async (values, { setSubmitting, setErrors }) => {
-          try {
-            const response: UsersPostResponse = await fetchPostOrPut(
-              "/api/users",
-              values
-            )
-
-            if (response.status == "success") {
-              dispatch(authFulfilled({ email: values.email }))
-              router.push("/profile")
-            } else if (
-              response.status == "error" &&
-              response.payload !== undefined
-            ) {
-              setErrors(response.payload)
-            } else {
-              /*  Throwing null passes control to the catch
-              block, where a default error message is set. */
-              throw null
-            }
-          } catch (e) {
-            setFormError(signupFormError)
-          } finally {
-            setSubmitting(false)
-          }
-        }}
+        onSubmit={async (values, helpers) =>
+          await handleAuthResponse(
+            values,
+            helpers,
+            setFormError,
+            dispatch,
+            router,
+            signupFormError
+          )
+        }
       >
         {(formik) => (
           <form onSubmit={formik.handleSubmit} className={classes.form}>
