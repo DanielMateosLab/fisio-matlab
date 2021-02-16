@@ -3,5 +3,6 @@ import { FormikHelpers } from "formik"
 
 export default async function handleAuthResponse(
   values: LoginData | SignupData,
-  { setSubmitting, setErrors }: FormikHelpers<LoginData | SignupData>
+  { setSubmitting, setErrors }: FormikHelpers<LoginData | SignupData>,
+  setFormError: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> {}
