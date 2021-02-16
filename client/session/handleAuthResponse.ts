@@ -1,9 +1,4 @@
-import {
-  LoginData,
-  LoginResponse,
-  SignupData,
-  UsersPostResponse,
-} from "appShared/types"
+import { LoginResponse, UsersPostResponse } from "appShared/types"
 import { useThunkDispatch } from "client/redux/store"
 import { FormikHelpers } from "formik"
 import { NextRouter } from "next/router"
@@ -11,8 +6,8 @@ import { fetchPostOrPut } from "server/apiUtils"
 import { authFulfilled } from "./sessionSlice"
 
 export default async function handleAuthResponse(
-  values: LoginData | SignupData,
-  { setSubmitting, setErrors }: FormikHelpers<LoginData | SignupData>,
+  values: any,
+  { setSubmitting, setErrors }: FormikHelpers<any>,
   setFormError: React.Dispatch<React.SetStateAction<string>>,
   dispatch: ReturnType<typeof useThunkDispatch>,
   router: NextRouter,
@@ -28,10 +23,10 @@ export default async function handleAuthResponse(
       dispatch(authFulfilled({ email: values.email }))
       router.push("/profile")
     } else if (response.status == "error" && response.payload !== undefined) {
-      setErrors(response.payload)
+      setErrors(response.payload as any)
     } else {
       /*  Throwing null passes control to the catch
-              block, where a default error message is set. */
+      block, where a default error message is set. */
       throw null
     }
   } catch (e) {
