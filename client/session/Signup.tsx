@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react"
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
+import { UsersPostResponse } from "appShared/types"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
-import FormikTextInput from "../clientShared/FormikTextInput"
+import React, { useEffect, useState } from "react"
+import { fetchPostOrPut } from "server/apiUtils"
 import { signupValidationSchema } from "../../appShared/Validation"
+import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
 import { useThunkDispatch } from "../redux/store"
-import { fetchPostOrPut } from "server/apiUtils"
-import { UsersPostResponse } from "appShared/types"
 import { authFulfilled } from "./sessionSlice"
 
 export const signupComponentTitle =
@@ -38,7 +38,7 @@ const Signup: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useThunkDispatch()
-  const [signupError, setSignupError] = useState("")
+  const [formError, setFormError] = useState("")
 
   useEffect(() => {
     router.prefetch("/profile")
@@ -82,7 +82,7 @@ const Signup: React.FC = () => {
               throw null
             }
           } catch (e) {
-            setSignupError(signupFormError)
+            setFormError(signupFormError)
           } finally {
             setSubmitting(false)
           }
@@ -121,9 +121,9 @@ const Signup: React.FC = () => {
                 {submitButtonText}
               </Button>
             </div>
-            {signupError && (
+            {formError && (
               <div className={classes.formElement}>
-                <Typography color="error">{signupError}</Typography>
+                <Typography color="error">{formError}</Typography>
               </div>
             )}
             <div className={classes.formElement}>
