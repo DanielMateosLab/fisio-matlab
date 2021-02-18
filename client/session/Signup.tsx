@@ -66,7 +66,8 @@ const Signup: React.FC = () => {
             setFormError,
             dispatch,
             router,
-            signupFormError
+            signupFormError,
+            "signup"
           )
         }
       >

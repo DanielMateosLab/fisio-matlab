@@ -11,11 +11,12 @@ export default async function handleAuthResponse(
   setFormError: React.Dispatch<React.SetStateAction<string>>,
   dispatch: ReturnType<typeof useThunkDispatch>,
   router: NextRouter,
-  defaultErrorMessage: string
+  defaultErrorMessage: string,
+  operation: "login" | "signup"
 ): Promise<void> {
   try {
     const response: UsersPostResponse | LoginResponse = await fetchPostOrPut(
-      "/api/users",
+      `/api/${operation == "login" ? "login" : "signup"}`,
       values
     )
 

@@ -29,17 +29,22 @@ describe("handleAuthResponse", () => {
     message: error,
   })
 
+  async function exec(operation: "login" | "signup" = "login") {
+    await handleAuthResponse(
+      values,
+      formikHelpers,
+      setFormError,
+      mockDispatch,
+      { push: mockPush } as any,
+      error,
+      operation
+    )
+  }
+
   describe("if api call finishes successful", () => {
     it("should dispatch authFulfilled with the email", async () => {
       fetchMock.once(successfulApiRes)
-      await handleAuthResponse(
-        values,
-        formikHelpers,
-        setFormError,
-        mockDispatch,
-        { push: mockPush } as any,
-        error
-      )
+      await exec()
 
       await waitFor(() => {
         expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
@@ -47,14 +52,7 @@ describe("handleAuthResponse", () => {
     })
     it("should redirect to /profile", async () => {
       fetchMock.once(successfulApiRes)
-      await handleAuthResponse(
-        values,
-        formikHelpers,
-        setFormError,
-        mockDispatch,
-        { push: mockPush } as any,
-        error
-      )
+      await exec()
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith("/profile")
       })
@@ -63,28 +61,14 @@ describe("handleAuthResponse", () => {
   describe("if api call fails", () => {
     it("should set an email error if the response has a payload with an email property)", async () => {
       fetchMock.once(validationErrorApiRes)
-      await handleAuthResponse(
-        values,
-        formikHelpers,
-        setFormError,
-        mockDispatch,
-        { push: mockPush } as any,
-        error
-      )
+      await exec()
       await waitFor(() => {
         expect(setErrors).toHaveBeenCalledWith({ email: error })
       })
     })
     it("should set a form error if the response has nor payload or email", async () => {
       fetchMock.once(formErrorApiRes)
-      await handleAuthResponse(
-        values,
-        formikHelpers,
-        setFormError,
-        mockDispatch,
-        { push: mockPush } as any,
-        error
-      )
+      await exec()
       await waitFor(() => {
         expect(setFormError).toHaveBeenCalled()
       })
@@ -92,42 +76,33 @@ describe("handleAuthResponse", () => {
   })
   it("should enable the submit button when the submission handling is done", async () => {
     fetchMock.once(successfulApiRes)
-    await handleAuthResponse(
-      values,
-      formikHelpers,
-      setFormError,
-      mockDispatch,
-      { push: mockPush } as any,
-      error
-    )
+    await exec()
     await waitFor(() => {
       expect(setSubmitting).toHaveBeenCalledWith(false)
     })
 
     fetchMock.once(validationErrorApiRes)
-    await handleAuthResponse(
-      values,
-      formikHelpers,
-      setFormError,
-      mockDispatch,
-      { push: mockPush } as any,
-      error
-    )
+    await exec()
     await waitFor(() => {
       expect(setSubmitting).toHaveBeenCalledWith(false)
     })
 
     fetchMock.once(formErrorApiRes)
-    await handleAuthResponse(
-      values,
-      formikHelpers,
-      setFormError,
-      mockDispatch,
-      { push: mockPush } as any,
-      error
-    )
+    await exec()
     await waitFor(() => {
       expect(setSubmitting).toHaveBeenCalledWith(false)
     })
+  })
+  it("should call /api/login if operation is login", async () => {
+    fetchMock.once(successfulApiRes)
+    await exec()
+
+    expect(fetchMock.mock.calls[0][0]).toEqual("/api/login")
+  })
+  it("should call /api/users if operation is signup", async () => {
+    fetchMock.once(successfulApiRes)
+    await exec("signup")
+
+    expect(fetchMock.mock.calls[0][0]).toEqual("/api/signup")
   })
 })
