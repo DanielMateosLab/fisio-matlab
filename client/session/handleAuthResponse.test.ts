@@ -103,6 +103,6 @@ describe("handleAuthResponse", () => {
     fetchMock.once(successfulApiRes)
     await exec("signup")
 
-    expect(fetchMock.mock.calls[0][0]).toEqual("/api/signup")
+    expect(fetchMock.mock.calls[0][0]).toEqual("/api/users")
   })
 })
