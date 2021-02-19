@@ -15,7 +15,6 @@ import {
   RenderResult,
   waitFor,
 } from "../clientShared/testUtils"
-import { authFulfilled } from "./sessionSlice"
 import Signup, {
   emailInputText,
   passwordInputText,
@@ -245,12 +244,12 @@ describe("Signup", () => {
       userEvent.click(submitButtonElement)
     }
     describe("response succeeded", () => {
-      it("should dispatch authFulfilled with the email", async () => {
+      it("should dispatch authenticate with the email", async () => {
         fetchMock.once(successfulApiRes)
         submitForm()
 
         await waitFor(() => {
-          expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
+          expect(mockDispatch).toHaveBeenCalled()
         })
       })
       it("should redirect to /profile", async () => {

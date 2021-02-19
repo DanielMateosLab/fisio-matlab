@@ -3,7 +3,7 @@ import { useThunkDispatch } from "client/redux/store"
 import { FormikHelpers } from "formik"
 import { NextRouter } from "next/router"
 import { fetchPostOrPut } from "server/apiUtils"
-import { authFulfilled } from "./sessionSlice"
+import { authenticate } from "./sessionSlice"
 
 export default async function handleAuthResponse(
   values: any,
@@ -21,7 +21,7 @@ export default async function handleAuthResponse(
     )
 
     if (response.status == "success") {
-      dispatch(authFulfilled({ email: values.email }))
+      dispatch(authenticate(values.email))
       router.push("/profile")
     } else if (response.status == "error" && response.payload !== undefined) {
       setErrors(response.payload as any)

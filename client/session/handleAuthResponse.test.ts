@@ -1,6 +1,5 @@
 import { waitFor } from "@testing-library/react"
 import handleAuthResponse from "./handleAuthResponse"
-import { authFulfilled } from "./sessionSlice"
 
 describe("handleAuthResponse", () => {
   const email = "aaaaa@aaa.aa"
@@ -42,12 +41,13 @@ describe("handleAuthResponse", () => {
   }
 
   describe("if api call finishes successful", () => {
-    it("should dispatch authFulfilled with the email", async () => {
+    it("should dispatch authenticate action thunk with the email", async () => {
       fetchMock.once(successfulApiRes)
       await exec()
 
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
+        // No way to assert the anonymous function returned by the thunk
+        expect(mockDispatch).toHaveBeenCalled()
       })
     })
     it("should redirect to /profile", async () => {
