@@ -1,3 +1,4 @@
+import userEvent from "@testing-library/user-event"
 import {
   initialState,
   mockPush,
@@ -7,13 +8,13 @@ import {
   waitFor,
 } from "../clientShared/testUtils"
 import Login, {
-  loginTitle,
+  changedPasswordText,
   emailInputText,
+  loginFormError,
+  loginTitle,
   passwordInputText,
   submitButtonText,
-  changedPasswordText,
 } from "./Login"
-import userEvent from "@testing-library/user-event"
 
 const mockDispatch = jest.fn()
 jest.mock("react-redux", () => ({
@@ -22,6 +23,25 @@ jest.mock("react-redux", () => ({
 }))
 
 describe("Login", () => {
+  const submitForm = () => {
+    const queries = render(<Login />)
+    const { getByLabelText, getByRole } = queries
+
+    const emailElement = getByLabelText(emailInputText)
+    const passwordElement = getByLabelText(passwordInputText)
+    const submitButtonElement = getByRole("button", {
+      name: submitButtonText,
+    })
+
+    const email = "aaaa@aaa.aa"
+    const password = "aaaaa"
+
+    userEvent.type(emailElement, email)
+    userEvent.type(passwordElement, password)
+    userEvent.click(submitButtonElement)
+
+    return queries
+  }
   it("should render the login page title", () => {
     const { getByText } = render(<Login />)
 
@@ -65,24 +85,16 @@ describe("Login", () => {
       expect(emailInputElement).toBeInvalid()
     })
   })
-  it("submitting the form should dispatch a login action with the form values", async () => {
-    const { getByLabelText, getByRole } = render(<Login />)
+  it("submitting the form should call handleAuthResponse", async () => {
+    const spy = jest.spyOn(
+      require("client/session/handleAuthResponse"),
+      "default"
+    )
 
-    const emailElement = getByLabelText(emailInputText)
-    const passwordElement = getByLabelText(passwordInputText)
-    const submitButtonElement = getByRole("button", {
-      name: submitButtonText,
-    })
-
-    const email = "aaaa@aaa.aa"
-    const password = "aaaaa"
-
-    userEvent.type(emailElement, email)
-    userEvent.type(passwordElement, password)
-    userEvent.click(submitButtonElement)
+    submitForm()
 
     await waitFor(() => {
-      expect(mockDispatch).toHaveBeenCalled()
+      expect(spy).toHaveBeenCalled()
     })
   })
   it("should show a success text message when state.session.changePassword is true", () => {
@@ -97,18 +109,18 @@ describe("Login", () => {
 
     expect(changedPasswordTextElement).toBeInTheDocument()
   })
-  it("should show the loginError when there is one", () => {
-    const mockError = "aaaaa"
-    const { getByText } = render(<Login />, {
-      initialState: {
-        ...initialState,
-        session: { ...sessionInitialState, loginError: mockError },
-      },
+  it("should show the default error message when there is an unknown or server error", async () => {
+    const formErrorApiRes = JSON.stringify({
+      status: "error",
+      message: "mockError",
     })
+    fetchMock.once(formErrorApiRes)
+    const queries = submitForm()
 
-    const errorElement = getByText(mockError)
-
-    expect(errorElement).toBeInTheDocument()
+    await waitFor(() => {
+      const errorElement = queries.getByText(loginFormError)
+      expect(errorElement).toBeInTheDocument()
+    })
   })
   describe("signup page link", () => {
     let signupPageLinkElement: HTMLElement

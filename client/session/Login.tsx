@@ -1,19 +1,22 @@
 import { Button, Link, makeStyles, Typography } from "@material-ui/core"
 import { Formik } from "formik"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { loginValidationSchema } from "../../appShared/Validation"
 import FormikTextInput from "../clientShared/FormikTextInput"
 import PageTitle from "../clientShared/pageTitle"
 import useRedirectAuth from "../clientShared/useRedirectAuth"
-import { loginValidationSchema } from "../../appShared/Validation"
 import { useTypedSelector } from "../redux/rootReducer"
 import { useThunkDispatch } from "../redux/store"
-import { login } from "./sessionSlice"
+import handleAuthResponse from "./handleAuthResponse"
 
 export const loginTitle = "¿Quién eres?"
 export const emailInputText = "Tu email"
 export const passwordInputText = "Tu contraseña"
 export const submitButtonText = "Iniciar sesión"
+export const loginFormError =
+  "No se ha podido iniciar sesión. Vuelve a intentarlo más tarde."
+export const invalidCredentialsMessage = "Email o contraseña incorrectas."
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,9 +42,8 @@ const Login = () => {
   const classes = useStyles()
   const dispatch = useThunkDispatch()
   const router = useRouter()
-  const { changedPassword, loginError } = useTypedSelector(
-    (state) => state.session
-  )
+  const [formError, setFormError] = useState("")
+  const { changedPassword } = useTypedSelector((state) => state.session)
 
   useEffect(() => {
     router.prefetch("/profile")
@@ -63,11 +65,17 @@ const Login = () => {
           password: "",
         }}
         validationSchema={loginValidationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          const actionResponse = await dispatch(login({ ...values }))
-          login.fulfilled.match(actionResponse) && router.push("/profile")
-          setSubmitting(false)
-        }}
+        onSubmit={async (values, helpers) =>
+          await handleAuthResponse(
+            values,
+            helpers,
+            setFormError,
+            dispatch,
+            router,
+            loginFormError,
+            "login"
+          )
+        }
       >
         {(formik) => (
           <form onSubmit={formik.handleSubmit} className={classes.form}>
@@ -92,9 +100,9 @@ const Login = () => {
                 </Typography>
               </div>
             )}
-            {loginError && (
+            {formError && (
               <div className={classes.formElement}>
-                <Typography color="error">{loginError}</Typography>
+                <Typography color="error">{formError}</Typography>
               </div>
             )}
             <div className={classes.formElement}>

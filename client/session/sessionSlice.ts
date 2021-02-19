@@ -5,11 +5,12 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit"
 import { LoginData } from "appShared/types"
+import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
-export const sessionCookieName = "ss"
+export const sessionCookieName = "session.active"
 
 export const loginPayloadCreator: AsyncThunkPayloadCreator<
   { email: string },
@@ -29,6 +30,12 @@ export const login = createAsyncThunk<{ email: string }, LoginData>(
   "session/login",
   loginPayloadCreator
 )
+
+export const authenticate = (email: string): AppThunk => (dispatch) => {
+  Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
+
+  dispatch(authFulfilled({ email }))
+}
 
 export const logoutPayloadCreator: AsyncThunkPayloadCreator<void> = async () => {
   Cookies.remove(sessionCookieName)

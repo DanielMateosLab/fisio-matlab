@@ -1,25 +1,28 @@
-import { render, RenderResult, waitFor } from "../clientShared/testUtils"
-import Signup, {
-  signupComponentTitle,
-  emailInputText,
-  passwordInputText,
-  repeatPasswordInputText,
-  submitButtonText,
-  signupFormError,
-} from "./Signup"
 import userEvent from "@testing-library/user-event"
 import {
   emailErrorText,
-  repeatPasswordErrorText,
-  requiredErrorText,
   emailMaxCharacters,
   getMaxErrorText,
-  passwordMinCharacters,
   getMinErrorText,
   passwordMaxCharacters,
+  passwordMinCharacters,
+  repeatPasswordErrorText,
+  requiredErrorText,
 } from "../../appShared/Validation"
-import { mockPush } from "../clientShared/testUtils"
-import { authFulfilled } from "./sessionSlice"
+import {
+  mockPush,
+  render,
+  RenderResult,
+  waitFor,
+} from "../clientShared/testUtils"
+import Signup, {
+  emailInputText,
+  passwordInputText,
+  repeatPasswordInputText,
+  signupComponentTitle,
+  signupFormError,
+  submitButtonText,
+} from "./Signup"
 
 jest.mock("react-redux", () => ({
   ...(jest.requireActual("react-redux") as {}),
@@ -241,12 +244,12 @@ describe("Signup", () => {
       userEvent.click(submitButtonElement)
     }
     describe("response succeeded", () => {
-      it("should dispatch authFulfilled with the email", async () => {
+      it("should dispatch authenticate with the email", async () => {
         fetchMock.once(successfulApiRes)
         submitForm()
 
         await waitFor(() => {
-          expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
+          expect(mockDispatch).toHaveBeenCalled()
         })
       })
       it("should redirect to /profile", async () => {
