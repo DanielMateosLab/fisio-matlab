@@ -31,7 +31,11 @@ describe("authenticate", () => {
       expires: sessionExpiration,
     })
   })
-  it.todo("should dispatch authFulfilled with the email")
+  it("should dispatch authFulfilled with the email", () => {
+    authenticate(email)(mockDispatch, () => initialState, undefined)
+
+    expect(mockDispatch).toHaveBeenCalledWith(authFulfilled({ email }))
+  })
 })
 
 describe("authenticationFulfilled", () => {

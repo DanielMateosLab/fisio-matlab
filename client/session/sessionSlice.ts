@@ -33,6 +33,8 @@ export const login = createAsyncThunk<{ email: string }, LoginData>(
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
+
+  dispatch(authFulfilled({ email }))
 }
 
 export const logoutPayloadCreator: AsyncThunkPayloadCreator<void> = async () => {
