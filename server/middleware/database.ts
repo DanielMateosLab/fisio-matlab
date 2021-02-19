@@ -5,13 +5,6 @@ import { ExtendedRequest } from "../types"
 
 let conn: MongoClient | undefined
 
-// HOC with the conn as parameter that returns the handler. Allows us to test it with a mock conn
-export const onClose = (conn: MongoClient | undefined) => () => {
-  if (conn && conn.isConnected) {
-    conn.close().catch(() => {})
-  }
-}
-
 export default async function database(
   req: ExtendedRequest,
   res: NextApiResponse
@@ -26,8 +19,6 @@ export default async function database(
     })
   }
   req.conn = conn
-
-  res.addListener("close", onClose(conn))
 }
 
 // For testing purposes only
