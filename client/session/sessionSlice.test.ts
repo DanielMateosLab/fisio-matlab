@@ -1,5 +1,8 @@
 import { waitFor } from "@testing-library/react"
+import Cookies from "js-cookie"
+import { initialState, mockThunkAPI } from "../clientShared/testUtils"
 import sessionReducer, {
+  authenticate,
   authFulfilled,
   changePassword,
   deleteAccount,
@@ -11,13 +14,25 @@ import sessionReducer, {
   sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"
-import { mockThunkAPI } from "../clientShared/testUtils"
-import Cookies from "js-cookie"
 
 jest.mock("js-cookie")
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
+
+describe("authenticate", () => {
+  const mockDispatch = jest.fn()
+  const email = "mockEmail@mo.ck"
+  it("should set a cookie indicating that the session is active", () => {
+    const spy = jest.spyOn(Cookies, "set")
+    authenticate(email)(mockDispatch, () => initialState, undefined)
+
+    expect(spy).toHaveBeenCalledWith(sessionCookieName, "true", {
+      expires: sessionExpiration,
+    })
+  })
+  it.todo("should dispatch authFulfilled with the email")
+})
 
 describe("authenticationFulfilled", () => {
   it("should update the state email", () => {
