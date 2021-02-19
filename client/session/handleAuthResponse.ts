@@ -3,6 +3,7 @@ import { useThunkDispatch } from "client/redux/store"
 import { FormikHelpers } from "formik"
 import { NextRouter } from "next/router"
 import { fetchPostOrPut } from "server/apiUtils"
+import { invalidCredentialsMessage } from "./Login"
 import { authenticate } from "./sessionSlice"
 
 export default async function handleAuthResponse(
@@ -25,6 +26,11 @@ export default async function handleAuthResponse(
       router.push("/profile")
     } else if (response.status == "error" && response.payload !== undefined) {
       setErrors(response.payload as any)
+    } else if (
+      response.status == "error" &&
+      response.name == "InvalidCredentialsError"
+    ) {
+      setFormError(invalidCredentialsMessage)
     } else {
       /*  Throwing null passes control to the catch
       block, where a default error message is set. */

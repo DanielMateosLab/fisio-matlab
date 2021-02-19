@@ -15,7 +15,8 @@ export const emailInputText = "Tu email"
 export const passwordInputText = "Tu contraseña"
 export const submitButtonText = "Iniciar sesión"
 export const loginFormError =
-  "No se ha podido iniciar sesión. Vuelve a intentarlo más tarde"
+  "No se ha podido iniciar sesión. Vuelve a intentarlo más tarde."
+export const invalidCredentialsMessage = "Email o contraseña incorrectas."
 
 const useStyles = makeStyles((theme) => ({
   container: {

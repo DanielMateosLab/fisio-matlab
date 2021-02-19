@@ -1,5 +1,6 @@
 import { waitFor } from "@testing-library/react"
 import handleAuthResponse from "./handleAuthResponse"
+import { invalidCredentialsMessage } from "./Login"
 
 describe("handleAuthResponse", () => {
   const email = "aaaaa@aaa.aa"
@@ -71,6 +72,20 @@ describe("handleAuthResponse", () => {
       await exec()
       await waitFor(() => {
         expect(setFormError).toHaveBeenCalled()
+      })
+    })
+    it("should set an invalidCredentialsMessage if there is an InvalidCredentialsError", async () => {
+      const invalidCredentialsErrorApiRes = JSON.stringify({
+        status: "error",
+        message: "",
+        name: "InvalidCredentialsError",
+      })
+      fetchMock.once(invalidCredentialsErrorApiRes)
+
+      await exec()
+
+      await waitFor(() => {
+        expect(setFormError).toHaveBeenCalledWith(invalidCredentialsMessage)
       })
     })
   })
