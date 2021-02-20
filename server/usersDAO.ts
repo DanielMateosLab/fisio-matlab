@@ -1,8 +1,8 @@
-import bcrypt from "bcryptjs"
 import { emailErrorText } from "appShared/Validation"
+import bcrypt from "bcryptjs"
 import { Collection, MongoClient } from "mongodb"
 import { ValidationError } from "yup"
-import { appName } from "../appShared/appData"
+import { dbName } from "../appShared/appData"
 import { UserNotFoundError } from "../appShared/errors"
 import { DAOResponse, User } from "./types"
 
@@ -13,7 +13,7 @@ export default class UsersDAO {
     if (users) {
       return
     }
-    users = conn.db(appName).collection("users")
+    users = conn.db(dbName).collection("users")
   }
 
   /** Utility function to mock the users collection in tests */
