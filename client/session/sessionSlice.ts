@@ -4,32 +4,12 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit"
-import { LoginData } from "appShared/types"
 import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
 export const sessionCookieName = "session.active"
-
-export const loginPayloadCreator: AsyncThunkPayloadCreator<
-  { email: string },
-  LoginData
-> = async ({ email }) => {
-  const isValid = email == "daniel.mat.lab@usal.es"
-  if (!isValid) {
-    const error = {
-      message: "Email o contraseña incorrectos",
-    }
-    throw error
-  }
-  Cookies.set(sessionCookieName, email, { expires: sessionExpiration })
-  return { email }
-}
-export const login = createAsyncThunk<{ email: string }, LoginData>(
-  "session/login",
-  loginPayloadCreator
-)
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
@@ -112,18 +92,6 @@ const sessionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(login.pending, (state) => {
-      state.loginError = ""
-      state.changedPassword = false
-    })
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.email = action.payload.email
-    })
-    builder.addCase(login.rejected, (state, action) => {
-      if (action.error && action.error.message) {
-        state.loginError = action.error.message
-      }
-    })
     builder.addCase(changePassword.fulfilled, (state) => {
       state.changedPassword = true
     })

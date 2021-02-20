@@ -7,8 +7,6 @@ import sessionReducer, {
   changePassword,
   deleteAccount,
   deleteAccountPayloadCreator,
-  login,
-  loginPayloadCreator,
   logout,
   logoutPayloadCreator,
   sessionCookieName,
@@ -44,52 +42,7 @@ describe("authenticationFulfilled", () => {
     expect(state.email).toEqual(email)
   })
 })
-describe("loginReducer", () => {
-  test("login/pending action should set session.changedPassword to false if it's true", () => {
-    const state = sessionReducer(
-      { ...emptyInitialState, changedPassword: true },
-      login.pending("", {} as any)
-    )
 
-    expect(state.changedPassword).toEqual(false)
-  })
-  test("login/pending action should clean loginError", () => {
-    const state = sessionReducer(
-      { ...emptyInitialState, loginError: "aaaaaa" },
-      login.pending("", {} as any)
-    )
-
-    expect(state.loginError).toEqual("")
-  })
-  test("login/fulfilled should update the state email", () => {
-    const state = sessionReducer(
-      undefined,
-      login.fulfilled({ email }, "", {} as any)
-    )
-
-    expect(state.email).toEqual(email)
-  })
-  test("login/rejected should update state loginError", () => {
-    const message = "aaaa"
-    const state = sessionReducer(
-      undefined,
-      login.rejected({ message, name: "mockError" }, "", {} as any)
-    )
-    expect(state.loginError).toEqual(message)
-  })
-  test("login should call Cookies.set() with the email with valid input", async () => {
-    expect.hasAssertions()
-    const email = "daniel.mat.lab@usal.es"
-    const password = "bbbbb"
-    await loginPayloadCreator({ email, password }, {} as any)
-
-    await waitFor(() => {
-      expect(Cookies.set).toHaveBeenCalledWith(sessionCookieName, email, {
-        expires: sessionExpiration,
-      })
-    })
-  })
-})
 describe("logout", () => {
   test("logout should call Cookies.remove() with a 200 api response", async () => {
     expect.hasAssertions()
@@ -119,6 +72,7 @@ describe("logout", () => {
     expect(state.email).toEqual("")
   })
 })
+
 describe("changePassword", () => {
   test("changePassword.fullfilled action should turn state.changedPassword to true", () => {
     const state = sessionReducer(
@@ -129,6 +83,7 @@ describe("changePassword", () => {
     expect(state.changedPassword).toEqual(true)
   })
 })
+
 describe("deleteAccount", () => {
   test("deleteAccount.fulfilled action dispatch should clean session.email", () => {
     const password = "aaaaa"
