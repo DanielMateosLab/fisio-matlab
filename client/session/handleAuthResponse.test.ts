@@ -41,6 +41,16 @@ describe("handleAuthResponse", () => {
     )
   }
 
+  it("should clean form errors", async () => {
+    expect.hasAssertions()
+    fetchMock.once(successfulApiRes)
+    await exec()
+
+    await waitFor(() => {
+      expect(setFormError).toHaveBeenCalledWith("")
+    })
+  })
+
   describe("if api call finishes successful", () => {
     it("should dispatch authenticate action thunk with the email", async () => {
       expect.hasAssertions()

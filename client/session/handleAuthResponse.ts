@@ -16,6 +16,8 @@ export default async function handleAuthResponse(
   operation: "login" | "signup"
 ): Promise<void> {
   try {
+    setFormError("")
+
     const response: UsersPostResponse | LoginResponse = await fetchPostOrPut(
       `/api/${operation == "login" ? "login" : "users"}`,
       values
