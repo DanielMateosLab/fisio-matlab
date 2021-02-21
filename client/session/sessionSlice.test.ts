@@ -1,4 +1,5 @@
 import { waitFor } from "@testing-library/react"
+import { pendingLogoutCookieName } from "appShared/appData"
 import { LogoutResponse } from "appShared/types"
 import Cookies from "js-cookie"
 import { initialState, mockThunkAPI } from "../clientShared/testUtils"
@@ -10,7 +11,6 @@ import sessionReducer, {
   deleteAccountPayloadCreator,
   logout,
   logoutFulfilled,
-  pendingLogoutCookieName,
   sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"

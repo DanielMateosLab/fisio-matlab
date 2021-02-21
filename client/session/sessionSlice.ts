@@ -4,6 +4,7 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit"
+import { pendingLogoutCookieName } from "appShared/appData"
 import { LogoutResponse } from "appShared/types"
 import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
@@ -11,7 +12,6 @@ import Cookies from "js-cookie"
 // In days
 export const sessionExpiration = 7
 export const sessionCookieName = "ss_active"
-export const pendingLogoutCookieName = "ss_pending_logout"
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
