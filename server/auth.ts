@@ -7,7 +7,10 @@ export const logIn = (req: ExtendedRequest, email: string) => {
 }
 
 export const logout = (req: ExtendedRequest) => {
-  req.session.destroy(() => {})
+  req.session.destroy(() => {
+    // If destroy is not successful probably the session is already gone,
+    // so we do not care about the result
+  })
   if (req.cookies[pendingLogoutCookieName] == "1") {
     Cookies.remove(pendingLogoutCookieName)
   }

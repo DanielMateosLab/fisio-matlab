@@ -142,15 +142,23 @@ describe("/api/login", () => {
   })
 
   describe("DELETE", () => {
+    const { req, res } = createMocks({ method: "DELETE" })
     it("should call logout function", async () => {
-      const { req, res } = createMocks({ method: "DELETE" })
       const logoutSpy = jest.spyOn(auth, "logout").mockImplementation(() => {})
 
-      loginHandler(req as any, res as any)
+      await loginHandler(req as any, res as any)
 
       await waitFor(() => {
         expect(logoutSpy).toHaveBeenCalled()
       })
+    })
+    it("should call res.status(200).json({ status: 'success' } after calling logout", async () => {
+      const jsonSpy = jest.spyOn(res, "json")
+
+      loginHandler(req as any, res as any)
+
+      expect(res.statusCode).toEqual(200)
+      expect(jsonSpy).toHaveBeenCalledWith({ status: "success" })
     })
   })
 })

@@ -35,6 +35,7 @@ export const loginHandler: ExtendedApiHandler<LoginResponse> = async (
     return res.status(201).json({ status: "success" })
   } else if (req.method == "DELETE") {
     logout(req)
+    return res.status(200).json({ status: "success" })
   } else {
     throw new MethodNotAllowedError()
   }
