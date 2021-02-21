@@ -29,7 +29,5 @@ export interface Middleware {
 }
 
 export interface ExtendedApiHandler<JSONBodyType> {
-  (req: ExtendedRequest, res: NextApiResponse<JSONBodyType>): void | Promise<
-    void
-  >
+  (req: ExtendedRequest, res: NextApiResponse<JSONBodyType>): Promise<void>
 }

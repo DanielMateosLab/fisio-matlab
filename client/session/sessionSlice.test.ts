@@ -1,4 +1,6 @@
 import { waitFor } from "@testing-library/react"
+import { pendingLogoutCookieName } from "appShared/appData"
+import { LogoutResponse } from "appShared/types"
 import Cookies from "js-cookie"
 import { initialState, mockThunkAPI } from "../clientShared/testUtils"
 import sessionReducer, {
@@ -7,6 +9,8 @@ import sessionReducer, {
   changePassword,
   deleteAccount,
   deleteAccountPayloadCreator,
+  logout,
+  logoutFulfilled,
   sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"
@@ -15,9 +19,9 @@ jest.mock("js-cookie")
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
+const mockDispatch = jest.fn()
 
 describe("authenticate", () => {
-  const mockDispatch = jest.fn()
   const email = "mockEmail@mo.ck"
   it("should set a cookie indicating that the session is active", () => {
     const spy = jest.spyOn(Cookies, "set")
@@ -42,14 +46,62 @@ describe("authenticationFulfilled", () => {
 })
 
 describe("logout", () => {
-  it.todo("should call Cookies.remove()")
-  it.todo("should send a DEL request to /api/login")
+  const successfulResponse = JSON.stringify({ status: "success" })
+  fetchMock.mockResponse(successfulResponse)
+
+  const exec = () => {
+    logout()(mockDispatch, () => initialState, undefined)
+  }
+
+  it("should call Cookies.remove(sessionCookieName)", async () => {
+    exec()
+
+    await waitFor(() => {
+      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+    })
+  })
+  it("should send a DEL request to /api/login", async () => {
+    exec()
+
+    await waitFor(() => {
+      const path = fetchMock.mock.calls[0][0]
+      const method = fetchMock.mock.calls[0][1]?.method
+      expect(path).toEqual("/api/login")
+      expect(method).toEqual("DELETE")
+    })
+  })
   // TODO: this cookie must be parsed on page load to call logout api endpoint
-  it.todo(
-    "should set ss_logout_pending cookie if api response is not successful"
-  )
-  test.todo("logoutFulfilled should clean the state email")
-  it.todo("should dispatch logoutFulfilled")
+  it("should set pending_logout cookie if api response is not successful", async () => {
+    const errorResponse: LogoutResponse = {
+      status: "error",
+      message: "error",
+      name: "MockError",
+    }
+    fetchMock.once(JSON.stringify(errorResponse))
+
+    exec()
+
+    await waitFor(() => {
+      expect(Cookies.set).toHaveBeenCalledWith(pendingLogoutCookieName, "1")
+    })
+  })
+  it("should dispatch logoutFulfilled", async () => {
+    exec()
+
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalled()
+    })
+  })
+})
+
+describe("logoutFulfilled", () => {
+  it("should clean the state email", () => {
+    const state = sessionReducer(
+      { ...emptyInitialState, email: "mockEmail" },
+      logoutFulfilled()
+    )
+    expect(state.email).toEqual("")
+  })
 })
 
 describe("changePassword", () => {

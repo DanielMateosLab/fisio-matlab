@@ -4,12 +4,14 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit"
+import { pendingLogoutCookieName } from "appShared/appData"
+import { LogoutResponse } from "appShared/types"
 import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
-export const sessionCookieName = "ss.active"
+export const sessionCookieName = "ss_active"
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
@@ -17,7 +19,18 @@ export const authenticate = (email: string): AppThunk => (dispatch) => {
   dispatch(authFulfilled({ email }))
 }
 
-export const logout = (): AppThunk => async (dispatch) => {}
+export const logout = (): AppThunk => async (dispatch) => {
+  Cookies.remove(sessionCookieName)
+  const res: LogoutResponse = await fetch("/api/login", {
+    method: "DELETE",
+  }).then(async (res) => await res.json())
+
+  if (res.status !== "success") {
+    Cookies.set(pendingLogoutCookieName, "1")
+  }
+
+  dispatch(logoutFulfilled)
+}
 
 interface ChangePasswordArgs {
   currentPassword: string
@@ -34,7 +47,7 @@ export const changePasswordPayloadCreator: AsyncThunkPayloadCreator<
       currentPassword: "Contraseña incorrecta",
     })
   }
-  // await dispatch(logout())
+  dispatch(logout)
   return
 }
 export const changePassword = createAsyncThunk<
@@ -86,6 +99,9 @@ const sessionSlice = createSlice({
     authFulfilled(state, action: PayloadAction<{ email: string }>) {
       state.email = action.payload.email
     },
+    logoutFulfilled(state) {
+      state.email = ""
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(changePassword.fulfilled, (state) => {
@@ -110,7 +126,7 @@ const sessionSlice = createSlice({
   },
 })
 
-export const { authFulfilled } = sessionSlice.actions
+export const { authFulfilled, logoutFulfilled } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 
