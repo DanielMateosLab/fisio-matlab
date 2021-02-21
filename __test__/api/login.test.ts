@@ -139,4 +139,8 @@ describe("/api/login", () => {
       expect(jsonSpy).toHaveBeenCalledWith({ status: "success" })
     })
   })
+
+  describe("DELETE", () => {
+    it.todo("should call logout function")
+  })
 })
