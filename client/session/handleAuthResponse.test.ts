@@ -41,8 +41,19 @@ describe("handleAuthResponse", () => {
     )
   }
 
+  it("should clean form errors", async () => {
+    expect.hasAssertions()
+    fetchMock.once(successfulApiRes)
+    await exec()
+
+    await waitFor(() => {
+      expect(setFormError).toHaveBeenCalledWith("")
+    })
+  })
+
   describe("if api call finishes successful", () => {
     it("should dispatch authenticate action thunk with the email", async () => {
+      expect.hasAssertions()
       fetchMock.once(successfulApiRes)
       await exec()
 
@@ -52,8 +63,11 @@ describe("handleAuthResponse", () => {
       })
     })
     it("should redirect to /profile", async () => {
+      expect.hasAssertions()
       fetchMock.once(successfulApiRes)
+
       await exec()
+
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith("/profile")
       })
@@ -61,20 +75,27 @@ describe("handleAuthResponse", () => {
   })
   describe("if api call fails", () => {
     it("should set an email error if the response has a payload with an email property)", async () => {
+      expect.hasAssertions()
       fetchMock.once(validationErrorApiRes)
+
       await exec()
+
       await waitFor(() => {
         expect(setErrors).toHaveBeenCalledWith({ email: error })
       })
     })
     it("should set a form error if the response has nor payload or email", async () => {
+      expect.hasAssertions()
       fetchMock.once(formErrorApiRes)
+
       await exec()
+
       await waitFor(() => {
         expect(setFormError).toHaveBeenCalled()
       })
     })
     it("should set an invalidCredentialsMessage if there is an InvalidCredentialsError", async () => {
+      expect.hasAssertions()
       const invalidCredentialsErrorApiRes = JSON.stringify({
         status: "error",
         message: "",
@@ -90,6 +111,8 @@ describe("handleAuthResponse", () => {
     })
   })
   it("should enable the submit button when the submission handling is done", async () => {
+    expect.hasAssertions()
+
     fetchMock.once(successfulApiRes)
     await exec()
     await waitFor(() => {
@@ -109,13 +132,17 @@ describe("handleAuthResponse", () => {
     })
   })
   it("should call /api/login if operation is login", async () => {
+    expect.hasAssertions()
     fetchMock.once(successfulApiRes)
+
     await exec()
 
     expect(fetchMock.mock.calls[0][0]).toEqual("/api/login")
   })
   it("should call /api/users if operation is signup", async () => {
+    expect.hasAssertions()
     fetchMock.once(successfulApiRes)
+
     await exec("signup")
 
     expect(fetchMock.mock.calls[0][0]).toEqual("/api/users")

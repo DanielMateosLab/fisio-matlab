@@ -9,7 +9,7 @@ import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
-export const sessionCookieName = "session.active"
+export const sessionCookieName = "ss.active"
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
@@ -17,11 +17,7 @@ export const authenticate = (email: string): AppThunk => (dispatch) => {
   dispatch(authFulfilled({ email }))
 }
 
-export const logoutPayloadCreator: AsyncThunkPayloadCreator<void> = async () => {
-  Cookies.remove(sessionCookieName)
-  return
-}
-export const logout = createAsyncThunk("session/logout", logoutPayloadCreator)
+export const logout = (): AppThunk => async (dispatch) => {}
 
 interface ChangePasswordArgs {
   currentPassword: string
@@ -38,7 +34,7 @@ export const changePasswordPayloadCreator: AsyncThunkPayloadCreator<
       currentPassword: "Contraseña incorrecta",
     })
   }
-  await dispatch(logout())
+  // await dispatch(logout())
   return
 }
 export const changePassword = createAsyncThunk<
@@ -110,13 +106,6 @@ const sessionSlice = createSlice({
       if (action.error && action.error.message) {
         state.changePasswordError = action.error.message
       }
-    })
-
-    builder.addCase(logout.pending, (state) => {
-      state.email = ""
-    })
-    builder.addCase(logout.fulfilled, (state) => {
-      state.email = ""
     })
   },
 })
