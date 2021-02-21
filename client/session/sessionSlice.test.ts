@@ -7,8 +7,6 @@ import sessionReducer, {
   changePassword,
   deleteAccount,
   deleteAccountPayloadCreator,
-  logout,
-  logoutPayloadCreator,
   sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"
@@ -44,33 +42,14 @@ describe("authenticationFulfilled", () => {
 })
 
 describe("logout", () => {
-  test("logout should call Cookies.remove() with a 200 api response", async () => {
-    expect.hasAssertions()
-    await logoutPayloadCreator(undefined, mockThunkAPI as any)
-
-    await waitFor(() => {
-      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
-    })
-  })
-  test("dispatching logout.fulfilled should clean the state email", () => {
-    const state = sessionReducer(
-      { ...emptyInitialState, email },
-      logout.fulfilled(undefined, "", undefined)
-    )
-
-    expect(state.email).toEqual("")
-  })
-  // We do this because we should be able to close the session offline
-  // TODO: later, see in passport how to make this possible (to not use the server session if the client one is not available)
-  // Possible solution: set a cookie with { pendingLogout: true } and write a middleware to check the flag and call logout
-  test("dispatching logout.pending should clean the state email", () => {
-    const state = sessionReducer(
-      { ...emptyInitialState, email },
-      logout.fulfilled(undefined, "", undefined)
-    )
-
-    expect(state.email).toEqual("")
-  })
+  it.todo("should call Cookies.remove()")
+  it.todo("should send a DEL request to /api/login")
+  // TODO: this cookie must be parsed on page load to call logout api endpoint
+  it.todo(
+    "should set ss_logout_pending cookie if api response is not successful"
+  )
+  test.todo("logoutFulfilled should clean the state email")
+  it.todo("should dispatch logoutFulfilled")
 })
 
 describe("changePassword", () => {
