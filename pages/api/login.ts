@@ -5,7 +5,7 @@ import {
 import { LoginResponse } from "appShared/types"
 import { loginValidationSchema } from "appShared/Validation"
 import bcrypt from "bcryptjs"
-import { logIn } from "server/auth"
+import { logIn, logout } from "server/auth"
 import catchErrors from "server/middleware/catchErrors"
 import database from "server/middleware/database"
 import runMiddlewares from "server/middleware/runMiddlewares"
@@ -34,6 +34,7 @@ export const loginHandler: ExtendedApiHandler<LoginResponse> = async (
 
     return res.status(201).json({ status: "success" })
   } else if (req.method == "DELETE") {
+    logout(req)
   } else {
     throw new MethodNotAllowedError()
   }

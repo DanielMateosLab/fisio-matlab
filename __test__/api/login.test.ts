@@ -1,3 +1,4 @@
+import { waitFor } from "@testing-library/react"
 import {
   InvalidCredentialsError,
   MethodNotAllowedError,
@@ -141,6 +142,15 @@ describe("/api/login", () => {
   })
 
   describe("DELETE", () => {
-    it.todo("should call logout function")
+    it("should call logout function", async () => {
+      const { req, res } = createMocks({ method: "DELETE" })
+      const logoutSpy = jest.spyOn(auth, "logout").mockImplementation(() => {})
+
+      loginHandler(req as any, res as any)
+
+      await waitFor(() => {
+        expect(logoutSpy).toHaveBeenCalled()
+      })
+    })
   })
 })
