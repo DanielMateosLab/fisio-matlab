@@ -9,6 +9,7 @@ import sessionReducer, {
   deleteAccount,
   deleteAccountPayloadCreator,
   logout,
+  logoutFulfilled,
   pendingLogoutCookieName,
   sessionCookieName,
   sessionExpiration,
@@ -84,8 +85,17 @@ describe("logout", () => {
       expect(Cookies.set).toHaveBeenCalledWith(pendingLogoutCookieName, "1")
     })
   })
-  test.todo("logoutFulfilled should clean the state email")
   it.todo("should dispatch logoutFulfilled")
+})
+
+describe("logoutFulfilled", () => {
+  it("should clean the state email", () => {
+    const state = sessionReducer(
+      { ...emptyInitialState, email: "mockEmail" },
+      logoutFulfilled()
+    )
+    expect(state.email).toEqual("")
+  })
 })
 
 describe("changePassword", () => {

@@ -97,6 +97,9 @@ const sessionSlice = createSlice({
     authFulfilled(state, action: PayloadAction<{ email: string }>) {
       state.email = action.payload.email
     },
+    logoutFulfilled(state) {
+      state.email = ""
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(changePassword.fulfilled, (state) => {
@@ -121,7 +124,7 @@ const sessionSlice = createSlice({
   },
 })
 
-export const { authFulfilled } = sessionSlice.actions
+export const { authFulfilled, logoutFulfilled } = sessionSlice.actions
 
 const sessionReducer = sessionSlice.reducer
 
