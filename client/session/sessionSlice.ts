@@ -4,12 +4,14 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit"
+import { LogoutResponse } from "appShared/types"
 import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
-export const sessionCookieName = "ss.active"
+export const sessionCookieName = "ss_active"
+export const pendingLogoutCookieName = "ss_pending_logout"
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
   Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
@@ -19,9 +21,13 @@ export const authenticate = (email: string): AppThunk => (dispatch) => {
 
 export const logout = (): AppThunk => async (dispatch) => {
   Cookies.remove(sessionCookieName)
-  const res = await fetch("/api/login", {
+  const res: LogoutResponse = await fetch("/api/login", {
     method: "DEL",
-  })
+  }).then(async (res) => await res.json())
+
+  if (res.status !== "success") {
+    Cookies.set(pendingLogoutCookieName, "1")
+  }
 }
 
 interface ChangePasswordArgs {
