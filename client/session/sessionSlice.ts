@@ -28,6 +28,8 @@ export const logout = (): AppThunk => async (dispatch) => {
   if (res.status !== "success") {
     Cookies.set(pendingLogoutCookieName, "1")
   }
+
+  dispatch(logoutFulfilled)
 }
 
 interface ChangePasswordArgs {

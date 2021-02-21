@@ -85,7 +85,13 @@ describe("logout", () => {
       expect(Cookies.set).toHaveBeenCalledWith(pendingLogoutCookieName, "1")
     })
   })
-  it.todo("should dispatch logoutFulfilled")
+  it("should dispatch logoutFulfilled", async () => {
+    exec()
+
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalledWith(logoutFulfilled())
+    })
+  })
 })
 
 describe("logoutFulfilled", () => {
