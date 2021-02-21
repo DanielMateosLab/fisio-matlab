@@ -67,7 +67,7 @@ describe("logout", () => {
       const path = fetchMock.mock.calls[0][0]
       const method = fetchMock.mock.calls[0][1]?.method
       expect(path).toEqual("/api/login")
-      expect(method).toEqual("DEL")
+      expect(method).toEqual("DELETE")
     })
   })
   // TODO: this cookie must be parsed on page load to call logout api endpoint

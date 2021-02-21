@@ -22,7 +22,7 @@ export const authenticate = (email: string): AppThunk => (dispatch) => {
 export const logout = (): AppThunk => async (dispatch) => {
   Cookies.remove(sessionCookieName)
   const res: LogoutResponse = await fetch("/api/login", {
-    method: "DEL",
+    method: "DELETE",
   }).then(async (res) => await res.json())
 
   if (res.status !== "success") {
