@@ -51,7 +51,17 @@ describe("logout", () => {
 
     expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
   })
-  it.todo("should send a DEL request to /api/login")
+  it("should send a DEL request to /api/login", async () => {
+    fetchMock.once(JSON.stringify({ status: "success" }))
+    exec()
+
+    await waitFor(() => {
+      const path = fetchMock.mock.calls[0][0]
+      const method = fetchMock.mock.calls[0][1]?.method
+      expect(path).toEqual("/api/login")
+      expect(method).toEqual("DEL")
+    })
+  })
   // TODO: this cookie must be parsed on page load to call logout api endpoint
   it.todo(
     "should set ss_logout_pending cookie if api response is not successful"

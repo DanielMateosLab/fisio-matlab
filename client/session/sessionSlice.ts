@@ -19,6 +19,9 @@ export const authenticate = (email: string): AppThunk => (dispatch) => {
 
 export const logout = (): AppThunk => async (dispatch) => {
   Cookies.remove(sessionCookieName)
+  const res = await fetch("/api/login", {
+    method: "DEL",
+  })
 }
 
 interface ChangePasswordArgs {

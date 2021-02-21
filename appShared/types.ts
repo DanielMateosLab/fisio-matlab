@@ -22,3 +22,5 @@ export interface LoginData {
   password: string
 }
 export type LoginResponse = ErrorResponse<LoginData> | SuccessResponse
+
+export type LogoutResponse = ErrorResponse<undefined> | SuccessResponse

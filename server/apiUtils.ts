@@ -1,3 +1,7 @@
+export const headers = {
+  "Content-type": "application/json",
+}
+
 export async function fetchPostOrPut(
   path: string,
   body: {},
@@ -5,9 +9,7 @@ export async function fetchPostOrPut(
 ) {
   const res = await fetch(path, {
     method,
-    headers: {
-      "Content-type": "application/json",
-    },
+    headers,
     body: JSON.stringify(body),
   })
   return await res.json()
