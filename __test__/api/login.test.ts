@@ -142,11 +142,31 @@ describe("/api/login", () => {
   })
 
   describe("DELETE", () => {
-    const { req, res } = createMocks({ method: "DELETE" })
+    const { req, res }: { req: any; res: any } = createMocks({
+      method: "DELETE",
+    })
+
+    it("should run session, database and users middlewares", async () => {
+      const sessionSpy = jest.spyOn(
+        require("server/middleware/session"),
+        "default"
+      )
+      const databaseSpy = jest.spyOn(
+        require("server/middleware/database"),
+        "default"
+      )
+      const usersSpy = jest.spyOn(require("server/middleware/users"), "default")
+
+      await loginHandler(req, res)
+
+      expect(sessionSpy).toHaveBeenCalled()
+      expect(databaseSpy).toHaveBeenCalled()
+      expect(usersSpy).toHaveBeenCalled()
+    })
     it("should call logout function", async () => {
       const logoutSpy = jest.spyOn(auth, "logout").mockImplementation(() => {})
 
-      await loginHandler(req as any, res as any)
+      await loginHandler(req, res)
 
       await waitFor(() => {
         expect(logoutSpy).toHaveBeenCalled()
@@ -155,7 +175,7 @@ describe("/api/login", () => {
     it("should call res.status(200).json({ status: 'success' } after calling logout", async () => {
       const jsonSpy = jest.spyOn(res, "json")
 
-      loginHandler(req as any, res as any)
+      await loginHandler(req, res)
 
       expect(res.statusCode).toEqual(200)
       expect(jsonSpy).toHaveBeenCalledWith({ status: "success" })

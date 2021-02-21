@@ -18,11 +18,12 @@ export const loginHandler: ExtendedApiHandler<LoginResponse> = async (
   req,
   res
 ) => {
+  await runMiddlewares(req, res, session, database, users)
+
   if (req.method == "POST") {
     await loginValidationSchema.validate(req.body)
 
     const { email, password } = req.body as User
-    await runMiddlewares(req, res, session, database, users)
 
     const user = await UsersDAO.getUserByEmail(email)
     if (!user) throw new InvalidCredentialsError()
