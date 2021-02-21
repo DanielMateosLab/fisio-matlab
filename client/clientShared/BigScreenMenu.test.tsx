@@ -49,7 +49,7 @@ describe("Big Screens' Menu", () => {
 
       expect(logoutButtonElement).not.toBeInTheDocument()
     })
-    test("the logout button should dispatch a logoutSucess action", () => {
+    test("the logout button should dispatch a logout thunk action", () => {
       const { getByRole } = renderAuth()
       const logoutButtonElement = getByRole("button", {
         name: logoutButtonText,
