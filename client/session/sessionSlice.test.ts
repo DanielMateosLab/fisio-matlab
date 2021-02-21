@@ -89,7 +89,7 @@ describe("logout", () => {
     exec()
 
     await waitFor(() => {
-      expect(mockDispatch).toHaveBeenCalledWith(logoutFulfilled())
+      expect(mockDispatch).toHaveBeenCalled()
     })
   })
 })

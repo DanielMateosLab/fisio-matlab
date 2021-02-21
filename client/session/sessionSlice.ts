@@ -47,7 +47,7 @@ export const changePasswordPayloadCreator: AsyncThunkPayloadCreator<
       currentPassword: "Contraseña incorrecta",
     })
   }
-  // await dispatch(logout())
+  dispatch(logout)
   return
 }
 export const changePassword = createAsyncThunk<
