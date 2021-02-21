@@ -42,7 +42,11 @@ describe("authenticationFulfilled", () => {
 })
 
 describe("logout", () => {
+<<<<<<< HEAD
   it.todo("should call Cookies.remove()")
+=======
+  it.todo("should call Cookies.remove(sessionCookieName)")
+>>>>>>> Clean up code and write todo-tests
   it.todo("should send a DEL request to /api/login")
   // TODO: this cookie must be parsed on page load to call logout api endpoint
   it.todo(
