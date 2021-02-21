@@ -7,6 +7,7 @@ import sessionReducer, {
   changePassword,
   deleteAccount,
   deleteAccountPayloadCreator,
+  logout,
   sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"
@@ -15,9 +16,9 @@ jest.mock("js-cookie")
 
 const emptyInitialState = sessionReducer(undefined, { type: "" })
 const email = "aaaa"
+const mockDispatch = jest.fn()
 
 describe("authenticate", () => {
-  const mockDispatch = jest.fn()
   const email = "mockEmail@mo.ck"
   it("should set a cookie indicating that the session is active", () => {
     const spy = jest.spyOn(Cookies, "set")
@@ -42,7 +43,14 @@ describe("authenticationFulfilled", () => {
 })
 
 describe("logout", () => {
-  it.todo("should call Cookies.remove()")
+  const exec = () => {
+    logout()(mockDispatch, () => initialState, undefined)
+  }
+  it("should call Cookies.remove(sessionCookieName)", async () => {
+    exec()
+
+    expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+  })
   it.todo("should send a DEL request to /api/login")
   // TODO: this cookie must be parsed on page load to call logout api endpoint
   it.todo(
