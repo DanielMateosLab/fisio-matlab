@@ -7,7 +7,7 @@ import { sessionCookieName } from "./sessionSlice"
 // This component will in the future dispatch a getUser action, and will return a
 // "loading" component while session.getUserPending is true
 
-const AuthenticateOnLoad: React.FC = ({ children }) => {
+const ParseSessionOnLoad: React.FC = ({ children }) => {
   const dispatch = useThunkDispatch()
   const sessionActive = Cookies.get(sessionCookieName)
   const router = useRouter()
@@ -21,4 +21,4 @@ const AuthenticateOnLoad: React.FC = ({ children }) => {
   return <>{children}</>
 }
 
-export default AuthenticateOnLoad
+export default ParseSessionOnLoad
