@@ -1,6 +1,7 @@
+import { UsersGetResponse } from "appShared/types"
 import Cookies from "js-cookie"
-import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { fetcher } from "server/apiUtils"
 import { useThunkDispatch } from "../redux/store"
 import { sessionActiveCookieName } from "./sessionSlice"
 
@@ -10,12 +11,13 @@ import { sessionActiveCookieName } from "./sessionSlice"
 const ParseSessionOnLoad: React.FC = ({ children }) => {
   const dispatch = useThunkDispatch()
   const sessionActive = Cookies.get(sessionActiveCookieName)
-  const router = useRouter()
 
   useEffect(() => {
-    if (sessionActive) {
-      // TODO: call the api to get the user
-    }
+    ;(async () => {
+      if (sessionActive) {
+        const res = (await fetcher("/api/users/me")) as UsersGetResponse
+      }
+    })()
   }, [])
 
   return <>{children}</>

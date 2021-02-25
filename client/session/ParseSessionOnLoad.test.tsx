@@ -1,6 +1,28 @@
+import { render } from "client/clientShared/testUtils"
+import Cookies from "js-cookie"
+import ParseSessionOnLoad from "./ParseSessionOnLoad"
+
+jest.mock("js-cookie")
+
+jest.mock("react-redux", () => ({
+  ...(jest.requireActual("react-redux") as {}),
+  useDispatch: () => mockDispatch,
+}))
+const mockDispatch = jest.fn()
+
 describe("ParseSessionOnLoad", () => {
+  const email = "aaaa@aaa.aa"
   describe("if there is a session active", () => {
-    it.todo("should try to get the user with a request to /users/me")
+    //@ts-ignore
+    Cookies.get.mockImplementation(() => "1" as any)
+    it("should try to get the user with a request to /api/users/me", () => {
+      // Mock response to avoid errors
+      fetchMock.once(JSON.stringify({}))
+
+      render(<ParseSessionOnLoad />)
+
+      expect(fetchMock).toHaveBeenCalledWith("/api/users/me")
+    })
     it.todo("should dispatch an authenticate action if we get an user")
     it.todo("should dispatch a logout action if there is no user")
   })
