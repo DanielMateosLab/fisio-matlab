@@ -38,7 +38,19 @@ describe("ParseSessionOnLoad", () => {
         expect(mockDispatch).toHaveBeenCalled()
       })
     })
-    it.todo("should dispatch a logout action if there is no user")
+    it("should dispatch a logout action if there is no user", async () => {
+      fetchMock.once(
+        JSON.stringify({
+          status: "error",
+        } as UsersGetResponse)
+      )
+
+      render(<ParseSessionOnLoad />)
+
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled()
+      })
+    })
   })
   // This might be posible if the user has tried to log out but there was a network error
   it.todo(
