@@ -17,6 +17,10 @@ export interface SignupData {
 }
 export type UsersPostResponse = ErrorResponse<SignupData> | SuccessResponse
 
+export type UsersGetResponse =
+  | ErrorResponse<SignupData>
+  | SuccessResponse<{ user: { email: string } }>
+
 export interface LoginData {
   email: string
   password: string

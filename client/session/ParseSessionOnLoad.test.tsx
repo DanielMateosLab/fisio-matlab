@@ -1,4 +1,5 @@
-import { render } from "client/clientShared/testUtils"
+import { UsersGetResponse } from "appShared/types"
+import { render, waitFor } from "client/clientShared/testUtils"
 import Cookies from "js-cookie"
 import ParseSessionOnLoad from "./ParseSessionOnLoad"
 
@@ -23,7 +24,20 @@ describe("ParseSessionOnLoad", () => {
 
       expect(fetchMock).toHaveBeenCalledWith("/api/users/me")
     })
-    it.todo("should dispatch an authenticate action if we get an user")
+    it("should dispatch an authenticate action if we get an user", async () => {
+      fetchMock.once(
+        JSON.stringify({
+          status: "success",
+          user: { email },
+        } as UsersGetResponse)
+      )
+
+      render(<ParseSessionOnLoad />)
+
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled()
+      })
+    })
     it.todo("should dispatch a logout action if there is no user")
   })
   // This might be posible if the user has tried to log out but there was a network error
