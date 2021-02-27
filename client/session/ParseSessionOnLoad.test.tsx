@@ -1,9 +1,11 @@
-import { pendingLogoutCookieName } from "appShared/appData"
+import {
+  pendingLogoutCookieName,
+  sessionActiveCookieName,
+} from "appShared/appData"
 import { UsersGetResponse } from "appShared/types"
 import { render, waitFor } from "client/clientShared/testUtils"
 import Cookies from "js-cookie"
 import ParseSessionOnLoad from "./ParseSessionOnLoad"
-import { sessionActiveCookieName } from "./sessionSlice"
 
 jest.mock("js-cookie")
 

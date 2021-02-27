@@ -1,10 +1,13 @@
-import { pendingLogoutCookieName } from "appShared/appData"
+import {
+  pendingLogoutCookieName,
+  sessionActiveCookieName,
+} from "appShared/appData"
 import { UsersGetResponse } from "appShared/types"
 import Cookies from "js-cookie"
 import { useEffect } from "react"
 import { fetcher } from "server/apiUtils"
 import { useThunkDispatch } from "../redux/store"
-import { authenticate, logout, sessionActiveCookieName } from "./sessionSlice"
+import { authenticate, logout } from "./sessionSlice"
 
 // This component will in the future dispatch a getUser action, and will return a
 // "loading" component while session.getUserPending is true
