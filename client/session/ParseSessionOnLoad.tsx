@@ -1,3 +1,4 @@
+import { pendingLogoutCookieName } from "appShared/appData"
 import { UsersGetResponse } from "appShared/types"
 import Cookies from "js-cookie"
 import { useEffect } from "react"
@@ -10,7 +11,8 @@ import { authenticate, logout, sessionActiveCookieName } from "./sessionSlice"
 
 const ParseSessionOnLoad: React.FC = ({ children }) => {
   const dispatch = useThunkDispatch()
-  const sessionActive = Cookies.get(sessionActiveCookieName)
+  const sessionActive = !!Cookies.get(sessionActiveCookieName)
+  const pendingLogout = !!Cookies.get(pendingLogoutCookieName)
 
   useEffect(() => {
     ;(async () => {
@@ -21,6 +23,9 @@ const ParseSessionOnLoad: React.FC = ({ children }) => {
         } else {
           dispatch(logout())
         }
+      }
+      if (pendingLogout) {
+        dispatch(logout())
       }
     })()
   }, [])

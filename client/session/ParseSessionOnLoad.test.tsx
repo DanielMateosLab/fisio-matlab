@@ -1,3 +1,4 @@
+import { pendingLogoutCookieName } from "appShared/appData"
 import { UsersGetResponse } from "appShared/types"
 import { render, waitFor } from "client/clientShared/testUtils"
 import Cookies from "js-cookie"
@@ -53,8 +54,17 @@ describe("ParseSessionOnLoad", () => {
     })
   })
   // This might be posible if the user has tried to log out but there was a network error
-  it.todo(
-    "should send a logout request to the server if there is a pending logout"
-  )
+  it("should send a logout request to the server if there is a pending logout", async () => {
+    //@ts-ignore
+    Cookies.get.mockImplementation((cookieName) =>
+      cookieName == pendingLogoutCookieName ? ("1" as any) : undefined
+    )
+
+    render(<ParseSessionOnLoad />)
+
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalled()
+    })
+  })
   it.todo("should do nothing if there are no session related cookies")
 })
