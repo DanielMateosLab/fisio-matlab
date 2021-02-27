@@ -1,5 +1,8 @@
 import { waitFor } from "@testing-library/react"
-import { pendingLogoutCookieName } from "appShared/appData"
+import {
+  pendingLogoutCookieName,
+  sessionActiveCookieName,
+} from "appShared/appData"
 import { LogoutResponse } from "appShared/types"
 import Cookies from "js-cookie"
 import { initialState, mockThunkAPI } from "../clientShared/testUtils"
@@ -11,7 +14,6 @@ import sessionReducer, {
   deleteAccountPayloadCreator,
   logout,
   logoutFulfilled,
-  sessionCookieName,
   sessionExpiration,
 } from "./sessionSlice"
 
@@ -27,7 +29,7 @@ describe("authenticate", () => {
     const spy = jest.spyOn(Cookies, "set")
     authenticate(email)(mockDispatch, () => initialState, undefined)
 
-    expect(spy).toHaveBeenCalledWith(sessionCookieName, "true", {
+    expect(spy).toHaveBeenCalledWith(sessionActiveCookieName, "true", {
       expires: sessionExpiration,
     })
   })
@@ -57,7 +59,7 @@ describe("logout", () => {
     exec()
 
     await waitFor(() => {
-      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+      expect(Cookies.remove).toHaveBeenCalledWith(sessionActiveCookieName)
     })
   })
   it("should send a DEL request to /api/login", async () => {
@@ -131,7 +133,7 @@ describe("deleteAccount", () => {
     await deleteAccountPayloadCreator({ password }, mockThunkAPI as any)
 
     await waitFor(() => {
-      expect(Cookies.remove).toHaveBeenCalledWith(sessionCookieName)
+      expect(Cookies.remove).toHaveBeenCalledWith(sessionActiveCookieName)
     })
   })
 })

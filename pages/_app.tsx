@@ -1,12 +1,12 @@
-import Header from "../client/clientShared/Header"
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
+import { AppProps } from "next/dist/next-server/lib/router/router"
 import Head from "next/head"
 import { Provider } from "react-redux"
 import { appName } from "../appShared/appData"
-import theme from "../client/theme"
+import Header from "../client/clientShared/Header"
 import store from "../client/redux/store"
-import AuthenticateOnLoad from "../client/session/AuthenticateOnLoad"
-import { AppProps } from "next/dist/next-server/lib/router/router"
+import ParseSessionOnLoad from "../client/session/ParseSessionOnLoad"
+import theme from "../client/theme"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -21,10 +21,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <AuthenticateOnLoad>
+          <ParseSessionOnLoad>
             <Header />
             <Component {...pageProps} />
-          </AuthenticateOnLoad>
+          </ParseSessionOnLoad>
         </Provider>
       </ThemeProvider>
     </>

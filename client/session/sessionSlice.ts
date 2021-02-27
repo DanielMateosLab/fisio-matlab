@@ -4,23 +4,25 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit"
-import { pendingLogoutCookieName } from "appShared/appData"
+import {
+  pendingLogoutCookieName,
+  sessionActiveCookieName,
+} from "appShared/appData"
 import { LogoutResponse } from "appShared/types"
 import { AppThunk } from "client/redux/store"
 import Cookies from "js-cookie"
 
 // In days
 export const sessionExpiration = 7
-export const sessionCookieName = "ss_active"
 
 export const authenticate = (email: string): AppThunk => (dispatch) => {
-  Cookies.set(sessionCookieName, "true", { expires: sessionExpiration })
+  Cookies.set(sessionActiveCookieName, "true", { expires: sessionExpiration })
 
   dispatch(authFulfilled({ email }))
 }
 
 export const logout = (): AppThunk => async (dispatch) => {
-  Cookies.remove(sessionCookieName)
+  Cookies.remove(sessionActiveCookieName)
   const res: LogoutResponse = await fetch("/api/login", {
     method: "DELETE",
   }).then(async (res) => await res.json())
@@ -67,7 +69,7 @@ export const deleteAccountPayloadCreator: AsyncThunkPayloadCreator<
       password: "Contraseña incorrecta",
     })
   }
-  Cookies.remove(sessionCookieName)
+  Cookies.remove(sessionActiveCookieName)
   return
 }
 export const deleteAccount = createAsyncThunk<
