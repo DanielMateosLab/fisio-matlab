@@ -3,6 +3,7 @@ import { UsersGetResponse } from "appShared/types"
 import { render, waitFor } from "client/clientShared/testUtils"
 import Cookies from "js-cookie"
 import ParseSessionOnLoad from "./ParseSessionOnLoad"
+import { sessionActiveCookieName } from "./sessionSlice"
 
 jest.mock("js-cookie")
 
@@ -16,7 +17,9 @@ describe("ParseSessionOnLoad", () => {
   const email = "aaaa@aaa.aa"
   describe("if there is a session active", () => {
     //@ts-ignore
-    Cookies.get.mockImplementation(() => "1" as any)
+    Cookies.get.mockImplementation((cookieName) =>
+      cookieName == sessionActiveCookieName ? ("1" as any) : undefined
+    )
     it("should try to get the user with a request to /api/users/me", () => {
       // Mock response to avoid errors
       fetchMock.once(JSON.stringify({}))
@@ -36,7 +39,7 @@ describe("ParseSessionOnLoad", () => {
       render(<ParseSessionOnLoad />)
 
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalled()
+        expect(mockDispatch).toHaveBeenCalledTimes(1)
       })
     })
     it("should dispatch a logout action if there is no user", async () => {
@@ -49,7 +52,7 @@ describe("ParseSessionOnLoad", () => {
       render(<ParseSessionOnLoad />)
 
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalled()
+        expect(mockDispatch).toHaveBeenCalledTimes(1)
       })
     })
   })
@@ -63,7 +66,7 @@ describe("ParseSessionOnLoad", () => {
     render(<ParseSessionOnLoad />)
 
     await waitFor(() => {
-      expect(mockDispatch).toHaveBeenCalled()
+      expect(mockDispatch).toHaveBeenCalledTimes(1)
     })
   })
   it.todo("should do nothing if there are no session related cookies")
