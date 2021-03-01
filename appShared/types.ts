@@ -1,8 +1,10 @@
+import { User } from "server/types"
+
 type SuccessResponse<Payload = {}> = {
   status: "success"
 } & Payload
 
-export type ErrorResponse<Payload> = {
+export type ErrorResponse<Payload = undefined> = {
   status: "error"
   name: string
   message: string
@@ -17,9 +19,11 @@ export interface SignupData {
 }
 export type UsersPostResponse = ErrorResponse<SignupData> | SuccessResponse
 
+export type UserWithoutPassword = Omit<User, "password">
+
 export type UsersGetResponse =
-  | ErrorResponse<SignupData>
-  | SuccessResponse<{ user: { email: string } }>
+  | ErrorResponse
+  | SuccessResponse<{ user: UserWithoutPassword }>
 
 export interface LoginData {
   email: string
